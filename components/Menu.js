@@ -15,11 +15,15 @@ import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom
 import Home from './Home'
 import Info from './Info'
 import Akun from './Akun'
+import TambahTambak from './TambahTambak';
+import { createStackNavigator } from 'react-navigation-stack';
+
+const HomeStack = createStackNavigator({ Home: Home, TambahTambak: TambahTambak });
 
 const TabNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
-      screen: Home,
+      screen: HomeStack,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <View>
@@ -28,21 +32,22 @@ const TabNavigator = createMaterialBottomTabNavigator(
         ),
       }
     },
-  
+   
     Information: {
-      screen: Info,      
+      screen: Info,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'ios-information'} />
+            <Icon style={[{color: tintColor}]} size={30} name={'ios-information-circle-outline'} />
           </View>
         ),
         activeColor: '#ffffff',
-        inactiveColor: '#92c5c2',
-        barStyle: { backgroundColor: '#2c6d6a' },
+        inactiveColor: '#ebaabd',
+        barStyle: { backgroundColor: '#d13560' },
       }
     },
-    Profile: {
+
+    Akun: {
       screen: Akun,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
@@ -55,6 +60,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         barStyle: { backgroundColor: '#d13560' },
       }
     },
+
   },
   {
     initialRouteName: 'Home',

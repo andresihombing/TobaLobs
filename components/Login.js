@@ -16,12 +16,65 @@ export default class Login extends Component {
 
         this.state = {
             username: "",
-            Password: "",
-            token: ""
-        }     
-    }    
+            password: "",
+            token: "",
+
+            usernameValidate: true,
+            passValidate:true,
+            enableButton: false,
+            disableButton: true,
+            errorUsername: false,
+            errorPass: false,
+            textLabelError: false,
+            textLabelSuccess: false,
+            errorForm: false,
+        }
+    }
+
+    validate(text, type) {  
+        if (type == 'uname') {
+            if(text == ''){
+                this.setState({              
+                    errorUsername: true
+                })
+            }else{
+                this.setState({              
+                    errorUsername: false
+                })
+            }            
+        }
+        else if (type == 'pass') {
+            if(text == ''){
+                this.setState({              
+                    errorPass: true
+                })
+            }else{
+                this.setState({              
+                    errorPass: false
+                })
+            }            
+        }              
+    }
+
+    val(){
+        const { username, password } = this.state
+        if ((username == "")) {
+            this.setState({
+                errorForm: true,
+                errorUsername: true,                
+            })            
+        }
+        if(password == ""){
+            this.setState({
+                errorForm: true,                
+                errorPass: true,
+            })            
+        }
+    }
 
     submitReg(){
+        this.val();
+
         const { navigate } = this.props.navigation;
         let body = new FormData();
         body.append('username', this.state.username);
@@ -40,7 +93,9 @@ export default class Login extends Component {
             navigate("Menu")
         })
         .catch((err) => {
-            alert('Username or Password is wrong')
+            this.setState({
+                errorForm: true,
+            })
             console.log('Error:', error);
         })
         
@@ -78,26 +133,41 @@ export default class Login extends Component {
                     {/* <Image style = {styles.logo}
                         source = {require('../images/logo.jpeg')}>
                     </Image> */}
-                    <View style = {styles.infoContainer}>
-                        <Text style = {styles.title}>Login</Text>
+                    <View style = {styles.infoContainer}>                    
+                        <Text style = {styles.title}>Login Tobalobs</Text>
+                        <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Username dan Password Salah</Text>
+
+                        <Text style={styles.label}>Username</Text>
                         <TextInput style = {styles.input}
-                            placeholder = "Username"
-                            placeholderTextColor = "rgba(255,255,255,0.8)"
+                            // placeholder = "Username"
+                            // placeholderTextColor = "rgba(255,255,255,0.8)"
                             returnKeyType = 'next'
                             autoCorrect = {false}
-                            onChangeText={(username) => this.setState({username})}
+                            onChangeText={(username) => {
+                                this.validate(username, 'uname')
+                                this.setState({username})
+                            }}
+                            // onChangeText={(username) => this.setState({username})}
                         />
+                        <Text style={{ display: this.state.errorUsername ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+
+                        <Text style={styles.label}>Password</Text>
                         <TextInput style = {styles.input}
-                            placeholder = "Password"
-                            placeholderTextColor = "rgba(255,255,255,0.8)"                            
+                            // placeholder = "Password"
+                            // placeholderTextColor = "rgba(255,255,255,0.8)"                            
                             secureTextEntry
                             autoCorrect = {false}
-                            onChangeText={(password) => this.setState({password})}
+                            onChangeText={(password) => {
+                                this.validate(password, 'pass')
+                                this.setState({password})
+                            }}
                         />
-                        <TouchableOpacity style = {styles.buttonContainer}
+                        <Text style={{ display: this.state.errorPass ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                        <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 15, marginTop: 10}}
                             onPress = {() => this.submitReg()}>
                             <Text style = {styles.buttonText}>SIGN IN</Text>
-                        </TouchableOpacity>                                                                                
+                        </TouchableOpacity>
+                                           
                         <Text style={styles.buttonReg}>
                             Anda belum mempunyai akun?
                             <Text>  </Text>                        
@@ -130,19 +200,28 @@ const styles = StyleSheet.create({
     //     height: 56
     // },
     title: {
-        color: '#f7c744',
-        fontSize: 40,
+        color: 'white',
+        fontSize: 30,
         textAlign: 'center',
-        marginTop: 25,
-        opacity: 0.9
+        marginTop: 20,
+        opacity: 0.9,
+        borderBottomColor: 'white',
+        borderBottomWidth: 3,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        marginLeft: 50,
+        marginRight: 50
     },
  
-    input: {
+    input: { 
+        // flex: 2,       
         height: 40,
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        // width: 320,        
         color: '#FFF',
-        paddingHorizontal: 10,
-        marginTop: 20,        
+        paddingHorizontal: 10,                
+        alignSelf: "stretch",
+        borderBottomColor: 'white',
+        borderBottomWidth: 1,        
     },
 
     infoContainer: {
@@ -150,13 +229,13 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 380,        
-        padding: 20
+        padding: 20,        
         // backgroundColor: 'red'
     },
     buttonContainer: {
         backgroundColor: '#f7c744',
         paddingVertical: 15,
-        marginTop: 10
+        marginTop: 10,         
     },
     buttonText: {
         textAlign: 'center',
@@ -171,5 +250,9 @@ const styles = StyleSheet.create({
         fontSize: 13,        
         marginTop: 20,        
     },
+    label:{
+        color: 'white',
+        marginTop: 20,        
+    }
 
 })
