@@ -8,11 +8,7 @@ import DropDownItem from "react-native-drop-down-item";
 const IC_ARR_DOWN = require('./assets/icons/ic_arr_down.png');
 const IC_ARR_UP = require('./assets/icons/ic_arr_up.png');
 
-export default class Info extends React.Component {
-
-    static navigationOptions = {
-        title: 'Info',
-    };    
+export default class Info extends React.Component {    
 
     state = {
         contents: [
@@ -58,7 +54,7 @@ export default class Info extends React.Component {
                         <Text style={[
                           styles.txt,
                           {
-                            fontSize: 20,
+                            fontSize: 10,
                           },
                         ]}>
                           {param.body}
@@ -81,7 +77,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#F5FCFF',
-      paddingTop: 60,
+      paddingTop: 10,
     },
     header: {
       width: '100%',
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 12,
       flexWrap: 'wrap',
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'center',      
     },
     headerTxt: {
       fontSize: 12,

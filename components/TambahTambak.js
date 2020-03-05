@@ -10,18 +10,17 @@ import Resource from './network/Resource'
 
 export default class Register extends Component {        
     static navigationOptions = {
-        title: 'Tambah Tambak'
+        title: 'Tambah Tambak'        
     };
         
     constructor(props){
         super(props);                
-        
-        
+                
         this.state = {
             namaTambak: "",
-            panjangTambak: "",
-            lebarTambak: "",
-            jenisTambak: "",
+            panjang: "",
+            lebar: "",
+            jenisBudidaya: "",
             usiaLobster: "",            
 
             errorNama: false,
@@ -31,17 +30,16 @@ export default class Register extends Component {
             errorUsia: false,            
             errorForm: false,
 
+            list_tambak: [],
+
             data: [{
-                value: 'Fruit',
-                label: 'Banana'
+                value: 'pembesaran',
+                label: 'Pembesaran'
               }, {
-                value: 'Vegetable',
-                label: 'Tomato'
-              }, {
-                value: 'Fruit',
-                label: 'Pear'
+                value: 'pembenihan',
+                label: 'Pembenihan'
               }],
-        }          
+        }        
     }    
 
     validate(text, type) {        
@@ -103,26 +101,26 @@ export default class Register extends Component {
     }
 
     val(){
-        const { namaTambak, panjangTambak, lebarTambak, jenisTambak, usiaLobster} = this.state
+        const { namaTambak, panjang, lebar, jenisBudidaya, usiaLobster} = this.state
         if ((namaTambak == "")) {
             this.setState({
                 errorForm: true,
                 errorNama: true,                
             })            
         }
-        if(panjangTambak == ""){
+        if(panjang == ""){
             this.setState({
                 errorForm: true,                
                 errorPanjang: true,
             })            
         }
-        if(lebarTambak == ""){
+        if(lebar == ""){
             this.setState({
                 errorForm: true,                
                 errorLebar: true,
             })            
         }      
-        if(jenisTambak == ""){
+        if(jenisBudidaya == ""){
             this.setState({
                 errorForm: true,                
                 errorJenis: true,
@@ -136,30 +134,46 @@ export default class Register extends Component {
         }
     }
 
-    submitReg(){         
+    submitReg = async () => {
         this.val();          
-        const { navigate } = this.props.navigation;        
+        const { navigate } = this.props.navigation;
         let formdata = new FormData();
-        formdata.append('username', this.state.namaTambak);
-        formdata.append('fullname', this.state.panjangTambak);
-        formdata.append('password', this.state.lebarTambak);        
-        formdata.append('noHp', this.state.jenisTambak);
-        formdata.append('tanggalLahir', this.state.usiaLobster);        
+        formdata.append('namaTambak', this.state.namaTambak);
+        formdata.append('panjang', this.state.panjang);
+        formdata.append('lebar', this.state.lebar);        
+        formdata.append('jenisBudidaya', this.state.jenisBudidaya);
+        formdata.append('usiaLobster', this.state.usiaLobster);                
         
-        Resource.register(formdata)
-        .then((res) => {                
-            console.log(res.responseJson.data)
-            const token = res.responseJson.data;
-            AsyncStorage.setItem('user', JSON.stringify(token));                        
-            navigate("Menu")
-        })
-        .catch((err) => {            
-            this.setState({
-                errorForm: true,
-            })
-            console.log('Error:', error);
-        })          
-    }
+        try{
+            await AsyncStorage.getItem('user', (error, result) => {       
+                let tokenString = JSON.parse(result);
+                
+                Resource.tambah_tambak(formdata, tokenString)
+                .then((res) => {                                                        
+                    console.warn(res)
+                    if (res.responseJson.status == 'failed') {
+                        alert('user anda telah expired')
+                        AsyncStorage.clear();
+                        this.props.navigation.navigate('Auth');
+                    }
+                    
+                    this.props.navigation.navigate('Home');
+                    // const token = res.responseJson.data;
+                    // AsyncStorage.setItem('user', JSON.stringify(token));
+                    // navigate("Menu")
+                })
+                .catch((err) => {
+                    this.setState({
+                        errorForm: true,
+                    })
+                    console.log('Error:', error);
+                })  
+            });   
+        } catch (error) {
+            console.log('error')
+            console.log('AsyncStorage error: ' + error.message);
+        }            
+    }    
 
     render() {       
 
@@ -170,17 +184,11 @@ export default class Register extends Component {
             {this.state.Error}
             </Text>
                 <StatusBar barStyle = "light-content"/>
-                <View style = {styles.logoContainer}>
-                    {/* <Image style = {styles.logo}
-                        source = {require('../images/logo.jpeg')}>
-                    </Image> */}
+                <View style = {styles.logoContainer}>                    
                     <ScrollView>
                         <View style = {{marginBottom:10}}>                    
                             <Text style = {styles.title}>Buat Tambak</Text>
-                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Buat Tambak vailed</Text>
-                            {/* <Text style={styles.instructions}>
-                                Nama: {this.state.token}                            
-                            </Text> */}
+                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Buat Tambak vailed</Text>                            
                             <View style={styles.rowContainer}>
                                 <Text style={styles.label}>Nama Tambak</Text>
                                 <TextInput style = {styles.input}                                    
@@ -196,30 +204,27 @@ export default class Register extends Component {
 
                             <View style={styles.rowContainer}>
                                 <Text style={styles.label}>Panjang Tambak</Text>
-                                <TextInput style = {styles.input}
-                                    // placeholder = "Nama"
-                                    // placeholderTextColor = "rgba(255,255,255,0.8)"
+                                <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
-                                    onChangeText={(panjangTambak) => {
-                                        this.validate(panjangTambak, 'panjang')
-                                        this.setState({panjangTambak})
-                                    }}
-                                    // onChangeText = {(text) => this.updateValue(text, "keterangan")}
+                                    keyboardType= 'number-pad'
+                                    onChangeText={(panjang) => {
+                                        this.validate(panjang, 'panjang')
+                                        this.setState({panjang})
+                                    }}                                    
                                 />                                                            
                             </View>
                             <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
 
                             <View style={styles.rowContainer}>
                                 <Text style={styles.label}>Lebar Tambak</Text>
-                                <TextInput style = {styles.input}
-                                    // placeholder = "Username"
-                                    // placeholderTextColor = "rgba(255,255,255,0.8)"                            
+                                <TextInput style = {styles.input}                                            
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
-                                    onChangeText={(lebarTambak) => {
-                                        this.validate(lebarTambak, 'lebar')
-                                        this.setState({lebarTambak})
+                                    keyboardType= 'number-pad'
+                                    onChangeText={(lebar) => {
+                                        this.validate(lebar, 'lebar')
+                                        this.setState({lebar})
                                     }}                                    
                                 />
                             </View>
@@ -236,9 +241,9 @@ export default class Register extends Component {
                                 selectedItemColor = 'black'
                                 textColor= 'white'
                                 baseColor = 'white'                                
-                                onChangeText={(jenisTambak)=> {
-                                    this.validate(jenisTambak, 'jenis')
-                                    this.setState({jenisTambak})
+                                onChangeText={(value)=> {
+                                    this.validate(value, 'jenis')
+                                    this.setState({ jenisBudidaya : value })                                     
                             }}
                             />
                             </View>
@@ -249,9 +254,10 @@ export default class Register extends Component {
                                 <TextInput style = {styles.input}                                                 
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
-                                    onChangeText={(Usia) => {
-                                        this.validate(Usia, 'usia')
-                                        this.setState({Usia})
+                                    keyboardType= 'number-pad'
+                                    onChangeText={(usiaLobster) => {
+                                        this.validate(usiaLobster, 'usia')
+                                        this.setState({usiaLobster})                                                                           
                                     }}
                                 />
                             </View>            
@@ -280,19 +286,13 @@ const styles = StyleSheet.create({
         flex: 2,
         height: 90,
         width: 700,                
-        color: 'white',
-        // paddingHorizontal: 90,
-        borderBottomColor: 'white',
-        // borderBottomWidth: 1
+        color: 'white',        
+        borderBottomColor: 'white',        
     },
-    logoContainer: {        
-        // alignItems: 'center',
-        // justifyContent: 'center',
+    logoContainer: {                
         flex: 1,
         marginLeft: 20,
-        marginRight: 20,
-        // left:0,
-        // right:0
+        marginRight: 20,        
     },
     rowContainer: {
         flex: 1,         
@@ -300,11 +300,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: 10
-      },
-    // logo: {
-    //     width: 128,
-    //     height: 56
-    // },
+      },    
     title: {        
         color: 'white',
         textAlign: 'bold',   
@@ -323,8 +319,7 @@ const styles = StyleSheet.create({
         flex: 2,
         height: 50,
         width: 300,        
-        color: 'white',
-        // paddingHorizontal: 90,
+        color: 'white',        
         borderBottomColor: 'white',
         borderBottomWidth: 1
     },
@@ -335,8 +330,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 600,        
-        padding: 20
-        // backgroundColor: 'red'
+        padding: 20        
     },
     buttonContainer: {
         backgroundColor: '#f7c744',
@@ -351,7 +345,6 @@ const styles = StyleSheet.create({
     },
     label:{
         flex: 1,
-        color: 'white',
-        // marginTop: 10,        
+        color: 'white',        
     }
 })
