@@ -112,6 +112,24 @@ class Resource {
         }
       });
     }
+
+    async detailTambak(list, token){
+      // console.warn(token)
+      const header = {
+        "Authorization": token,
+        "Content-Type": "application/json",
+      }
+  
+      let res = await Request.get(URI.API_BASE_URL + URI.DETAIL_TAMBAK + list, header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

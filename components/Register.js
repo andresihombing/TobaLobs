@@ -155,7 +155,7 @@ export default class Register extends Component {
 
     submitReg(){         
         this.val();          
-        const { navigate } = this.props.navigation;        
+        const { navigate } = this.props.navigation;
         let formdata = new FormData();
         formdata.append('username', this.state.username);
         formdata.append('fullname', this.state.nama);

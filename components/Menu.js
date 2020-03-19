@@ -17,11 +17,13 @@ import Info from './Info'
 import Akun from './Akun'
 import Tambak from './Tambak'
 import TambahTambak from './TambahTambak';
+import DetailTambak from './DetailTambak'
+import KebutuhanTambak from './KebutuhanTambak'
 import { createStackNavigator } from 'react-navigation-stack';
 
-const HomeStack = createStackNavigator({ 
+const HomeStack = createStackNavigator({
   Home: {
-    screen: Home,    
+    screen: Home,
     navigationOptions: {
         header: null,
     },
@@ -32,7 +34,12 @@ const HomeStack = createStackNavigator({
   TambahTambak: {
     screen: TambahTambak,
   },
-  
+  DetailTambak: {
+    screen: DetailTambak,
+  },
+  KebutuhanTambak: {
+    screen: KebutuhanTambak,
+  }
 });
 
 const InfoStack = createStackNavigator({ 

@@ -4,6 +4,8 @@ import {
     TouchableOpacity, ScrollView, FlatList
 } from 'react-native';
 import Resource from './network/Resource'
+import Tambak from './Tambak'
+
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
@@ -25,10 +27,11 @@ export default class Home extends React.Component {
 
     goToCreate(){        
         this.props.navigation.navigate('TambahTambak');
+        // this.props.navigation.navigate('KebutuhanTambak');
     }
 
-    componentWillMount() {
-        this.getData();        
+    componentDidMount() {
+        this.getData();                
     }    
 
     onRefresh() {
@@ -76,23 +79,25 @@ export default class Home extends React.Component {
     }
     
     listTambak = async () => {
+        
         try{            
             await AsyncStorage.getItem('user', (error, result) => {       
-                let tokenString = JSON.parse(result);
                 // console.warn(this.state.tambak)
+                // let tokenString = JSON.parse(result);                
                 let list = this.state.tambak;
-                Resource.postTambak(list, tokenString.token)
-                .then((res) => {                                                        
-                    console.log(res)
-                    // if (res.responseJson.status == 'failed') {
-                    //     alert('user anda telah expired')
-                    //     AsyncStorage.clear();
-                    //     this.props.navigation.navigate('Auth');
-                    // }                    
-                })
-                .catch((err) => {                    
-                    console.log('Error:', error);
-                })  
+                
+                // Resource.postTambak(list, tokenString.token)
+                // .then((res) => {                                                        
+                //     console.warn(res)
+                    
+                    this.props.navigation.navigate('Tambak', {
+                        itemId : list,
+                        
+                    });
+                // })
+                // .catch((err) => {                    
+                //     console.log('Error:', error);
+                // })  
             });   
         } catch (error) {
             console.log('error')
@@ -103,8 +108,11 @@ export default class Home extends React.Component {
     render() {
         // console.warn(this.state.list_tambak)
         const { navigate } = this.props.navigation;        
-        return (                        
+        return (                                    
             <View style={styles.container}>
+                {/* <View>
+                    <Tambak coba = {this.state.tambak}/>
+                </View> */}
                 <ScrollView
                 refreshControl={
                     <RefreshControl
@@ -126,8 +134,8 @@ export default class Home extends React.Component {
                     <View style={styles.tambakContainer}>  
                     <FlatList 
                         style={{ display: this.state.enableButton ? "flex" : "none"}}
-                        // data = {this.state.list_tambak}
-                        data={this.state.list_tambak.sort((a, b) => a.namaTambak.localeCompare(b.name))}
+                        data = {this.state.list_tambak}
+                        // data={this.state.list_tambak.sort((b, a) => b.namaTambak.localeCompare(a.namaTambak))}                        
                         numColumns={2}
                         extraData={this.state.list_tambak}
                         renderItem={({ item, index }) => (                            

@@ -135,44 +135,58 @@ export default class Register extends Component {
     }
 
     submitReg = async () => {
-        this.val();          
-        const { navigate } = this.props.navigation;
-        let formdata = new FormData();
-        formdata.append('namaTambak', this.state.namaTambak);
-        formdata.append('panjang', this.state.panjang);
-        formdata.append('lebar', this.state.lebar);        
-        formdata.append('jenisBudidaya', this.state.jenisBudidaya);
-        formdata.append('usiaLobster', this.state.usiaLobster);                
+        this.props.navigation.navigate('KebutuhanTambak', {
+            namaTambak : this.state.namaTambak,
+            panjang : this.state.panjang,
+            lebar : this.state.lebar,
+            jenisBudidaya : this.state.jenisBudidaya,
+            usiaLobster : this.state.usiaLobster
+        });
+        // console.warn(this.state.namaTambak)
+        // this.val();          
+        // const { navigate } = this.props.navigation;
+        // let formdata = new FormData();
+        // formdata.append('namaTambak', this.state.namaTambak);
+        // formdata.append('panjang', this.state.panjang);
+        // formdata.append('lebar', this.state.lebar);        
+        // formdata.append('jenisBudidaya', this.state.jenisBudidaya);
+        // formdata.append('usiaLobster', this.state.usiaLobster);                
         
-        try{
-            await AsyncStorage.getItem('user', (error, result) => {       
-                let tokenString = JSON.parse(result);
+        // try{
+        //     await AsyncStorage.getItem('user', (error, result) => {       
+        //         let tokenString = JSON.parse(result);                
                 
-                Resource.tambah_tambak(formdata, tokenString)
-                .then((res) => {                                                        
-                    console.warn(res)
-                    if (res.responseJson.status == 'failed') {
-                        alert('user anda telah expired')
-                        AsyncStorage.clear();
-                        this.props.navigation.navigate('Auth');
-                    }
+        //         Resource.tambah_tambak(formdata, tokenString)
+        //         .then((res) => {                                                        
+        //             let id = res.responseJson.data
+        //             console.warn(res.responseJson.data)                    
+        //             if (res.responseJson.status == 'failed') {
+        //                 alert('user anda telah expired')
+        //                 AsyncStorage.clear();
+        //                 this.props.navigation.navigate('Auth');
+        //             }
                     
-                    this.props.navigation.navigate('Home');
-                    // const token = res.responseJson.data;
-                    // AsyncStorage.setItem('user', JSON.stringify(token));
-                    // navigate("Menu")
-                })
-                .catch((err) => {
-                    this.setState({
-                        errorForm: true,
-                    })
-                    console.log('Error:', error);
-                })  
-            });   
-        } catch (error) {
-            console.log('error')
-            console.log('AsyncStorage error: ' + error.message);
-        }            
+        //             Resource.postTambak(id, tokenString.token)
+        //             .then((respon) => {                                                        
+        //                 console.warn(respon)                                       
+        //             })
+        //             .catch((err) => {                    
+        //                 console.log('Error:', error);
+        //             })  
+
+        //             this.props.navigation.navigate('Tambak');                    
+        //         })
+        //         .catch((err) => {
+        //             this.setState({
+        //                 errorForm: true,
+        //             })
+        //             console.log('Error:', error);
+        //         })  
+        //     });   
+        // } catch (error) {
+        //     console.log('error')
+        //     console.log('AsyncStorage error: ' + error.message);
+        // }            
     }    
 
     render() {       

@@ -4,24 +4,96 @@ import {
     TouchableOpacity, ScrollView, FlatList
 } from 'react-native';
 import Resource from './network/Resource'
+import Home from './Home'
 
-export default class Tambak extends React.Component {        
+export default class Tambak extends React.Component {   
+    constructor(props) {
+        super(props);
 
-    render() {              
+        this.state = {
+            namaTambak : '',
+            keterangan: '',
+            ph: '',
+            suhu: '',
+            do: '',
+            waktuTanggal: '',
+            tambakId : ''
+        }
+    }
+    
+
+    componentDidMount() {
+        // console.warn(this.props.itemId)
+        this.getData()
+    }   
+
+    getData = async () => {
+        const {params} = this.props.navigation.state;
+        const itemId = params ? params.itemId : null;        
+        // console.warn(itemId)        
+
+
+        try{            
+            await AsyncStorage.getItem('user', (error, result) => {       
+                let tokenString = JSON.parse(result);
+                // console.warn(this.state.tambak)
+                let list = this.props.coba;
+                // console.warn(this.props.coba)
+                // console.warn(list)
+                Resource.postTambak(itemId, tokenString.token)
+                .then((res) => {                                                        
+                    console.warn(res)
+                    this.setState({
+                        namaTambak: res.data.namaTambak,
+                        keterangan: res.data.keterangan,
+                        ph: res.data.ph,
+                        suhu: res.data.suhu,
+                        do: res.data.do,
+                        waktuTanggal: res.data.waktuTanggal,
+                        tambakId: itemId
+                    })                    
+                })
+                .catch((err) => {                    
+                    console.log('Error:', error);
+                })  
+            });  
+        } catch (error) {            
+            console.log(error)
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
+    render() {                      
+
         return (                        
             <View style={styles.container}>
                 <ScrollView>                
                 <View style = {styles.infoContainer}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.textTittle}>Tambak 1</Text>
+                        <Text style={styles.textTittle}>{this.state.namaTambak}</Text>
                                         
-                        <TouchableOpacity style = {styles.buttonContainer}>
-                            <Text style={styles.txtTambah}>Tambah Tambak</Text>
+                        <TouchableOpacity style = {styles.buttonContainer}
+                            onPress = {() => {
+                                this.props.navigation.navigate('DetailTambak', {
+                                    tambakId : this.state.tambakId
+                                })
+                            }}
+                        >
+                            <Text style={styles.txtTambah}>Detail</Text>
                         </TouchableOpacity>                    
                         
                     </View>
                     <View style={styles.tambakContainer}>  
-                    
+                        <View style = {styles.monitoring}>
+                            <Text style = {styles.textMonitoring}>{this.state.ph ? this.state.ph : 0}</Text>
+                            <Text style = {styles.textMonitoring}>{this.state.suhu ? this.state.ph : 0}°</Text>
+                            <Text style = {styles.textMonitoring}>{this.state.do ? this.state.do : 0}ppm</Text>
+                        </View>
+                        <View style = {styles.monitoring}>
+                            <Text>PH</Text>
+                            <Text>Suhu</Text>
+                            <Text>Do</Text>
+                        </View>
                     </View>
                 </View>
                 </ScrollView>
@@ -57,27 +129,39 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',                
         color: 'white',        
-        width: '50%'
+        width: '70%'
     },
     buttonContainer: {
         backgroundColor: '#f7c744',
         paddingVertical: 10,        
         alignItems: 'center',
-        width: '50%',
+        width: '30%',
         marginBottom: 10  
     },
     tambakContainer: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        alignItems: 'stretch',    
+        // alignItems: 'stretch',    
         backgroundColor: 'white',
-        paddingVertical: 15,
-        marginTop: 15,
-        alignItems: 'center',
-        padding: 20,
+        // paddingVertical: 15,
+        marginTop: 15,        
+        paddingTop: 70,
+        paddingBottom: 80,
         height: 200,
-        alignContent: 'center'
+        // alignContent: 'center'
+    },
+    monitoring: {
+        flex: 1,
+        flexDirection: 'row', 
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',        
+        alignItems: 'center',
+        alignContent: 'center',
+    },
+    textMonitoring: {        
+        fontSize: 20,
+        fontWeight: 'bold',                                
     },
 });
