@@ -17,19 +17,21 @@ export default class Tambak extends React.Component {
             suhu: '',
             do: '',
             waktuTanggal: '',
-            tambakId : ''
+            tambakId : '',
+            kosong: false
         }
     }
     
 
-    componentDidMount() {
-        // console.warn(this.props.itemId)
-        this.getData()        
+    componentDidMount() {        
+        this.getData()
+        this.getDataNotif()
     }   
 
     getData = async () => {
         const {params} = this.props.navigation.state;
-        const itemId = params ? params.itemId : null;                
+        const itemId = params ? params.itemId : null;        
+        // console.warn(itemId)        
 
         try{            
             await AsyncStorage.getItem('user', (error, result) => {       
@@ -49,7 +51,7 @@ export default class Tambak extends React.Component {
                         do: res.data.do,
                         waktuTanggal: res.data.waktuTanggal,
                         tambakId: itemId
-                    })                                        
+                    })                    
                 })
                 .catch((err) => {                    
                     console.log('Error:', error);
@@ -57,6 +59,55 @@ export default class Tambak extends React.Component {
             });  
         } catch (error) {            
             console.log(error)
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
+    getDataNotif = async () => {
+        const {params} = this.props.navigation.state;
+        const itemId = params ? params.itemId : null;                
+
+        try{            
+            await AsyncStorage.getItem('user', (error, result) => {
+            let tokenString = JSON.parse(result);
+            Resource.getNotif(tokenString.token, itemId, 'unread-per-tambak')
+                .then((res) => {                                 
+                    if(res.data.length != 0){
+                        this.setState({
+                            kosong : false,                            
+                        })
+                    } else {
+                        this.setState({
+                            kosong : true,                            
+                        })
+                    }
+                    
+                    this.setState({isFetching: false, listNotif: res.data })
+                })
+                .catch((err) => {                      
+                    this.setState({
+                        enableButton : false,
+                        disableButton : true
+                    })
+                    console.log(err)
+                })
+            });
+        } catch (error) {            
+            console.log(error)
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
+    detailNotif = async () => {
+        try{            
+            await AsyncStorage.getItem('user', (error, result) => {                       
+                let list = this.state.tambak;                
+                    this.props.navigation.navigate('DetailNotifikasi', {
+                        notifId : this.state.notifId,
+                    });                
+            });   
+        } catch (error) {
+            console.log('error')
             console.log('AsyncStorage error: ' + error.message);
         }
     }
@@ -108,31 +159,23 @@ export default class Tambak extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <View style = {styles.notif}>
-                        {/* <TouchableOpacity full style = {styles.notifikasi}>
-                            <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity full style = {styles.notifikasi}>
-                            <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
-                        </TouchableOpacity> */}
-                        <FlatList
-                            // style = {styles.notifikasi}
-                            data={[
-                                {key: 'Devin'},                                
-                            ]}
+                    <FlatList                            
+                            data = {this.state.listNotif}
+                            extraData={this.state.listNotif}
                             renderItem={({item}) => 
-                            // <Text style={styles.notifikasi}>{item.key}</Text>
                             <TouchableOpacity full style = {styles.notifikasi}
                             onPress = {() => {
-                                this.props.navigation.navigate('DetailNotifikasi', {
-                                    tambakID : this.state.tambakId
-                                });
-                            }}>
-                                <Text style = {styles.txtTambah}>{item.key}</Text>
-                            </TouchableOpacity>
-                        }
+                                this.detailNotif();                                
+                                this.setState({notifId :item.notifikasiID})                                                                      
+                            }}
+                            >
+                                <Text style = {styles.txtTambah, {padding:5}}>{item.keterangan}</Text>
+                            </TouchableOpacity>                            
+                            }
                         />
-                    </View>                    
-                </View>
+                        <Text style={{ display: this.state.kosong ? "flex" : "none", textAlign: 'center', alignItems: 'center', fontSize: 10, color: 'white' }}>Tidak Ada Notifikasi Yang Belum Dibaca</Text>
+                    </View>                                                            
+                </View>                
                 </ScrollView>
             </View>
             

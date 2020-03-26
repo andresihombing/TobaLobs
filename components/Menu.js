@@ -21,6 +21,7 @@ import DetailTambak from './DetailTambak'
 import KebutuhanTambak from './KebutuhanTambak'
 import LogNotifikasi from './LogNotifikasi'
 import DetailNotifikasi from './DetailNotifikasi'
+import AllNotifikasi from './AllNotifikasi'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -47,6 +48,9 @@ const HomeStack = createStackNavigator({
   },
   DetailNotifikasi: {
     screen: DetailNotifikasi,
+  },
+  AllNotifikasi: {
+    screen: AllNotifikasi,
   }
 });
 

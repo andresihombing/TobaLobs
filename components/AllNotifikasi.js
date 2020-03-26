@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import Resource from './network/Resource'
 
-export default class LogNotifikasi extends React.Component {   
+export default class AllNotifikasi extends React.Component {   
     constructor(props) {
         super(props);
 
@@ -19,7 +19,7 @@ export default class LogNotifikasi extends React.Component {
     }
 
     static navigationOptions = {
-        title: 'Log Notifikasi'
+        title: 'All Notifikasi'
     };
 
     onRefresh() {
@@ -37,7 +37,7 @@ export default class LogNotifikasi extends React.Component {
         try{            
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
-            Resource.getNotif(tokenString.token, tambakId, 'all-per-tambak')
+            Resource.getNotif(tokenString.token, 0, 'all-tambak')
                 .then((res) => {                                     
                     if(res.data.length != 0){
                         this.setState({

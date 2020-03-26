@@ -49,7 +49,7 @@ export default class DetailTambak extends React.Component {
                 // console.warn(list)
                 Resource.detailTambak(tambakId, tokenString.token)
                 .then((res) => {                                                        
-                    console.log(res)
+                    // console.log(res)
                     this.setState({
                         namaTambak: res.data.namaTambak,
                         panjang: res.data.panjang,                        
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 10
       },  
-      label:{
+    label:{
         flex: 1,
         color: 'white',
         marginTop: 15

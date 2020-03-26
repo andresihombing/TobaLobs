@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import Resource from './network/Resource'
 import Tambak from './Tambak'
+import IconBadge from 'react-native-icon-badge';
 
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -31,7 +32,7 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = async () => {
-        this.getData();                                
+        this.getData();                    
     }    
 
     onRefresh() {
@@ -79,14 +80,13 @@ export default class Home extends React.Component {
         }
     }
     
-    listTambak = async () => {
-        
+    listTambak = async () => {        
         try{            
             await AsyncStorage.getItem('user', (error, result) => {                       
                 let list = this.state.tambak;                
                     this.props.navigation.navigate('Tambak', {
                         itemId : list,
-                    });                
+                    });
             });   
         } catch (error) {
             console.log('error')
@@ -110,10 +110,35 @@ export default class Home extends React.Component {
                       tintColor="red"
                     />
                   }>
-                <View style = {styles.infoContainer}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.textTittle}>Selamat Datang Di TobaLobs</Text>
-                    </View>                    
+                <View style={{flexDirection: 'row-reverse',alignItems: 'center', padding: 5}}>
+                    <TouchableOpacity 
+                        onPress = {() =>{
+                            this.props.navigation.navigate('AllNotifikasi');
+                        }}
+                    >
+                        <IconBadge
+                            MainElement={
+                                <View style={{
+                                    backgroundColor:'#489EFE',
+                                    width:20,
+                                    height:20,
+                                    margin:10
+                                }}/>
+                            }
+                            BadgeElement={
+                                <Text style={{color:'#FFFFFF'}}>2</Text>
+                            }
+                            IconBadgeStyle={{
+                                width:15,
+                                height:15,
+                                backgroundColor: '#FF00EE'
+                            }}
+                            Hidden={this.state.BadgeCount==0}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style = {styles.infoContainer}>                                        
+                    <Text style={styles.textTittle}>Selamat Datang Di TobaLobs</Text>                    
 
                     <TouchableOpacity style = {styles.buttonContainer}
                         onPress={() => this.goToCreate()}>
@@ -121,27 +146,27 @@ export default class Home extends React.Component {
                     </TouchableOpacity>                    
 
                     <View style={styles.tambakContainer}>  
-                    <FlatList 
-                        style={{ display: this.state.enableButton ? "flex" : "none"}}
-                        data = {this.state.list_tambak}
-                        // data={this.state.list_tambak.sort((b, a) => b.namaTambak.localeCompare(a.namaTambak))}                        
-                        numColumns={2}
-                        extraData={this.state.list_tambak}
-                        renderItem={({ item, index }) => (                            
-                            <TouchableOpacity style={styles.nameTambak}
-                                onPress = {() => {
-                                    this.listTambak();
-                                    // console.warn(this.state.list_tambak[index])                                    
-                                    this.setState({tambak :item.tambakID})                                     
-                                }}
-                            >
-                                <Text style= {styles.txtTambah}>{item.namaTambak}</Text>
-                            </TouchableOpacity>
-                        )}                    
-                    />
+                        <FlatList 
+                            style={{ display: this.state.enableButton ? "flex" : "none"}}
+                            data = {this.state.list_tambak}
+                            // data={this.state.list_tambak.sort((b, a) => b.namaTambak.localeCompare(a.namaTambak))}                        
+                            numColumns={2}
+                            extraData={this.state.list_tambak}
+                            renderItem={({ item, index }) => (                            
+                                <TouchableOpacity style={styles.nameTambak}
+                                    onPress = {() => {
+                                        this.listTambak();
+                                        // console.warn(this.state.list_tambak[index])                                    
+                                        this.setState({tambak :item.tambakID})                                     
+                                    }}
+                                >
+                                    <Text style= {styles.txtTambah}>{item.namaTambak}</Text>
+                                </TouchableOpacity>
+                            )}                    
+                        />
                         <Text style={{ display: this.state.disableButton ? "flex" : "none", marginTop:150, textAlign: 'center', alignItems: 'center', fontSize: 30 }}>Belum Mempunyai Tambak</Text>
                     </View>
-                </View>
+                </View>                
                 </ScrollView>
             </View>
             
@@ -155,18 +180,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgb(32, 53, 70)',
         flexDirection: 'column',      
-    },
-    titleContainer: {
-        // flex: 1,
-        marginTop: 30,
-    },
-    infoContainer: {
-        // position: 'absolute',
+    },    
+    infoContainer: {        
         left: 0,
-        right: 0,
-        // height: 380,        
-        padding: 20,        
-        // backgroundColor: 'red'   
+        right: 0,                   
     },
     textTittle: {
         alignItems: 'center',
@@ -214,5 +231,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 5,        
         // height: 200
-    }
+    },
 });

@@ -10,5 +10,6 @@ export default {
     GET_TAMBAK : '/api/tambak',
     LIST_TAMBAK : '/api/tambak/last-monitor/',
     DETAIL_TAMBAK : '/api/tambak/',
-    NOTIF : '/api/notif/'
+    NOTIF : '/api/notif/',
+    DETAIL_NOTIF : '/api/notif/detail/'
 }
