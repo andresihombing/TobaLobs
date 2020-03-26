@@ -5,6 +5,7 @@ import {
     TextInput, SafeAreaView,AsyncStorage
 } from 'react-native'
 import Resource from './network/Resource'
+import PushNotification from "react-native-push-notification";
 
 export default class Login extends Component {
     static navigationOptions = {
@@ -28,7 +29,35 @@ export default class Login extends Component {
             textLabelError: false,
             textLabelSuccess: false,
             errorForm: false,
+            tokenNotif : ''
         }
+    }
+
+    componentDidMount = async () => {
+        const that = this
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+            onRegister: function(token) {
+              console.log("TOKEN:", token);
+                that.setState({
+                    tokenNotif : token
+                })                              
+            },
+            
+            onNotification: function(notification) {
+                console.log("NOTIFICATION:", notification);          
+            },
+            // Android only
+            senderID: "931315204931",
+            // iOS only
+            permissions: {
+                alert: true,
+                badge: true,
+                sound: true
+            },
+            popInitialNotification: true,
+            requestPermissions: true
+        });
     }
 
     validate(text, type) {  
@@ -76,16 +105,25 @@ export default class Login extends Component {
         this.val();
 
         const { navigate } = this.props.navigation;
+        let deviceID = this.state.tokenNotif
+        let devices = deviceID.token
         let body = new FormData();
         body.append('username', this.state.username);
-        body.append('password', this.state.password);        
+        body.append('password', this.state.password);
 
-        Resource.login(body)
+        Resource.login(body, devices)
         .then((res) => {                
-            console.log(res.responseJson.data)
-            const token = res.responseJson.data;
-            AsyncStorage.setItem('user', JSON.stringify(token));                        
-            navigate("Menu")
+            console.log(res.responseJson.status)
+            if(res.responseJson.status == 'failed'){
+                this.setState({
+                    errorForm: true,
+                })
+            }else{
+                const token = res.responseJson.data;
+                AsyncStorage.setItem('user', JSON.stringify(token));
+                AsyncStorage.setItem('devices', JSON.stringify(devices));
+                navigate("Menu")
+            }
         })
         .catch((err) => {
             this.setState({

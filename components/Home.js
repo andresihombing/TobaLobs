@@ -30,8 +30,8 @@ export default class Home extends React.Component {
         // this.props.navigation.navigate('KebutuhanTambak');
     }
 
-    componentDidMount() {
-        this.getData();                
+    componentDidMount = async () => {
+        this.getData();                                
     }    
 
     onRefresh() {
@@ -44,6 +44,7 @@ export default class Home extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
                 .then((res) => {                 
+                    console.log(res.data)
                     if (res.status == 'failed') {
                         alert('user anda telah expired')
                         AsyncStorage.clear();
@@ -81,23 +82,11 @@ export default class Home extends React.Component {
     listTambak = async () => {
         
         try{            
-            await AsyncStorage.getItem('user', (error, result) => {       
-                // console.warn(this.state.tambak)
-                // let tokenString = JSON.parse(result);                
-                let list = this.state.tambak;
-                
-                // Resource.postTambak(list, tokenString.token)
-                // .then((res) => {                                                        
-                //     console.warn(res)
-                    
+            await AsyncStorage.getItem('user', (error, result) => {                       
+                let list = this.state.tambak;                
                     this.props.navigation.navigate('Tambak', {
                         itemId : list,
-                        
-                    });
-                // })
-                // .catch((err) => {                    
-                //     console.log('Error:', error);
-                // })  
+                    });                
             });   
         } catch (error) {
             console.log('error')

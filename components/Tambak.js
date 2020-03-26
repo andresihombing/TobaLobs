@@ -24,14 +24,12 @@ export default class Tambak extends React.Component {
 
     componentDidMount() {
         // console.warn(this.props.itemId)
-        this.getData()
+        this.getData()        
     }   
 
     getData = async () => {
         const {params} = this.props.navigation.state;
-        const itemId = params ? params.itemId : null;        
-        // console.warn(itemId)        
-
+        const itemId = params ? params.itemId : null;                
 
         try{            
             await AsyncStorage.getItem('user', (error, result) => {       
@@ -42,7 +40,7 @@ export default class Tambak extends React.Component {
                 // console.warn(list)
                 Resource.postTambak(itemId, tokenString.token)
                 .then((res) => {                                                        
-                    console.warn(res)
+                    // console.warn(res)
                     this.setState({
                         namaTambak: res.data.namaTambak,
                         keterangan: res.data.keterangan,
@@ -51,7 +49,7 @@ export default class Tambak extends React.Component {
                         do: res.data.do,
                         waktuTanggal: res.data.waktuTanggal,
                         tambakId: itemId
-                    })                    
+                    })                                        
                 })
                 .catch((err) => {                    
                     console.log('Error:', error);
@@ -80,7 +78,7 @@ export default class Tambak extends React.Component {
                             }}
                         >
                             <Text style={styles.txtTambah}>Detail</Text>
-                        </TouchableOpacity>                    
+                        </TouchableOpacity>
                         
                     </View>
                     <View style={styles.tambakContainer}>  
@@ -95,6 +93,45 @@ export default class Tambak extends React.Component {
                             <Text>Do</Text>
                         </View>
                     </View>
+                    <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 7, marginTop: 10, marginBottom:20}}>
+                        <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
+                    </TouchableOpacity>
+                    <View style = {styles.notifContainer}>
+                        <Text style={styles.txtNotif}>Notifikasi</Text>
+                        <TouchableOpacity style = {styles.buttonLog}
+                        onPress = {() => {
+                            this.props.navigation.navigate('LogNotifikasi', {
+                                tambakId : this.state.tambakId
+                            })
+                        }}>
+                            <Text style={styles.txtTambah}>Log Notifikasi</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style = {styles.notif}>
+                        {/* <TouchableOpacity full style = {styles.notifikasi}>
+                            <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity full style = {styles.notifikasi}>
+                            <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
+                        </TouchableOpacity> */}
+                        <FlatList
+                            // style = {styles.notifikasi}
+                            data={[
+                                {key: 'Devin'},                                
+                            ]}
+                            renderItem={({item}) => 
+                            // <Text style={styles.notifikasi}>{item.key}</Text>
+                            <TouchableOpacity full style = {styles.notifikasi}
+                            onPress = {() => {
+                                this.props.navigation.navigate('DetailNotifikasi', {
+                                    tambakID : this.state.tambakId
+                                });
+                            }}>
+                                <Text style = {styles.txtTambah}>{item.key}</Text>
+                            </TouchableOpacity>
+                        }
+                        />
+                    </View>                    
                 </View>
                 </ScrollView>
             </View>
@@ -163,5 +200,44 @@ const styles = StyleSheet.create({
     textMonitoring: {        
         fontSize: 20,
         fontWeight: 'bold',                                
+    },
+    txtNotif: {        
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'white',
+        padding: 5,
+        width: '50%'
+    },
+    notifContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',        
+        borderBottomWidth: 1,
+        borderBottomColor: 'white',
+        backgroundColor: '#455867',       
+        padding: 5 
+    },
+    notif: {
+        flex: 1,
+        // flexDirection: 'row',
+        // flexWrap: 'wrap',
+        // alignItems: 'flex-start',                
+        borderBottomColor: 'white',
+        backgroundColor: '#455867',
+        padding: 5   
+    },
+    notifikasi: {
+        backgroundColor: 'white', 
+        paddingVertical: 7, 
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 5
+    },
+    buttonLog: {
+        backgroundColor: '#f7c744',
+        paddingVertical: 5,
+        alignItems: 'center',
+        width: '50%',        
     },
 });

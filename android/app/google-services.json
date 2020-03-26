@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "931315204931",
+    "firebase_url": "https://tobalobs.firebaseio.com",
+    "project_id": "tobalobs",
+    "storage_bucket": "tobalobs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931315204931:android:7c2f900e78deda215125f6",
+        "android_client_info": {
+          "package_name": "com.tobalobs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "931315204931-ugi41kee7a1f33l28tugq3rqdmvdaf6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApfbNFodwcdP7K93l5H_LUzemkFtpZcP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "931315204931-ugi41kee7a1f33l28tugq3rqdmvdaf6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

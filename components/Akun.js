@@ -10,14 +10,22 @@ import Icon from 'react-native-vector-icons/Ionicons';
  * Home screen
  */
 export default class Akun extends React.Component {        
-    
+    constructor(props){
+        super(props);
+
+        this.state = {
+            
+        }
+    }
+
     _signOutAsync = async () => {
         try {
+        let devices = await AsyncStorage.getItem('devices');        
         await AsyncStorage.getItem('user', (error, result) => {       
             let tokenString = JSON.parse(result);            
-            let body = '';
+            let body = '';              
 
-            Resource.logout(body, tokenString)
+            Resource.logout(body, tokenString, devices)
             .then((res) => {                
                 console.log(res)                
                 AsyncStorage.clear();

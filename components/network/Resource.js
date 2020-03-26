@@ -2,10 +2,11 @@ import Request from "./Request";
 import URI from "../config/Uri"
 
 class Resource {
-    async login(body){
+    async login(body, deviceID){
         const header = {                      
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',  
+            'deviceID' : deviceID
         }
     
         console.log(JSON.stringify(body))
@@ -40,9 +41,10 @@ class Resource {
         });
     }
 
-    async logout(body, headers){                
+    async logout(body, headers, deviceID){                
         const header = {                                  
-            'Authorization': headers.token
+            'Authorization': headers.token,
+            'deviceID' : deviceID
         }
     
         console.log(JSON.stringify(body))
@@ -113,14 +115,30 @@ class Resource {
       });
     }
 
-    async detailTambak(list, token){
-      // console.warn(token)
+    async detailTambak(list, token){      
       const header = {
         "Authorization": token,
         "Content-Type": "application/json",
       }
   
       let res = await Request.get(URI.API_BASE_URL + URI.DETAIL_TAMBAK + list, header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async getNotif(token, tambakId, type){      
+      const header = {
+        "Authorization": token,
+        "Content-Type": "application/json",
+      }
+  
+      let res = await Request.get(URI.API_BASE_URL + URI.NOTIF + tambakId + '/' + type, header);
       
       return new Promise((resolve, reject) => {
         try{

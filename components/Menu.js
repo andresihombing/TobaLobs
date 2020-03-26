@@ -19,6 +19,8 @@ import Tambak from './Tambak'
 import TambahTambak from './TambahTambak';
 import DetailTambak from './DetailTambak'
 import KebutuhanTambak from './KebutuhanTambak'
+import LogNotifikasi from './LogNotifikasi'
+import DetailNotifikasi from './DetailNotifikasi'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -39,6 +41,12 @@ const HomeStack = createStackNavigator({
   },
   KebutuhanTambak: {
     screen: KebutuhanTambak,
+  },
+  LogNotifikasi: {
+    screen: LogNotifikasi,
+  },
+  DetailNotifikasi: {
+    screen: DetailNotifikasi,
   }
 });
 
@@ -91,7 +99,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         ),        
         activeColor: '#ffffff',
         inactiveColor: '#ebaabd',
-        barStyle: { backgroundColor: '#d13560' },
+        barStyle: { backgroundColor: '#265011' },
       }
     },
   },
