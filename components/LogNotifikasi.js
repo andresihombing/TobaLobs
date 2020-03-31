@@ -38,7 +38,8 @@ export default class LogNotifikasi extends React.Component {
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
             Resource.getNotif(tokenString.token, tambakId, 'all-per-tambak')
-                .then((res) => {                                     
+                .then((res) => {                                 
+                    console.log(res)    
                     if(res.data.length != 0){
                         this.setState({
                             kosong : false,                            
@@ -94,10 +95,10 @@ export default class LogNotifikasi extends React.Component {
                             <TouchableOpacity full style = {styles.notifikasi}
                             onPress = {() => {
                                 this.detailNotif();                                
-                                this.setState({notifId :item.notifikasiID})                                                                      
+                                this.setState({notifId :item.ID})                                                                      
                             }}
                             >
-                                <Text style = {styles.txtTambah, {padding:5}}>{item.keterangan}</Text>
+                                <Text style = {styles.txtTambah, {padding:5}}>{item.Body}</Text>
                             </TouchableOpacity>                            
                             }
                         />

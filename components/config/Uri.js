@@ -1,7 +1,8 @@
 export default {
-    // API_BASE_URL: "http://10.42.0.84:8000/",
+    // API_BASE_URL: "http://10.42.0.84:8000",
     // API_BASE_URL: "http://192.168.43.139:8000/",
-    API_BASE_URL: "http://192.168.137.160:8000",
+    // API_BASE_URL: "http://192.168.137.160:8000",
+    API_BASE_URL: "http://66.70.190.240:8001",
 
     LOGIN: '/api/user/login',
     REGISTER: '/api/user/register',

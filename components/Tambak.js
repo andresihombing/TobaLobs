@@ -166,10 +166,10 @@ export default class Tambak extends React.Component {
                             <TouchableOpacity full style = {styles.notifikasi}
                             onPress = {() => {
                                 this.detailNotif();                                
-                                this.setState({notifId :item.notifikasiID})                                                                      
+                                this.setState({notifId :item.ID})                                                                      
                             }}
                             >
-                                <Text style = {styles.txtTambah, {padding:5}}>{item.keterangan}</Text>
+                                <Text style = {styles.txtTambah, {padding:5}}>{item.Body}</Text>
                             </TouchableOpacity>                            
                             }
                         />

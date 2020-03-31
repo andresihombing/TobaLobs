@@ -13,7 +13,7 @@ export default class DetailNotifikasi extends React.Component {
         this.state = {
             aksiPenyimpangan : '',
             keterangan : '',
-            kondisi : '',
+            kondisiPenyimpangan : '',
             namaTambak : '',
             waktuTanggal : ''
         }
@@ -35,14 +35,24 @@ export default class DetailNotifikasi extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.detailNotif(tokenString.token, notifId)
                 .then((res) => {             
-                    console.log(res.data.aksiPenyimpangan)       
-                    this.setState({
-                        aksiPenyimpangan : res.data.aksiPenyimpangan,
-                        keterangan : res.data.keterangan,
-                        kondisi : res.data.kondisi,
-                        namaTambak : res.data.namaTambak,
-                        waktuTanggal : res.data.waktuTanggal
-                    })
+                    // console.log(res)
+                    if (res.data.tipeNotifikasi == 'notif-pool-condition') {
+                        this.setState({
+                            aksiPenyimpangan : res.data.aksiPenyimpangan,
+                            keterangan : res.data.keterangan,
+                            kondisiPenyimpangan : res.data.kondisiPenyimpangan,
+                            namaTambak : res.data.namaTambak,
+                            waktuTanggal : res.data.waktuTanggal
+                        })
+                    }else{
+                        this.setState({
+                            aksiPenyimpangan : res.data.aksiGuideline,
+                            keterangan : res.data.keterangan,
+                            kondisiPenyimpangan : res.data.kondisiGuideline,
+                            namaTambak : res.data.namaTambak,
+                            waktuTanggal : res.data.waktuTanggal
+                        })
+                    }               
                 })
                 .catch((err) => {                                          
                     console.log(err)
@@ -65,7 +75,7 @@ export default class DetailNotifikasi extends React.Component {
                         </View>
                         <View style={styles.rowContainer}>
                             <Text style={styles.label}>Kondisi :</Text>
-                            <Text style = {styles.input}> {this.state.kondisi}</Text>
+                            <Text style = {styles.input}> {this.state.kondisiPenyimpangan}</Text>
                         </View>
                         <View style={styles.rowContainer}>
                             <Text style={styles.label}>Keterangan :</Text>

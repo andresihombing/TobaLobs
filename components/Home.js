@@ -6,6 +6,7 @@ import {
 import Resource from './network/Resource'
 import Tambak from './Tambak'
 import IconBadge from 'react-native-icon-badge';
+import { set } from 'react-native-reanimated';
 
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,6 +24,7 @@ export default class Home extends React.Component {
             enableButton: false,
             disableButton: true,
             isFetching: true,
+            totalNotif : ''
         }          
     }   
 
@@ -45,7 +47,10 @@ export default class Home extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
                 .then((res) => {                 
-                    console.log(res.data)
+                    // console.log(res.data.totalNotif)
+                    this.setState({
+                        totalNotif : res.data.totalNotif
+                    })                    
                     if (res.status == 'failed') {
                         alert('user anda telah expired')
                         AsyncStorage.clear();
@@ -64,7 +69,7 @@ export default class Home extends React.Component {
                         })
                     }
                     
-                    this.setState({isFetching: false, list_tambak: res.data })                                       
+                    this.setState({isFetching: false, list_tambak: res.data.data })
                 })
                 .catch((err) => {                                                                            
                     this.setState({
@@ -126,7 +131,7 @@ export default class Home extends React.Component {
                                 }}/>
                             }
                             BadgeElement={
-                                <Text style={{color:'#FFFFFF'}}>2</Text>
+                                <Text style={{color:'#FFFFFF'}}>{this.state.totalNotif}</Text>
                             }
                             IconBadgeStyle={{
                                 width:15,
