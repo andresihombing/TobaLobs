@@ -100,48 +100,93 @@ export default class Register extends Component {
         }
     }
 
-    val(){
+    submitReg(){
         const { namaTambak, panjang, lebar, jenisBudidaya, usiaLobster} = this.state
         if ((namaTambak == "")) {
             this.setState({
                 errorForm: true,
                 errorNama: true,                
-            })            
+            })
+            this.props.navigation.navigate('TambahTambak')
+        }else {
+            this.props.navigation.navigate('KebutuhanTambak', {
+                namaTambak : this.state.namaTambak,
+                panjang : this.state.panjang,
+                lebar : this.state.lebar,
+                jenisBudidaya : this.state.jenisBudidaya,
+                usiaLobster : this.state.usiaLobster
+            })
         }
         if(panjang == ""){
             this.setState({
                 errorForm: true,                
                 errorPanjang: true,
             })            
+            this.props.navigation.navigate('TambahTambak')
+        }else {
+            this.props.navigation.navigate('KebutuhanTambak', {
+                namaTambak : this.state.namaTambak,
+                panjang : this.state.panjang,
+                lebar : this.state.lebar,
+                jenisBudidaya : this.state.jenisBudidaya,
+                usiaLobster : this.state.usiaLobster
+            })
         }
         if(lebar == ""){
             this.setState({
                 errorForm: true,                
                 errorLebar: true,
             })            
+            this.props.navigation.navigate('TambahTambak')
+        }else {
+            this.props.navigation.navigate('KebutuhanTambak', {
+                namaTambak : this.state.namaTambak,
+                panjang : this.state.panjang,
+                lebar : this.state.lebar,
+                jenisBudidaya : this.state.jenisBudidaya,
+                usiaLobster : this.state.usiaLobster
+            })
         }      
         if(jenisBudidaya == ""){
             this.setState({
                 errorForm: true,                
                 errorJenis: true,
             })            
+            this.props.navigation.navigate('TambahTambak')
+        }else {
+            this.props.navigation.navigate('KebutuhanTambak', {
+                namaTambak : this.state.namaTambak,
+                panjang : this.state.panjang,
+                lebar : this.state.lebar,
+                jenisBudidaya : this.state.jenisBudidaya,
+                usiaLobster : this.state.usiaLobster
+            })
         }
         if(usiaLobster == ""){
             this.setState({
                 errorForm: true,                
                 errorUsia: true,
             })            
+            this.props.navigation.navigate('TambahTambak')
+        }else {
+            this.props.navigation.navigate('KebutuhanTambak', {
+                namaTambak : this.state.namaTambak,
+                panjang : this.state.panjang,
+                lebar : this.state.lebar,
+                jenisBudidaya : this.state.jenisBudidaya,
+                usiaLobster : this.state.usiaLobster
+            })
         }
     }
 
-    submitReg = async () => {
-        this.props.navigation.navigate('KebutuhanTambak', {
-            namaTambak : this.state.namaTambak,
-            panjang : this.state.panjang,
-            lebar : this.state.lebar,
-            jenisBudidaya : this.state.jenisBudidaya,
-            usiaLobster : this.state.usiaLobster
-        });
+    // submitReg = async () => {
+    //     this.props.navigation.navigate('KebutuhanTambak', {
+    //         namaTambak : this.state.namaTambak,
+    //         panjang : this.state.panjang,
+    //         lebar : this.state.lebar,
+    //         jenisBudidaya : this.state.jenisBudidaya,
+    //         usiaLobster : this.state.usiaLobster
+    //     });
         // console.warn(this.state.namaTambak)
         // this.val();          
         // const { navigate } = this.props.navigation;
@@ -187,7 +232,7 @@ export default class Register extends Component {
         //     console.log('error')
         //     console.log('AsyncStorage error: ' + error.message);
         // }            
-    }    
+    // }    
 
     render() {       
 
@@ -279,7 +324,7 @@ export default class Register extends Component {
                              
                             <TouchableOpacity style = {styles.buttonContainer}
                                 onPress={() => this.submitReg()}>
-                                <Text style = {styles.buttonText}>Register</Text>
+                                <Text style = {styles.buttonText}>Tambah</Text>
                             </TouchableOpacity>                                                                  
                         </View>
                         

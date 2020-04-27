@@ -167,9 +167,9 @@ export default class Register extends Component {
         Resource.register(formdata)
         .then((res) => {                
             console.log(res.responseJson.data)
-            const token = res.responseJson.data;
-            AsyncStorage.setItem('user', JSON.stringify(token));                        
-            navigate("Menu")
+            // const token = res.responseJson.data;
+            // AsyncStorage.setItem('user', JSON.stringify(token));                        
+            navigate("SignIn")
         })
         .catch((err) => {            
             this.setState({
@@ -273,19 +273,20 @@ export default class Register extends Component {
                                     cancelBtnText="Cancel"                                
                                     // iconSource={require("../assets/images/calendar.png")}
                                     customStyles={{
-                                        dateIcon: {
-                                        position: 'absolute',
-                                        left: 0,
-                                        top: 5,
-                                        marginLeft: 0,
-                                        height: 30,
-                                        width: 28
+                                        dateInput: { 
+                                          borderWidth: 0,
+                                        //   borderBottomWidth: 2
                                         },
-                                        dateInput: {
-                                            marginLeft: -9,
-                                            marginRight: -9
+                                        placeholderText: {
+                                          fontSize: 15,
+                                          color: "#C7C7C7"
+                                        },
+                                        dateText: {
+                                          fontSize: 15,
+                                          color: "white",
+                                          textAlign: "left"
                                         }
-                                    }}                                    
+                                      }}            
                                     onDateChange={(date) => { 
                                         this.validate(date, 'tgl')
                                         this.setState({ tanggalLahir: date }) 

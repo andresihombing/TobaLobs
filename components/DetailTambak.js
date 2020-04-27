@@ -23,7 +23,8 @@ export default class DetailTambak extends React.Component {
           jumlahLobster: '',
           usiaLobster: '',
           jantan: '',
-          betina: ''
+          betina: '',
+          tambakId: ''
         }       
       }
 
@@ -33,6 +34,15 @@ export default class DetailTambak extends React.Component {
     
     componentDidMount() {        
         this.Detail()
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.Detail()
+        });
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
     }
 
     Detail = async () => {
@@ -48,9 +58,10 @@ export default class DetailTambak extends React.Component {
                 // console.warn(this.props.coba)
                 // console.warn(list)
                 Resource.detailTambak(tambakId, tokenString.token)
-                .then((res) => {                                                        
-                    // console.log(res)
+                .then((res) => {     
+                    // console.warn(res)                                                                       
                     this.setState({
+                        tambakId: res.data.tambakID,
                         namaTambak: res.data.namaTambak,
                         panjang: res.data.panjang,                        
                         lebar: res.data.lebar,
@@ -70,7 +81,7 @@ export default class DetailTambak extends React.Component {
             console.log('AsyncStorage error: ' + error.message);
         }
     }
-
+        
     render() {                
         const state = this.state; 
         return (                        
@@ -79,7 +90,17 @@ export default class DetailTambak extends React.Component {
                 <View style = {styles.infoContainer}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.textTittle}>{this.state.namaTambak}</Text>                                        
-                        <TouchableOpacity style = {styles.buttonContainer}>
+                        <TouchableOpacity style = {styles.buttonContainer}
+                        onPress = {() => {
+                            this.props.navigation.navigate('EditTambak', {
+                                tambakId : this.state.tambakId,
+                                namaTambak : this.state.namaTambak,
+                                panjang : this.state.panjang,
+                                lebar : this.state.lebar,
+                                jenisBudidaya : this.state.jenisBudidaya,
+                                usiaLobster : this.state.usiaLobster
+                            })                            
+                        }}>
                             <Text style={styles.txtTambah}>Edit</Text>
                         </TouchableOpacity>                                                             
                     </View>                    
@@ -99,14 +120,27 @@ export default class DetailTambak extends React.Component {
                     </View>      
 
                     <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jumlah Lobster Pada Tambak</Text>
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Lobster Betina :</Text>
-                        <Text style = {styles.input}>{this.state.jantan} ekor</Text>
-                    </View>      
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Lobster Jantan :</Text>
-                        <Text style = {styles.input}>{this.state.jantan} ekor</Text>
-                    </View>      
+                    <View>{
+                        this.state.jenisBudidaya == 'pembenihan' ?
+                        <View>
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.label}>Lobster Betina :</Text>
+                                <Text style = {styles.input}>{this.state.betina} ekor</Text>
+                            </View>      
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.label}>Lobster Jantan :</Text>
+                                <Text style = {styles.input}>{this.state.jantan} ekor</Text>
+                            </View>
+                        </View> : 
+                        <View>
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.label}>Jumlah Lobster :</Text>
+                                <Text style = {styles.input}>{this.state.jumlahLobster} ekor</Text>
+                            </View>
+                        </View>
+                        }
+                    </View>
+                    
                     <View style={styles.rowContainer}>
                         <Text style={styles.label}>Shelter :</Text>
                         <Text style = {styles.input}>{this.state.jumlahLobster} buah</Text>

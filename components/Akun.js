@@ -20,12 +20,14 @@ export default class Akun extends React.Component {
 
     _signOutAsync = async () => {
         try {
-        let devices = await AsyncStorage.getItem('devices');        
+        let devices = await AsyncStorage.getItem('devices');
+        let dev = JSON.parse(devices);
+        // console.warn(dev)
         await AsyncStorage.getItem('user', (error, result) => {       
             let tokenString = JSON.parse(result);            
             let body = '';              
 
-            Resource.logout(body, tokenString, devices)
+            Resource.logout(body, tokenString, dev)
             .then((res) => {                
                 console.log(res)                
                 AsyncStorage.clear();
@@ -67,15 +69,20 @@ export default class Akun extends React.Component {
                     <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Pengaturan</Text>                    
                 </View>
                 <View style={styles.pengaturan}>
-                    <Text style = {styles.garis}><Icon size={25} name={'md-help-circle'} /> Panduan Aplikasi</Text>
+                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('PanduanAplikasi')}>
+                        <Text style = {styles.garis}><Icon size={25} name={'md-help-circle'} /> Panduan Aplikasi</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.pengaturan}>
-                    <Text style = {styles.garis}><Icon size={25} name={'md-information-circle'} /> Tentang Tobalobs</Text>
+                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('TentangTobalobs')}>
+                        <Text style = {styles.garis}><Icon size={25} name={'md-information-circle'} /> Tentang Tobalobs</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.pengaturan}>
-                    <Text style = {styles.garis}
-                        onPress = {() => this._signOutAsync()}
-                    > <Icon size={25} name={'md-log-out'} /> Keluar</Text>
+                    <TouchableOpacity onPress = {() => this._signOutAsync()}>
+                        <Text style = {styles.garis}> 
+                        <Icon size={25} name={'md-log-out'} /> Keluar</Text>
+                    </TouchableOpacity>
                 </View>            
                 <View>            
           </View>
@@ -88,13 +95,13 @@ export default class Akun extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
-        flexDirection: 'column',
+        backgroundColor: "#192338",    
+        position: "relative"
     },
     infoContainer: {        
         left: 0,        
         right: 0,        
-        padding: 15,                
+        // padding: 15,                
     },
     buttonContainer: {        
         backgroundColor: '#f7c744',
@@ -108,7 +115,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignItems: 'flex-start',                        
+        alignItems: 'flex-start',     
+        padding : 15                   
     },
     garis : {
         marginBottom: 10,
@@ -120,8 +128,9 @@ const styles = StyleSheet.create({
     }, 
     contentContainer: {
         marginTop: 25,                
-        borderBottomColor: 'blue',       
-        borderBottomWidth: 2,          
+        borderBottomColor: 'rgba(255,255,255,0.5)',       
+        borderBottomWidth: 1,     
+        paddingLeft : 15
     },
     text : {
         fontSize: 18,
@@ -131,7 +140,8 @@ const styles = StyleSheet.create({
     },
     pengaturan : {
         marginTop: 10,                
-        borderBottomColor: 'blue',       
-        borderBottomWidth: 2,         
+        borderBottomColor: 'rgba(255,255,255,0.5)',       
+        borderBottomWidth: 1,   
+        paddingLeft : 15              
     },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
     StyleSheet, View, Text, AsyncStorage, RefreshControl,
-    TouchableOpacity, ScrollView, FlatList
+    TouchableOpacity, ScrollView, FlatList, Image
 } from 'react-native';
 import Resource from './network/Resource'
 import Tambak from './Tambak'
@@ -24,7 +24,7 @@ export default class Home extends React.Component {
             enableButton: false,
             disableButton: true,
             isFetching: true,
-            totalNotif : ''
+            totalNotif : '',            
         }          
     }   
 
@@ -34,8 +34,17 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = async () => {
-        this.getData();                    
+        this.getData();               
+        const { navigation } = this.props;        
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.getData();
+        });
     }    
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
 
     onRefresh() {
         this.setState({ isFetching: true }, function() { this.getData() });
@@ -46,7 +55,7 @@ export default class Home extends React.Component {
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
-                .then((res) => {                 
+                .then((res) => {        
                     // console.log(res.data.totalNotif)
                     this.setState({
                         totalNotif : res.data.totalNotif
@@ -56,8 +65,9 @@ export default class Home extends React.Component {
                         AsyncStorage.clear();
                         this.props.navigation.navigate('Auth');
                     }
-
-                    if(res.data.length != 0){
+                     
+                    console.log(res.data.data.length)
+                    if(res.data.data.length > 0){                        
                         this.setState({
                             enableButton : true,
                             disableButton : false
@@ -126,9 +136,13 @@ export default class Home extends React.Component {
                                 <View style={{
                                     backgroundColor:'#489EFE',
                                     width:20,
-                                    height:20,
+                                    height:23,
                                     margin:10
-                                }}/>
+                                }}>
+                                    <Image 
+                                    style = {{paddingRight:9}}
+                                    source = {require('./assets/icons/notif.png')} />
+                                </View>
                             }
                             BadgeElement={
                                 <Text style={{color:'#FFFFFF'}}>{this.state.totalNotif}</Text>

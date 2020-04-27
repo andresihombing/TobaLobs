@@ -22,6 +22,11 @@ import KebutuhanTambak from './KebutuhanTambak'
 import LogNotifikasi from './LogNotifikasi'
 import DetailNotifikasi from './DetailNotifikasi'
 import AllNotifikasi from './AllNotifikasi'
+import TentangTobalobs from './TentangTobalobs'
+import PanduanAplikasi from './PanduanAplikasi'
+import Report from './Report'
+import EditTambak from './EditTambak'
+import KebutuhanEditTambak from './KebutuhanEditTambak'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -51,6 +56,15 @@ const HomeStack = createStackNavigator({
   },
   AllNotifikasi: {
     screen: AllNotifikasi,
+  },
+  Report: {
+    screen: Report
+  },
+  EditTambak: {
+    screen: EditTambak
+  },
+  KebutuhanEditTambak: {
+    screen: KebutuhanEditTambak
   }
 });
 
@@ -63,6 +77,12 @@ const InfoStack = createStackNavigator({
 const AkunStack = createStackNavigator({ 
   Akun: {
     screen: Akun,        
+  },
+  TentangTobalobs: {
+    screen: TentangTobalobs,        
+  },
+  PanduanAplikasi: {
+    screen: PanduanAplikasi,        
   }
 });
 

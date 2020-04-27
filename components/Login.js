@@ -38,7 +38,7 @@ export default class Login extends Component {
         PushNotification.configure({
             // (optional) Called when Token is generated (iOS and Android)
             onRegister: function(token) {
-              console.log("TOKEN:", token);
+            //   console.warn("TOKEN:", token);
                 that.setState({
                     tokenNotif : token
                 })                              
@@ -107,6 +107,7 @@ export default class Login extends Component {
         const { navigate } = this.props.navigation;
         let deviceID = this.state.tokenNotif
         let devices = deviceID.token
+        // console.warn(devices)
         let body = new FormData();
         body.append('username', this.state.username);
         body.append('password', this.state.password);

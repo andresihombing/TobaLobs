@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-    StyleSheet, View, Text, AsyncStorage,
+    StyleSheet, View, Text, AsyncStorage, RefreshControl,
     TouchableOpacity, ScrollView, FlatList
 } from 'react-native';
 import Resource from './network/Resource'
@@ -18,7 +18,8 @@ export default class Tambak extends React.Component {
             do: '',
             waktuTanggal: '',
             tambakId : '',
-            kosong: false
+            kosong: false,
+            isFetching: true,
         }
     }
     
@@ -26,7 +27,21 @@ export default class Tambak extends React.Component {
     componentDidMount() {        
         this.getData()
         this.getDataNotif()
-    }   
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.getData();
+            this.getDataNotif()
+        });
+    }       
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
+
+    onRefresh() {
+        this.setState({ isFetching: true }, function() { this.getData() });
+     }
 
     getData = async () => {
         const {params} = this.props.navigation.state;
@@ -41,16 +56,23 @@ export default class Tambak extends React.Component {
                 // console.warn(this.props.coba)
                 // console.warn(list)
                 Resource.postTambak(itemId, tokenString.token)
-                .then((res) => {                                                        
-                    // console.warn(res)
+                .then((res) => {                             
+                    console.warn(res)                          
+                    var ph = res.data.ph
+                    var suhu = res.data.suhu
+                    var Do = res.data.do
+                    ph = ph.toFixed(1);
+                    suhu = suhu.toFixed(1);
+                    Do = Do.toFixed(1);
                     this.setState({
                         namaTambak: res.data.namaTambak,
                         keterangan: res.data.keterangan,
-                        ph: res.data.ph,
-                        suhu: res.data.suhu,
-                        do: res.data.do,
+                        ph: ph,
+                        suhu: suhu,
+                        do: Do,
                         waktuTanggal: res.data.waktuTanggal,
-                        tambakId: itemId
+                        tambakId: itemId,
+                        isFetching: false,
                     })                    
                 })
                 .catch((err) => {                    
@@ -116,7 +138,14 @@ export default class Tambak extends React.Component {
 
         return (                        
             <View style={styles.container}>
-                <ScrollView>                
+                <ScrollView
+                refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.isFetching}  
+                      onRefresh={() => this.onRefresh()}                    
+                      tintColor="red"
+                    />
+                  }>
                 <View style = {styles.infoContainer}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.textTittle}>{this.state.namaTambak}</Text>
@@ -144,7 +173,12 @@ export default class Tambak extends React.Component {
                             <Text>Do</Text>
                         </View>
                     </View>
-                    <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 7, marginTop: 10, marginBottom:20}}>
+                    <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 7, marginTop: 10, marginBottom:20}}
+                        onPress = {() => {
+                            this.props.navigation.navigate('Report', {
+                                tambakId : this.state.tambakId
+                            })                            
+                        }}>
                         <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
                     </TouchableOpacity>
                     <View style = {styles.notifContainer}>
@@ -166,7 +200,7 @@ export default class Tambak extends React.Component {
                             <TouchableOpacity full style = {styles.notifikasi}
                             onPress = {() => {
                                 this.detailNotif();                                
-                                this.setState({notifId :item.ID})                                                                      
+                                this.setState({notifId :item.ID})                                                               
                             }}
                             >
                                 <Text style = {styles.txtTambah, {padding:5}}>{item.Body}</Text>

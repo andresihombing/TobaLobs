@@ -165,6 +165,79 @@ class Resource {
         }
       });
     }
+
+    async information(token){      
+      const header = {
+        "Authorization": token,
+        "Content-Type": "application/json",
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.INFO , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async panduan(token){      
+      const header = {
+        "Authorization": token,
+        "Content-Type": "application/json",
+      }
+  
+      let res = await Request.get(URI.API_BASE_URL + URI.PANDUAN , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }    
+
+    async monitor(token, id, tanggal){      
+      const header = {
+        'Accept': 'application/json',
+        "Authorization": token,
+        'Content-Type': 'multipart/form-data',
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.MONITOR + id + '/' + tanggal, header);     
+      // console.warn(URI.API_BASE_URL + URI.MONITOR + id + '/' + tanggal)   
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_tambak(body, headers, id){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDIT_TAMBAK + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

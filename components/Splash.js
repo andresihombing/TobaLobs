@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
-    View
+    View,
+    Image
 } from 'react-native';
 
 export default class Splash extends Component {
@@ -17,7 +18,9 @@ export default class Splash extends Component {
     render() {
         return (
             <View style = {styles.container}>
-                <Text style = {styles.title}>Horas Portibi</Text>
+                {/* <Text style = {styles.title}> */}                
+                <Image source = {require('./assets/icons/logo.png')} />
+                {/* </Text> */}
             </View>
         )
     }
@@ -25,7 +28,7 @@ export default class Splash extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'green',
+        backgroundColor: '#A1A3AA',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',

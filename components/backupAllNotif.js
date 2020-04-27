@@ -4,9 +4,9 @@ import {
     TouchableOpacity, ScrollView, FlatList,
     RefreshControl
 } from 'react-native';
-import Resource from './network/Resource'
+    import Resource from './network/Resource'
 
-export default class AllNotifikasi extends React.Component {   
+export default class AllNotifikasi extends React.Component {
     constructor(props) {
         super(props);
 

@@ -80,25 +80,17 @@ export default class DetailTambak extends React.Component {
                 let tokenString = JSON.parse(result);                                
                 Resource.tambah_tambak(formdata, tokenString)
                 .then((res) => {                                                        
-                    let id = res.responseJson.data
-                    console.warn(res.responseJson.data)                    
+                    let id = res.responseJson.data                    
                     if (res.responseJson.status == 'failed') {
                         alert('user anda telah expired')
                         AsyncStorage.clear();
                         this.props.navigation.navigate('Auth');
-                    }
-                    
-                    // Resource.postTambak(id, tokenString.token)
-                    // .then((respon) => {                                                        
-                    //     console.warn(respon)                                       
-                    // })
-                    // .catch((err) => {                    
-                    //     console.log('Error:', error);
-                    // })  
+                    }                                        
 
-                    this.props.navigation.navigate('Tambak', {
-                        itemId : id
-                    });                    
+                    // this.props.navigation.navigate('Tambak', {
+                    //     itemId : id
+                    // });
+                    this.props.navigation.navigate('Home');    
                 })
                 .catch((err) => {
                     this.setState({
@@ -150,15 +142,7 @@ export default class DetailTambak extends React.Component {
 
                     <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jumlah Lobster dan Shelter</Text>
                     {this.jenis()}
-                    {this.jantan()}
-                    {/* <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Benih Betina :</Text>
-                        <Text style = {styles.input}/>
-                    </View>       */}
-                    {/* <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Benih Jantan :</Text>
-                        <Text style = {styles.input}/>
-                    </View>       */}
+                    {this.jantan()}                    
                     <View style={styles.rowContainer}>
                         <Text style={styles.label}>Shelter :</Text>
                     <Text style = {styles.input}>{this.state.shelter} buah</Text>
