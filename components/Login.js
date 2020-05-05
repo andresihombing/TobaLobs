@@ -33,6 +33,16 @@ export default class Login extends Component {
         }
     }
 
+    handleNotification(notification){
+        //your logic here,
+        console.warn(notification);
+    
+        let isBackground = notification.foreground;
+        if(isBackground == true){
+          this.props.navigation.navigate('Register');
+        }
+    };
+
     componentDidMount = async () => {
         const that = this
         PushNotification.configure({
@@ -45,7 +55,8 @@ export default class Login extends Component {
             },
             
             onNotification: function(notification) {
-                console.log("NOTIFICATION:", notification);          
+                console.warn("NOTIFICATION:", notification);          
+                that.handleNotification(notification);  
             },
             // Android only
             senderID: "931315204931",

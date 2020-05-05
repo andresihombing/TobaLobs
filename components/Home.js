@@ -7,6 +7,7 @@ import Resource from './network/Resource'
 import Tambak from './Tambak'
 import IconBadge from 'react-native-icon-badge';
 import { set } from 'react-native-reanimated';
+import PushNotification from "react-native-push-notification";
 
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,12 +35,56 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = async () => {
+        this.notif();
         this.getData();               
         const { navigation } = this.props;        
         this.focusListener = navigation.addListener('didFocus', () => {      
             this.getData();
         });
     }    
+
+    handleNotification(notification){
+        //your logic here,
+        console.warn(notification);
+    
+        let isBackground = notification.foreground;
+        let id = notification.ID;
+        console.warn(id)
+        if(isBackground != true){
+        //   this.props.navigation.navigate('AllNotifikasi');
+          this.props.navigation.navigate('DetailNotifikasi', {
+            notifId : id,
+        });
+        }
+    };
+
+    notif = async () => {        
+        const that = this
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+            onRegister: function(token) {
+            //   console.warn("TOKEN:", token);
+                that.setState({
+                    tokenNotif : token
+                })                              
+            },
+            
+            onNotification: function(notification) {
+                // console.warn("NOTIFICATION:", notification);          
+                that.handleNotification(notification);  
+            },
+            // Android only
+            senderID: "931315204931",
+            // iOS only
+            permissions: {
+                alert: true,
+                badge: true,
+                sound: true
+            },
+            popInitialNotification: true,
+            requestPermissions: true
+        });
+    }
 
     componentWillUnmount() {
         // Remove the event listener before removing the screen from the stack
@@ -56,7 +101,7 @@ export default class Home extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
                 .then((res) => {        
-                    // console.log(res.data.totalNotif)
+                    console.log(res.data)
                     this.setState({
                         totalNotif : res.data.totalNotif
                     })                    
