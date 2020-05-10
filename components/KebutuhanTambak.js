@@ -6,12 +6,13 @@ import {
 import { Table, Row, Rows } from 'react-native-table-component';
 import CheckBox from 'react-native-check-box'
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n';
 
 export default class DetailTambak extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          tableHead: ['Waktu', 'Takaran', 'Makanan'],
+            tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.takaran'), I18n.t('hompage.makanan')],
           tableData: [
             ['08.00 WIB', '... gram', 'Pelet halus'],
             ['11.00 WIB', '... gram', 'Pelet halus'],
@@ -31,13 +32,22 @@ export default class DetailTambak extends React.Component {
         }
       }
 
-    static navigationOptions = {        
-        title: 'Kebutuhan Tambak '
-    };
+    static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.labelkebutuhan'),            
+    })
 
     componentDidMount() {        
         this.kebutuhanTambak()
-    }   
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.kebutuhanTambak()
+        });
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
 
     kebutuhanTambak = async () => {                
         const {params} = this.props.navigation.state;
@@ -108,13 +118,13 @@ export default class DetailTambak extends React.Component {
     jenis(){
         if (this.state.jenisBudidaya == 'pembesaran') {
             return <View style={styles.rowContainer}>
-                <Text style={styles.label}>Jumlah Lobster :</Text>
-                <Text style = {styles.input}>{this.state.jumlah} ekor</Text>
+                <Text style={styles.label}>{I18n.t('hompage.jumlahlobster')} :</Text>
+                <Text style = {styles.input}>{this.state.jumlah} {I18n.t('hompage.ekor')}</Text>
             </View>  
         }else{
             return <View style={styles.rowContainer}>
-                <Text style={styles.label}>Benih Betina :</Text>
-        <Text style = {styles.input}>{this.state.betina} ekor</Text>
+                <Text style={styles.label}>{I18n.t('hompage.jumlahbetina')} :</Text>
+        <Text style = {styles.input}>{this.state.betina} {I18n.t('hompage.ekor')}</Text>
             </View>                   
         }        
     }
@@ -122,8 +132,8 @@ export default class DetailTambak extends React.Component {
     jantan(){
         if (this.state.jenisBudidaya == 'pembenihan') {
             return <View style={styles.rowContainer}>
-                <Text style={styles.label}>Benih Jantan :</Text>                
-        <Text style = {styles.input}>{this.state.jantan} ekor</Text>
+                <Text style={styles.label}>{I18n.t('hompage.jumlahjantan')} :</Text>                
+        <Text style = {styles.input}>{this.state.jantan} {I18n.t('hompage.ekor')}</Text>
             </View>  
         }
     }
@@ -140,22 +150,22 @@ export default class DetailTambak extends React.Component {
                         <Text style={styles.textTittle}>{this.state.namaTambak}</Text>                                                                                                                        
                     </View>                    
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jumlah Lobster dan Shelter</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.juduljumlah')}</Text>
                     {this.jenis()}
                     {this.jantan()}                    
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Shelter :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.shelter')} :</Text>
                     <Text style = {styles.input}>{this.state.shelter} buah</Text>
                     </View>       
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jadwal Pemberian Pakan</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.juduljadwal')}</Text>
                     <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                         <Row data={state.tableHead} style={styles.head} textStyle={styles.textHead}/>
                         <Rows data={state.tableData} textStyle={styles.text}/>
                     </Table>
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Perhatian !</Text>
-                    <Text style={styles.textWarning}>Pastikan setiap kebutuhan yang tertera diatas sudah terpenuhi. Hal ini untuk melancarkan panduan tahapan budi daya pada aplikasi.</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.perhatian')}</Text>
+                    <Text style={styles.textWarning}>{I18n.t('hompage.warning')}</Text>
                     
                     <View style={styles.rowContainer}>                    
                         <CheckBox
@@ -169,9 +179,9 @@ export default class DetailTambak extends React.Component {
                             isChecked={this.state.isChecked}
                             // rightText={"CheckBox"}                    
                         />
-                        <Text style = {styles.check}>Kebutuhan Sudah Terpenuhi</Text>                        
+                        <Text style = {styles.check}>{I18n.t('hompage.terpenuhi')}</Text>                        
                     </View>
-                    <Text style={{ display: this.state.errorCheck ? "flex" : "none", color: 'red', fontSize: 10, marginTop: -30, paddingBottom: 30, paddingLeft: 30}}>centang jika semua telah terpenuhi</Text>
+                    <Text style={{ display: this.state.errorCheck ? "flex" : "none", color: 'red', fontSize: 10, marginTop: -30, paddingBottom: 30, paddingLeft: 30}}>{I18n.t('hompage.centang')}</Text>
                     
                     
                     <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "flex" : "none"}}
@@ -179,7 +189,7 @@ export default class DetailTambak extends React.Component {
                                 this.createTambak();
                             }}
                         >
-                        <Text style={styles.txtTambah}>Mulai Budidaya</Text>
+                        <Text style={styles.txtTambah}>{I18n.t('hompage.mulai')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "none" : "flex"}}
                             onPress = {() => {
@@ -188,10 +198,10 @@ export default class DetailTambak extends React.Component {
                                 })
                             }}
                         >
-                        <Text style={styles.txtTambah}>Mulai Budidaya</Text>
+                        <Text style={styles.txtTambah}>{I18n.t('hompage.mulai')}</Text>
                     </TouchableOpacity>
 
-                    <Text style={styles.note}>Note: Jika kebutuhan belum tersedia, silahkan kembali atau tekan 
+                    <Text style={styles.note}>Note: {I18n.t('hompage.note')}
                         <Text>  </Text>                        
                             <Text style={{color: '#f7c744'}} onPress={() => this.props.navigation.navigate('Home')}>
                                 Cancel

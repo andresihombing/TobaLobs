@@ -8,6 +8,7 @@ import Tambak from './Tambak'
 import IconBadge from 'react-native-icon-badge';
 import { set } from 'react-native-reanimated';
 import PushNotification from "react-native-push-notification";
+import I18n from '../i18n/i18n';
 
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -101,12 +102,11 @@ export default class Home extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
                 .then((res) => {        
-                    console.log(res.data)
-                    this.setState({
-                        totalNotif : res.data.totalNotif
-                    })                    
-                    if (res.status == 'failed') {
-                        alert('user anda telah expired')
+                    // console.warn(tokenString)
+                    // this.setState({
+                    //     totalNotif : res.data.totalNotif
+                    // })                    
+                    if (res.status == 'failed') {                        
                         AsyncStorage.clear();
                         this.props.navigation.navigate('Auth');
                     }
@@ -124,7 +124,7 @@ export default class Home extends React.Component {
                         })
                     }
                     
-                    this.setState({isFetching: false, list_tambak: res.data.data })
+                    this.setState({isFetching: false, list_tambak: res.data.data, totalNotif : res.data.totalNotif })
                 })
                 .catch((err) => {                                                                            
                     this.setState({
@@ -202,11 +202,11 @@ export default class Home extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style = {styles.infoContainer}>                                        
-                    <Text style={styles.textTittle}>Selamat Datang Di TobaLobs</Text>                    
+                    <Text style={styles.textTittle}>{I18n.t('hompage.welcome')}</Text>                    
 
                     <TouchableOpacity style = {styles.buttonContainer}
                         onPress={() => this.goToCreate()}>
-                        <Text style={styles.txtTambah}>Tambah Tambak</Text>
+                        <Text style={styles.txtTambah}>{I18n.t('hompage.tambahTambak')}</Text>
                     </TouchableOpacity>                    
 
                     <View style={styles.tambakContainer}>  

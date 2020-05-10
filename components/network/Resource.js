@@ -238,6 +238,23 @@ class Resource {
         }
       });
     }
+
+    async user(token){      
+      const header = {
+        'Accept': 'application/json',
+        "Authorization": token,        
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.USER , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

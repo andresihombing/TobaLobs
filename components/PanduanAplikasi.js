@@ -2,36 +2,23 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView, AsyncStorage } from 'react-native';
 import DropDownItem from "react-native-drop-down-item";
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n'
 
-/**
- * Home screen
- */
 const IC_ARR_DOWN = require('./assets/icons/down.jpg');
 const IC_ARR_UP = require('./assets/icons/up.png');
 
 export default class Info extends React.Component {    
 
-  state = {
-      // contents: [
-      //   {
-      //     title: "Title 1",
-      //     body: "Hi. I love this component. What do you think?"
-      //   },
-      //   {
-      //     title: "See this one too",
-      //     body: "Yes. You can have more items."
-      //   },
-      //   {
-      //     title: "Thrid thing",
-      //     body:
-      //       "What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text? What about very long text?"
-      //   }
-      // ],
+  state = {      
       contents : []
   };
 
+  static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.labelpanduan'),            
+  })
+
   componentDidMount = async () => {
-    this.getData();              
+    this.getData();                  
   }  
   
   getData = async () => {

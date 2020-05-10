@@ -5,13 +5,14 @@ import {
     TextInput, SafeAreaView, ScrollView, AsyncStorage
 } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown';
+import I18n from '../i18n/i18n';
 
 import Resource from './network/Resource'
 
 export default class Register extends Component {        
-    static navigationOptions = {
-        title: 'Edit Tambak'        
-    };
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labeledittambak'),            
+        })
         
     constructor(props){
         super(props);                
@@ -42,10 +43,10 @@ export default class Register extends Component {
 
             data: [{
                 value: 'pembesaran',
-                label: 'Pembesaran'
+                label: I18n.t('hompage.pembesaran')
               }, {
                 value: 'pembenihan',
-                label: 'Pembenihan'
+                label: I18n.t('hompage.pembenihan')
             }],
         }        
     }    
@@ -203,10 +204,10 @@ export default class Register extends Component {
                 <View style = {styles.logoContainer}>                    
                     <ScrollView>
                         <View style = {{marginBottom:10}}>  
-                            <Text style = {styles.title}>Edit Tambak</Text>
-                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Edit Tambak vailed</Text>                            
+                            <Text style = {styles.title}>{I18n.t('hompage.edittambak')}</Text>
+                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>{I18n.t('hompage.erroredit')}</Text>                            
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Nama Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addNama')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -217,10 +218,10 @@ export default class Register extends Component {
                                     }}                                    
                                 />                                                            
                             </View>
-                            <Text style={{ display: this.state.errorNama ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorNama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Panjang Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addPanjang')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -232,10 +233,10 @@ export default class Register extends Component {
                                     }}                                    
                                 />                                                            
                             </View>
-                            <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Lebar Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addLebar')}</Text>
                                 <TextInput style = {styles.input}                                            
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -247,11 +248,11 @@ export default class Register extends Component {
                                     }}                                    
                                 />
                             </View>
-                            <Text style={{ display: this.state.errorLebar ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorLebar ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
                             
                             
                             <View style={styles.rowContainer}>
-                            <Text style={styles.label}>Jenis Tambak</Text>
+                            <Text style={styles.label}>{I18n.t('hompage.addTipe')}</Text>
                             <Dropdown
                                 value={this.state.label}
                                 data={this.state.data}
@@ -267,10 +268,10 @@ export default class Register extends Component {
                             }}
                             />
                             </View>
-                            <Text style={{ display: this.state.errorJenis ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorJenis ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
                             
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Usia</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addUsia')}</Text>
                                 <TextInput style = {styles.input}                                                 
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -282,7 +283,7 @@ export default class Register extends Component {
                                     }}
                                 />
                             </View>            
-                            <Text style={{ display: this.state.errorUsia ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>                                                        
+                            <Text style={{ display: this.state.errorUsia ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>                                                        
                              
                             <TouchableOpacity style = {styles.buttonContainer}
                                 onPress={() => this.submitReg()}>

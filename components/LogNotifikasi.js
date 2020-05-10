@@ -5,6 +5,7 @@ import {
     RefreshControl
 } from 'react-native';
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n';
 
 export default class LogNotifikasi extends React.Component {   
     constructor(props) {
@@ -18,9 +19,9 @@ export default class LogNotifikasi extends React.Component {
         }
     }
 
-    static navigationOptions = {
-        title: 'Log Notifikasi'
-    };
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labellognotif'),            
+    })
 
     onRefresh() {
         this.setState({ isFetching: true }, function() { this.getData() });

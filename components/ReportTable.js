@@ -5,6 +5,7 @@ import {
 import Resource from './network/Resource'
 import DatePicker from 'react-native-datepicker'
 import { Table, Row, Rows } from 'react-native-table-component';
+import I18n from '../i18n/i18n';
 
 
 export default class DetailTambak extends React.Component {
@@ -31,6 +32,10 @@ export default class DetailTambak extends React.Component {
             ]
         }       
     }
+
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labelreport'),            
+    })
 
     componentDidMount = async () => {        
         this.getData();            

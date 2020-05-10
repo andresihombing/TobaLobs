@@ -5,12 +5,13 @@ import {
 } from 'react-native'
 import Resource from './network/Resource'
 import { Table, Row, Rows } from 'react-native-table-component';
+import I18n from '../i18n/i18n';
 
 export default class DetailTambak extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          tableHead: ['Waktu', 'Takaran', 'Makanan'],
+          tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.takaran'), I18n.t('hompage.makanan')],
           tableData: [
             ['08.00 WIB', '... gram', 'Pelet halus'],
             ['11.00 WIB', '... gram', 'Pelet halus'],
@@ -28,9 +29,9 @@ export default class DetailTambak extends React.Component {
         }       
       }
 
-    static navigationOptions = {
-        title: 'Detail Tambak'        
-    };
+      static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labeldetailtambak'),            
+        })
     
     componentDidMount() {        
         this.Detail()
@@ -105,52 +106,52 @@ export default class DetailTambak extends React.Component {
                         </TouchableOpacity>                                                             
                     </View>                    
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Ukuran Tambak</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.judulukuran')}</Text>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Panjang :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.addPanjang')} :</Text>
                         <Text style = {styles.input}>{this.state.panjang} meter</Text>
                     </View>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Lebar :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.addLebar')} :</Text>
                         <Text style = {styles.input}>{this.state.lebar} meter</Text>
                     </View>      
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Jenis Tambak :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.addTipe')} :</Text>
                         <Text style = {styles.input}>{this.state.jenisBudidaya}</Text>
                     </View>      
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jumlah Lobster Pada Tambak</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.juduljumlah')}</Text>
                     <View>{
                         this.state.jenisBudidaya == 'pembenihan' ?
                         <View>
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Lobster Betina :</Text>
-                                <Text style = {styles.input}>{this.state.betina} ekor</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.jumlahbetina')} :</Text>
+                                <Text style = {styles.input}>{this.state.betina} {I18n.t('hompage.ekor')}</Text>
                             </View>      
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Lobster Jantan :</Text>
-                                <Text style = {styles.input}>{this.state.jantan} ekor</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.jumlahjantan')} :</Text>
+                                <Text style = {styles.input}>{this.state.jantan} {I18n.t('hompage.ekor')}</Text>
                             </View>
                         </View> : 
                         <View>
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Jumlah Lobster :</Text>
-                                <Text style = {styles.input}>{this.state.jumlahLobster} ekor</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.jumlahlobster')} :</Text>
+                                <Text style = {styles.input}>{this.state.jumlahLobster} {I18n.t('hompage.ekor')}</Text>
                             </View>
                         </View>
                         }
                     </View>
                     
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Shelter :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.shelter')} :</Text>
                         <Text style = {styles.input}>{this.state.jumlahLobster} buah</Text>
                     </View>      
                     <View style={styles.rowContainer}>
-                        <Text style={styles.label}>Usia Lobster :</Text>
+                        <Text style={styles.label}>{I18n.t('hompage.addUsia')} :</Text>
                         <Text style = {styles.input}>{this.state.usiaLobster} bulan</Text>
                     </View>      
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Jadwal Pemberian Pakan</Text>
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.juduljadwal')}</Text>
                     <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                     <Row data={state.tableHead} style={styles.head} textStyle={styles.textHead}/>
                     <Rows data={state.tableData} textStyle={styles.text}/>

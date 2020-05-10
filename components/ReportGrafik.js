@@ -7,6 +7,7 @@ import {
 } from "react-native-chart-kit";
 import DatePicker from 'react-native-datepicker'
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n';
 
 class ReportGrafik extends Component {
   constructor(props){
@@ -44,6 +45,10 @@ class ReportGrafik extends Component {
       ]    
     }
   }
+
+  static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.labelreport'),            
+  })
 
   componentDidMount = async () => {        
     this.getData();            

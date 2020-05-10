@@ -6,19 +6,16 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n';
 
-export default class Register extends Component {        
-    static navigationOptions = {
-        header: null
-    };
+export default class EditProfile extends Component {            
         
     constructor(props){
         super(props);                
         
         this.state = {
             nama: "",
-            username: "",
-            password: "",
+            username: "",            
             alamat: "",
             tanggalLahir: "",
             noHp: "",
@@ -34,6 +31,10 @@ export default class Register extends Component {
             errorPassCar: false
         }          
     }         
+
+    static navigationOptions = {
+        title: 'Edit Profile'        
+    };
 
     validate(text, type) {        
         if (type == 'name') {
@@ -57,27 +58,7 @@ export default class Register extends Component {
                     errorUname: false
                 })
             }            
-        }        
-        else if (type == 'pass') {
-            if (text == '') {
-                this.setState({                    
-                    errorPass: true
-                })
-            } else {
-                this.setState({                    
-                    errorPass: false
-                })
-                if(text.length > 6){
-                    this.setState({                    
-                        errorPassCar: false
-                    })
-                }else{
-                    this.setState({                    
-                        errorPassCar: true
-                    })
-                }
-            }                              
-        }
+        }               
         else if (type == 'alamat') {
             if(text == ''){
                 this.setState({              
@@ -111,22 +92,16 @@ export default class Register extends Component {
                 })
             }            
         }                              
-    }
+    }    
 
     val(){
-        const { nama, username, password, alamat, tanggalLahir, noHp } = this.state
+        const { nama, username, alamat, tanggalLahir, noHp } = this.state
         if ((username == "")) {
             this.setState({
                 errorForm: true,
                 errorUname: true,                
             })            
-        }
-        if(password == ""){
-            this.setState({
-                errorForm: true,                
-                errorPass: true,
-            })            
-        }
+        }        
         if(alamat == ""){
             this.setState({
                 errorForm: true,                
@@ -151,6 +126,36 @@ export default class Register extends Component {
                 errorName: true,
             })            
         }
+    }    
+
+    componentDidMount() {        
+        this.listEdit()
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.listEdit()
+        });
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
+
+    listEdit(){
+        const {params} = this.props.navigation.state;
+        const name = params ? params.name : null;
+        const username = params ? params.username : null;
+        const alamat = params ? params.alamat : null;
+        const noHp = params ? params.noHp : null;
+        const tglLahir = params ? params.tglLahir : null;        
+
+        this.setState({
+            nama: name,
+            alamat: alamat,
+            tanggalLahir: tglLahir,
+            username: username,
+            noHp: noHp
+        })
     }
 
     submitReg(){         
@@ -162,13 +167,11 @@ export default class Register extends Component {
         formdata.append('password', this.state.password);        
         formdata.append('noHp', this.state.noHp);
         formdata.append('tanggalLahir', this.state.tanggalLahir);
-        formdata.append('alamat', this.state.alamat);
+        formdata.append('alamat', this.state.alamat);        
         
         Resource.register(formdata)
         .then((res) => {                
-            console.log(res.responseJson.data)
-            // const token = res.responseJson.data;
-            // AsyncStorage.setItem('user', JSON.stringify(token));                        
+            console.log(res.responseJson.data)            
             navigate("SignIn")
         })
         .catch((err) => {            
@@ -190,12 +193,13 @@ export default class Register extends Component {
                 <View style = {styles.logoContainer}>                    
                     <ScrollView>
                         <View style = {{marginBottom:10}}>                    
-                            <Text style = {styles.title}>Register Tobalobs</Text>
-                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Register vailed</Text>                            
+                            <Text style = {styles.title}>Edit Profile</Text>
+                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>{I18n.t('hompage.errorprofile')}</Text>                            
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Nama</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.nama')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
+                                    value = {this.state.nama}
                                     autoCorrect = {false}
                                     onChangeText={(nama) => {
                                         this.validate(nama, 'name')
@@ -203,12 +207,13 @@ export default class Register extends Component {
                                     }}                                    
                                 />                                                            
                             </View>
-                            <Text style={{ display: this.state.errorName ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorName ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Username</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.username')}</Text>
                                 <TextInput style = {styles.input}                                                            
                                     returnKeyType = 'next'
+                                    value = {this.state.username}
                                     autoCorrect = {false}
                                     onChangeText={(username) => {
                                         this.validate(username, 'uname')
@@ -216,27 +221,13 @@ export default class Register extends Component {
                                     }}                                    
                                 />
                             </View>
-                            <Text style={{ display: this.state.errorUname ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorUname ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>                            
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Password</Text>
-                                <TextInput style = {styles.input}                                                       
-                                    returnKeyType = 'next'
-                                    secureTextEntry
-                                    autoCorrect = {false}
-                                    onChangeText={(password) => {
-                                        this.validate(password, 'pass')
-                                        this.setState({password})
-                                    }}
-                                />
-                            </View>
-                            <Text style={{ display: this.state.errorPassCar ? "flex" : "none", color: 'red', fontSize: 12 }}>Password miniman 6 karakter</Text>
-                            <Text style={{ display: this.state.errorPass ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
-
-                            <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Alamat</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.alamat')}</Text>
                                 <TextInput style = {styles.input}                                                    
                                     returnKeyType = 'next'
+                                    value = {this.state.alamat}
                                     autoCorrect = {false}
                                     onChangeText={(alamat) => {
                                         this.validate(alamat, 'alamat')
@@ -244,12 +235,13 @@ export default class Register extends Component {
                                     }}
                                 />
                             </View>            
-                            <Text style={{ display: this.state.errorAlamat ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>                                                        
+                            <Text style={{ display: this.state.errorAlamat ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>                                                        
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>No.Telp</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.nohp')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
+                                    value = {this.state.noHp}
                                     autoCorrect = {false}
                                     keyboardType= 'number-pad'
                                     onChangeText={(noHp) => {
@@ -258,10 +250,10 @@ export default class Register extends Component {
                                     }}
                                 />
                             </View>
-                            <Text style={{ display: this.state.errorNo ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorNo ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Tgl Lahir</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.tgllahir')}</Text>
                                 <DatePicker
                                     style={styles.input}
                                     date={this.state.tanggalLahir}
@@ -294,10 +286,10 @@ export default class Register extends Component {
                                     }}
                                 />
                             </View>                     
-                            <Text style={{ color: 'red', fontSize: 12, display: this.state.errorTgl ? "flex" : "none"}}>Tidak boleh kosong</Text>   
+                            <Text style={{ color: 'red', fontSize: 12, display: this.state.errorTgl ? "flex" : "none"}}>{I18n.t('hompage.errornull')}</Text>   
                             <TouchableOpacity style = {styles.buttonContainer}
                                 onPress={() => this.submitReg()}>
-                                <Text style = {styles.buttonText}>Register</Text>
+                                <Text style = {styles.buttonText}>Edit</Text>
                             </TouchableOpacity>                                                                  
                         </View>
                     </ScrollView>
@@ -329,8 +321,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'bold',   
         fontSize: 30,
-        textAlign: 'center',
-        marginTop: 30,
+        textAlign: 'center',        
         marginBottom: 20,
         opacity: 0.9,
         borderBottomColor: 'white',        

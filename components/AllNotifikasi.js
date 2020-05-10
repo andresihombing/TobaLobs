@@ -1,6 +1,7 @@
 import React from "react";
 import{StyleSheet,View,ScrollView,FlatList,Text,TouchableOpacity,RefreshControl, AsyncStorage} from "react-native";
 import Resource from './network/Resource'
+import I18n from '../i18n/i18n';
 
 export default class AllNotifikasi extends React.Component {
   constructor(props) {
@@ -13,6 +14,11 @@ export default class AllNotifikasi extends React.Component {
       kosong : true,
      };
   }
+
+  static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.labelallnotif'),            
+  })
+
   componentDidMount() {this.getData();}
   
   onRefresh() {

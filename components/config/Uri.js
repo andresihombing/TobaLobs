@@ -16,5 +16,6 @@ export default {
     INFO : '/api/info',
     PANDUAN : '/api/panduan',
     MONITOR : '/api/tambak/monitor/',
-    EDIT_TAMBAK : '/api/tambak/'
+    EDIT_TAMBAK : '/api/tambak/',
+    USER : '/api/user'
 }

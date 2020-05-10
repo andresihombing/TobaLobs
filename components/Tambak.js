@@ -4,7 +4,7 @@ import {
     TouchableOpacity, ScrollView, FlatList
 } from 'react-native';
 import Resource from './network/Resource'
-import Home from './Home'
+import I18n from '../i18n/i18n';
 
 export default class Tambak extends React.Component {   
     constructor(props) {
@@ -23,6 +23,9 @@ export default class Tambak extends React.Component {
         }
     }
     
+    static navigationOptions = ({navmigation}) => ({
+        title: I18n.t('hompage.labeltambak'),            
+    })
 
     componentDidMount() {        
         this.getData()
@@ -56,8 +59,7 @@ export default class Tambak extends React.Component {
                 // console.warn(this.props.coba)
                 // console.warn(list)
                 Resource.postTambak(itemId, tokenString.token)
-                .then((res) => {                             
-                    console.warn(res)                          
+                .then((res) => {                                                                        
                     var ph = res.data.ph
                     var suhu = res.data.suhu
                     var Do = res.data.do
@@ -169,7 +171,7 @@ export default class Tambak extends React.Component {
                         </View>
                         <View style = {styles.monitoring}>
                             <Text>PH</Text>
-                            <Text>Suhu</Text>
+                            <Text>{I18n.t('hompage.suhu')}</Text>
                             <Text>Do</Text>
                         </View>
                     </View>
@@ -179,17 +181,17 @@ export default class Tambak extends React.Component {
                                 tambakId : this.state.tambakId
                             })                            
                         }}>
-                        <Text style = {styles.txtTambah, {textAlign:'center'}}>Lihat Riwayat Monitoring Tambak</Text>
+                        <Text style = {styles.txtTambah, {textAlign:'center'}}>{I18n.t('hompage.riwayat')}</Text>
                     </TouchableOpacity>
                     <View style = {styles.notifContainer}>
-                        <Text style={styles.txtNotif}>Notifikasi</Text>
+                        <Text style={styles.txtNotif}>{I18n.t('hompage.notif')}</Text>
                         <TouchableOpacity style = {styles.buttonLog}
                         onPress = {() => {
                             this.props.navigation.navigate('LogNotifikasi', {
                                 tambakId : this.state.tambakId
                             })
                         }}>
-                            <Text style={styles.txtTambah}>Log Notifikasi</Text>
+                            <Text style={styles.txtTambah}>{I18n.t('hompage.lognotif')}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style = {styles.notif}>

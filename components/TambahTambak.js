@@ -5,13 +5,14 @@ import {
     TextInput, SafeAreaView, ScrollView, AsyncStorage
 } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown';
-
+import I18n from '../i18n/i18n';
 import Resource from './network/Resource'
 
 export default class Register extends Component {        
-    static navigationOptions = {
-        title: 'Tambah Tambak'        
-    };
+    
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labeltambahtambak'),            
+    })
         
     constructor(props){
         super(props);                
@@ -34,13 +35,26 @@ export default class Register extends Component {
 
             data: [{
                 value: 'pembesaran',
-                label: 'Pembesaran'
+                label: I18n.t('hompage.pembesaran')
               }, {
                 value: 'pembenihan',
-                label: 'Pembenihan'
+                label: I18n.t('hompage.pembenihan')
               }],
         }        
     }    
+
+    componentDidMount() {        
+        this.validate()
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.validate()
+        });
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
 
     validate(text, type) {        
         if (type == 'nama') {
@@ -179,61 +193,6 @@ export default class Register extends Component {
         }
     }
 
-    // submitReg = async () => {
-    //     this.props.navigation.navigate('KebutuhanTambak', {
-    //         namaTambak : this.state.namaTambak,
-    //         panjang : this.state.panjang,
-    //         lebar : this.state.lebar,
-    //         jenisBudidaya : this.state.jenisBudidaya,
-    //         usiaLobster : this.state.usiaLobster
-    //     });
-        // console.warn(this.state.namaTambak)
-        // this.val();          
-        // const { navigate } = this.props.navigation;
-        // let formdata = new FormData();
-        // formdata.append('namaTambak', this.state.namaTambak);
-        // formdata.append('panjang', this.state.panjang);
-        // formdata.append('lebar', this.state.lebar);        
-        // formdata.append('jenisBudidaya', this.state.jenisBudidaya);
-        // formdata.append('usiaLobster', this.state.usiaLobster);                
-        
-        // try{
-        //     await AsyncStorage.getItem('user', (error, result) => {       
-        //         let tokenString = JSON.parse(result);                
-                
-        //         Resource.tambah_tambak(formdata, tokenString)
-        //         .then((res) => {                                                        
-        //             let id = res.responseJson.data
-        //             console.warn(res.responseJson.data)                    
-        //             if (res.responseJson.status == 'failed') {
-        //                 alert('user anda telah expired')
-        //                 AsyncStorage.clear();
-        //                 this.props.navigation.navigate('Auth');
-        //             }
-                    
-        //             Resource.postTambak(id, tokenString.token)
-        //             .then((respon) => {                                                        
-        //                 console.warn(respon)                                       
-        //             })
-        //             .catch((err) => {                    
-        //                 console.log('Error:', error);
-        //             })  
-
-        //             this.props.navigation.navigate('Tambak');                    
-        //         })
-        //         .catch((err) => {
-        //             this.setState({
-        //                 errorForm: true,
-        //             })
-        //             console.log('Error:', error);
-        //         })  
-        //     });   
-        // } catch (error) {
-        //     console.log('error')
-        //     console.log('AsyncStorage error: ' + error.message);
-        // }            
-    // }    
-
     render() {       
 
         var dateNow = new Date().getDate();              
@@ -246,10 +205,10 @@ export default class Register extends Component {
                 <View style = {styles.logoContainer}>                    
                     <ScrollView>
                         <View style = {{marginBottom:10}}>                    
-                            <Text style = {styles.title}>Buat Tambak</Text>
-                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Buat Tambak vailed</Text>                            
+                            <Text style = {styles.title}>{I18n.t('hompage.tambahTambak')}</Text>
+                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>{I18n.t('hompage.error')}</Text>                            
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Nama Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addNama')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -259,10 +218,10 @@ export default class Register extends Component {
                                     }}                                    
                                 />                                                            
                             </View>
-                            <Text style={{ display: this.state.errorNama ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorNama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Panjang Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addPanjang')}</Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -273,10 +232,10 @@ export default class Register extends Component {
                                     }}                                    
                                 />                                                            
                             </View>
-                            <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Lebar Tambak</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addLebar')}</Text>
                                 <TextInput style = {styles.input}                                            
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -287,11 +246,11 @@ export default class Register extends Component {
                                     }}                                    
                                 />
                             </View>
-                            <Text style={{ display: this.state.errorLebar ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorLebar ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
                             
                             
                             <View style={styles.rowContainer}>
-                            <Text style={styles.label}>Jenis Tambak</Text>
+                            <Text style={styles.label}>{I18n.t('hompage.addTipe')}</Text>
                             <Dropdown
                                 value={this.state.label}
                                 data={this.state.data}
@@ -306,10 +265,10 @@ export default class Register extends Component {
                             }}
                             />
                             </View>
-                            <Text style={{ display: this.state.errorJenis ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+                            <Text style={{ display: this.state.errorJenis ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
                             
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>Usia</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addUsia')}</Text>
                                 <TextInput style = {styles.input}                                                 
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -320,11 +279,11 @@ export default class Register extends Component {
                                     }}
                                 />
                             </View>            
-                            <Text style={{ display: this.state.errorUsia ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>                                                        
+                            <Text style={{ display: this.state.errorUsia ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>                                                        
                              
                             <TouchableOpacity style = {styles.buttonContainer}
                                 onPress={() => this.submitReg()}>
-                                <Text style = {styles.buttonText}>Tambah</Text>
+                                <Text style = {styles.buttonText}>{I18n.t('hompage.tambah')}</Text>
                             </TouchableOpacity>                                                                  
                         </View>
                         

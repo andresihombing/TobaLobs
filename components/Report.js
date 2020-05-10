@@ -5,65 +5,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ReportGrafik from './ReportGrafik'
 import ReportTable from './ReportTable'
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-// function ProfileScreen({ route }) {
-//   const userId = route.params.user;
-//   // console.warn(userId)
-//   return (
-//     <View style={{alignItems: 'center', top: 50}}>
-//          <Greeting name={userId} />         
-//          {/* <Text>{userId}</Text> */}
-//        </View>
-//   );
-// }
 const Greeting=()=> {
   console.warn('test')
 }
-
-// export class ProfileScreen extends React.Component {   
-  
-  // ProfileScreen( this.route ) {
-    // const userId = route.params.user;
-    // console.warn(userId)
-    // return (
-    //   <View style={{alignItems: 'center', top: 50}}>
-    //        <Greeting name={userId} />         
-    //        {/* <Text>{userId}</Text> */}
-    //      </View>
-    // );
-  // }
-  // componentDidMount(){
-  //   this.ProfileScreen()
-  // }
-  // render(){    
-  //   const a = this.props.route.params.user
-  //   console.warn(a)
-  //   return (
-  //     <View style={{alignItems: 'center', top: 50}}>
-  //       <Greeting name='Rexxar' />
-  //       <Greeting name='Jaina' />
-  //       <Greeting name='Valeera' />
-  //     </View>
-  //   );
-  // }
-// }
-
-
 
 const Tab = createMaterialTopTabNavigator();
 

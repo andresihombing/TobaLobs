@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import Resource from './network/Resource'
 import { set } from 'react-native-reanimated';
+import I18n from '../i18n/i18n';
 
 export default class DetailNotifikasi extends React.Component {   
     constructor(props) {
@@ -19,13 +20,22 @@ export default class DetailNotifikasi extends React.Component {
         }
     }
 
-    static navigationOptions = {
-        title: 'Detail Notifikasi'
-    };
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labeldetailnotif'),            
+    })    
 
     componentDidMount() {        
-        this.detailNotif()        
-    }  
+        this.detailNotif() 
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.detailNotif() 
+        });
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
 
     detailNotif = async () => {
         const {params} = this.props.navigation.state;
@@ -74,15 +84,15 @@ export default class DetailNotifikasi extends React.Component {
                             <Text style = {{paddingRight: 0, color: 'white', marginTop: 10, fontSize: 10}}> {this.state.waktuTanggal}</Text>
                         </View>
                         <View style={styles.rowContainer}>
-                            <Text style={styles.label}>Kondisi :</Text>
+                            <Text style={styles.label}>{I18n.t('hompage.kodisi')} :</Text>
                             <Text style = {styles.input}> {this.state.kondisiPenyimpangan}</Text>
                         </View>
                         <View style={styles.rowContainer}>
-                            <Text style={styles.label}>Keterangan :</Text>
+                            <Text style={styles.label}>{I18n.t('hompage.keterangan')} :</Text>
                             <Text style = {styles.input}> {this.state.keterangan}</Text>
                         </View>
                         <View style={styles.rowContainer}>
-                            <Text style={styles.label}>Cara Mengatasi :</Text>
+                            <Text style={styles.label}>{I18n.t('hompage.caramengatasi')} :</Text>
                             <Text style = {styles.input}> {this.state.aksiPenyimpangan}</Text>
                         </View>
                     </View>
