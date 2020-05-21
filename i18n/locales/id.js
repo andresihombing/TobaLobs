@@ -6,8 +6,7 @@ export default {
 
       //akun      
       infoMenambahTambak : 'Cara menambah tambak',
-      tentangTobaLobs: `TobaLobs adalah sebuah aplikasi mobile, dimana aplikasi ini dapat memonitoring tambak yang telah dibuat.\n\nPengguna dapat melihat pH, Suhu, u Do air yang ada di tambak tersebut. Pengguna juga akan mendapat notifikasi jika ada penyimpangan dari kondisi air yang ada di tambak tersebut. Selain itu, Pengguna juga akan mendapat notifikasi kapan untuk memberi pakan, pemisahan induk dan bibit, perkawinan, hinggakapan akan melakukan panen.\n\nPada aplikasi ini juga, pengguna akan diberikan beberapa informasi atau tips untuk melakukan budidaya yang baik.`,      
-      pengaturan: 'Pengaturan',
+      tentangTobaLobs: `TobaLobs adalah sebuah aplikasi mobile, dimana aplikasi ini dapat memonitoring tambak yang telah dibuat.\n\nPengguna dapat melihat pH, Suhu, u Do air yang ada di tambak tersebut. Pengguna juga akan mendapat notifikasi jika ada penyimpangan dari kondisi air yang ada di tambak tersebut. Selain itu, Pengguna juga akan mendapat notifikasi kapan untuk memberi pakan, pemisahan induk dan bibit, perkawinan, hinggakapan akan melakukan panen.\n\nPada aplikasi ini juga, pengguna akan diberikan beberapa informasi atau tips untuk melakukan budidaya yang baik.`,            
       panduan: 'Panduan Aplikasi',
       tentang: 'Tentang TobaLobs',
       keluar: 'Keluar', 
@@ -87,5 +86,16 @@ export default {
       kodisi: 'Kondisi',
       keterangan: 'Keterangan',
       caramengatasi: 'Cara Mengatasi',
+
+      //pengaturan
+      gantipass: 'Ganti Password',      
+
+      //ganti pass
+      passlama: 'Password Lama',
+      passbaru: 'Buat Password Baru',
+      passkonfirm: 'Konfirmasi Password Baru',
+      berhasilgantipass: 'Berhasil Ganti Password',
+      mincar: 'Password miniman 6 karakter',
+      errorpass: 'Edit Password Gagal',
     },
   }

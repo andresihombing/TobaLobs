@@ -221,7 +221,9 @@ export default class Register extends Component {
                             <Text style={{ display: this.state.errorNama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>{I18n.t('hompage.addPanjang')}</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addPanjang')}
+                                    <Text style = {styles.satuan}> (meter)</Text>
+                                </Text>
                                 <TextInput style = {styles.input}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -236,7 +238,9 @@ export default class Register extends Component {
                             <Text style={{ display: this.state.errorPanjang ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
 
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>{I18n.t('hompage.addLebar')}</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addLebar')}
+                                    <Text style = {styles.satuan}> (meter)</Text>
+                                </Text>
                                 <TextInput style = {styles.input}                                            
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -271,7 +275,9 @@ export default class Register extends Component {
                             <Text style={{ display: this.state.errorJenis ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
                             
                             <View style={styles.rowContainer}>
-                                <Text style={styles.label}>{I18n.t('hompage.addUsia')}</Text>
+                                <Text style={styles.label}>{I18n.t('hompage.addUsia')}
+                                    <Text style = {styles.satuan}> (bulan)</Text>
+                                </Text>
                                 <TextInput style = {styles.input}                                                 
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
@@ -368,5 +374,10 @@ const styles = StyleSheet.create({
     label:{
         flex: 1,
         color: 'white',        
+    },
+    satuan:{
+        flex: 1,
+        color: 'white',
+        fontSize: 10
     }
 })

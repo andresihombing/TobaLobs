@@ -17,5 +17,6 @@ export default {
     PANDUAN : '/api/panduan',
     MONITOR : '/api/tambak/monitor/',
     EDIT_TAMBAK : '/api/tambak/',
-    USER : '/api/user'
+    USER : '/api/user',
+    CHANGE_PASS: '/api/user/password'
 }

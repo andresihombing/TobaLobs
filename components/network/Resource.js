@@ -255,6 +255,46 @@ class Resource {
         }
       });
     }
+
+    async edit_profile(body, headers){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.USER, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_pass(body, headers){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.CHANGE_PASS, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

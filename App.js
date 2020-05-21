@@ -11,6 +11,13 @@ import {
 import Login from './components/Login';
 import Menu from './components/Menu';
 import Register from './components/Register';
+import Manage from './components/Manage';
+import ManageInformasi from './components/ManageInformasi';
+import ManagePanduan from './components/ManagePanduan';
+import EditInfo from './components/EditInfo';
+import EditPanduan from './components/EditPanduan';
+import TambahInfo from './components/TambahInfo'
+import TambahPanduan from './components/TambahPanduan'
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -50,12 +57,22 @@ const styles = StyleSheet.create({
 
 const AppStack = createStackNavigator({ Menu: Menu }, {headerMode: 'none'});
 const AuthStack = createStackNavigator({ SignIn: Login, Register: Register });
+const ManageStack = createStackNavigator({ 
+  Manage: Manage, 
+  ManageInformasi: ManageInformasi, 
+  ManagePanduan: ManagePanduan, 
+  EditInfo: EditInfo,
+  EditPanduan: EditPanduan,
+  TambahInfo: TambahInfo,
+  TambahPanduan: TambahPanduan
+});
 
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     App: AppStack,
     Auth: AuthStack,
+    Manage: ManageStack
   },
   {
     initialRouteName: 'AuthLoading',

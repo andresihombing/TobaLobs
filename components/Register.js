@@ -168,7 +168,7 @@ export default class Register extends Component {
         .then((res) => {                
             console.log(res.responseJson.data)
             // const token = res.responseJson.data;
-            // AsyncStorage.setItem('user', JSON.stringify(token));                        
+            // AsyncStorage.setItem('user', JSON.stringify(token));
             navigate("SignIn")
         })
         .catch((err) => {            

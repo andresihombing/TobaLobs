@@ -135,6 +135,7 @@ export default class Login extends Component {
                 AsyncStorage.setItem('user', JSON.stringify(token));
                 AsyncStorage.setItem('devices', JSON.stringify(devices));
                 navigate("Menu")
+                // navigate("Manage")
             }
         })
         .catch((err) => {

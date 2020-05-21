@@ -156,30 +156,41 @@ export default class EditProfile extends Component {
             username: username,
             noHp: noHp
         })
-    }
+    }    
 
-    submitReg(){         
-        this.val();          
-        const { navigate } = this.props.navigation;
+    submitReg = async () => {        
+        this.val()
         let formdata = new FormData();
+        formdata.append('nama', this.state.nama);
         formdata.append('username', this.state.username);
-        formdata.append('fullname', this.state.nama);
-        formdata.append('password', this.state.password);        
+        formdata.append('fullname', this.state.nama);         
         formdata.append('noHp', this.state.noHp);
         formdata.append('tanggalLahir', this.state.tanggalLahir);
-        formdata.append('alamat', this.state.alamat);        
+        formdata.append('alamat', this.state.alamat);   
         
-        Resource.register(formdata)
-        .then((res) => {                
-            console.log(res.responseJson.data)            
-            navigate("SignIn")
-        })
-        .catch((err) => {            
-            this.setState({
-                errorForm: true,
-            })
-            console.log('Error:', error);
-        })        
+        try{
+            await AsyncStorage.getItem('user', (error, result) => {
+                let tokenString = JSON.parse(result);                              
+                Resource.edit_profile(formdata, tokenString)            
+                .then((res) => {                                                               
+                    if (this.state.errorForm != true) {                              
+                        this.props.navigation.navigate('Akun');
+                    }
+                    this.setState({
+                        errorForm: false,
+                    })
+                })
+                .catch((err) => {
+                    this.setState({
+                        errorForm: true,
+                    })
+                    console.warn('Error:', error);
+                })  
+            });   
+        } catch (error) {
+            console.log('error', error)
+            console.log('AsyncStorage error: ' + error.message);
+        }            
     }
 
     render() {  

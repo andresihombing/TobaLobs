@@ -1,24 +1,24 @@
 import React from 'react';
 import {    
-  Text, View, StyleSheet, Picker, AsyncStorage
+  Text, View, StyleSheet, Picker, AsyncStorage, TouchableOpacity
 } from 'react-native';
 import I18n from '../i18n/i18n';
 
 const listLanguage = [
-  {key:'en', label:'English'}, {key:'id', label:'Indonesia'}
+    {key:'id', label:'Indonesia'}, {key:'en', label:'English'}
 ]
 
 export default class App extends React.Component {
     constructor(props) {
         super(props)
             this.state = {
-                languageSelected: '',
+                languageSelected: 'id',
                 heading: ''
             }
         }
 
         static navigationOptions = ({navigation}) => ({
-            title: I18n.t('hompage.labelpengaturan'),            
+            title: I18n.t('hompage.labelpengaturan'),
         })
         
         componentDidMount = async()=> {            
@@ -51,13 +51,10 @@ export default class App extends React.Component {
             const {languageSelected} = this.state
             return (
                 <View style={styles.container}>
-                        <DropdownLanguage language={languageSelected} onChangeLanguage={this.onChangeLanguage.bind(this)}></DropdownLanguage>
-                {/* <Text style={styles.title}>
-                {I18n.t('hompage.welcome')}
-                </Text>
-                <Text style={styles.paragraph}>
-                    {I18n.t('hompage.description')}
-                </Text> */}
+                    <DropdownLanguage language={languageSelected} onChangeLanguage={this.onChangeLanguage.bind(this)}></DropdownLanguage>                
+                    <TouchableOpacity style = {styles.password} onPress = {() => this.props.navigation.navigate('EditPassword')}>
+                        <Text>{I18n.t('hompage.gantipass')}</Text>
+                    </TouchableOpacity>
                 </View>
             );
         }
@@ -73,8 +70,8 @@ class DropdownLanguage extends React.Component {
             <View style={styles.dropdownLanguage}>
                 <Text style={{width:60, fontSize: 14}}>{I18n.t('hompage.language')} </Text>
                 <Picker
-                    mode="dropdown"                    
-                    style={{ width: 200,height:40}}
+                    // mode="dropdown"                    
+                    style={{ width: 250,height:40}}
                     selectedValue={this.props.language}
                     onValueChange={this.props.onChangeLanguage.bind(this)}
                     >
@@ -93,6 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "#192338",  
     padding: 8,
+    position: 'relative'    
   },
    title: {
     margin: 24,
@@ -107,17 +105,25 @@ const styles = StyleSheet.create({
     top:10,
     right:10, 
     flexDirection:'row',
-    flex:1,
-    // justifyContent: "center",
-    padding: 20,
+    flex:1,    
+    padding: 10,
     alignItems: "center",
     backgroundColor: 'white'
   },
-  
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  password: {
+    top: 60,
+    width:340,
+    height:40, 
+    position:'absolute',    
+    right:10,     
+    padding: 10,
+    backgroundColor: 'white',    
+  }
+
 });

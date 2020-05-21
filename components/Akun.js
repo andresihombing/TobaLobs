@@ -46,7 +46,7 @@ export default class Akun extends React.Component {
     
     getData(){
         this.setState({
-            pengaturan: I18n.t('hompage.pengaturan'),
+            pengaturan: I18n.t('hompage.labelpengaturan'),
             panduan: I18n.t('hompage.panduan'),
             tentang: I18n.t('hompage.tentang'),
             keluar: I18n.t('hompage.keluar')

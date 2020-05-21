@@ -30,6 +30,7 @@ import Report from './Report'
 import EditTambak from './EditTambak'
 import KebutuhanEditTambak from './KebutuhanEditTambak'
 import EditProfile from './EditProfile'
+import EditPassword from './EditPassword'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -92,6 +93,9 @@ const AkunStack = createStackNavigator({
   },
   EditProfile: {
     screen: EditProfile
+  },
+  EditPassword: {
+    screen: EditPassword
   }
 });
 

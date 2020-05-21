@@ -5,8 +5,7 @@ export default {
       description: 'Content by English',
 
       //akun      
-      tentangTobaLobs: `TobaLobs is a mobile application, where this application can monitor the ponds that have been made. Users can see the pH, temperature, and temperature in the pond. \n\nUsers will also be notified if there are deviations from the air conditionin the pond. In addition, users will also be notified at any time to provide food, give permission and seeds, marriage, untilwhen will harvest.\n\nIn this application also, users will be given some information or tips for conducting good cultivation.`,      
-      pengaturan: 'Setting',
+      tentangTobaLobs: `TobaLobs is a mobile application, where this application can monitor the ponds that have been made. Users can see the pH, temperature, and temperature in the pond. \n\nUsers will also be notified if there are deviations from the air conditionin the pond. In addition, users will also be notified at any time to provide food, give permission and seeds, marriage, untilwhen will harvest.\n\nIn this application also, users will be given some information or tips for conducting good cultivation.`,            
       panduan: 'application guide',
       tentang: 'About',
       keluar: 'Logout', 
@@ -86,5 +85,16 @@ export default {
       kodisi: 'Condition',
       keterangan: 'Information',
       caramengatasi: 'How to Overcome',
+
+      //pengaturan      
+      gantipass: 'Change Password',      
+
+      //ganti pass
+      passlama: 'Old Password',
+      passbaru: 'Create New Password',
+      passkonfirm: 'Confirm New Password',
+      berhasilgantipass: 'Successfully Changed Password',
+      mincar: 'Minimum password is 6 characters',
+      errorpass: 'Edit Password Failed',
   }
 }
