@@ -55,6 +55,9 @@ export default class App extends React.Component {
                     <TouchableOpacity style = {styles.password} onPress = {() => this.props.navigation.navigate('EditPassword')}>
                         <Text>{I18n.t('hompage.gantipass')}</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style = {styles.pakan} onPress = {() => this.props.navigation.navigate('SetJadwal')}>
+                        <Text>Set Jadwal</Text>
+                    </TouchableOpacity>           
                 </View>
             );
         }
@@ -124,6 +127,15 @@ const styles = StyleSheet.create({
     right:10,     
     padding: 10,
     backgroundColor: 'white',    
-  }
+  },
+  pakan: {
+    top: 110,
+    width:340,
+    height:40, 
+    position:'absolute',    
+    right:10,     
+    padding: 10,
+    backgroundColor: 'white',    
+  },
 
 });

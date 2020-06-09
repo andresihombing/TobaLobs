@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
     StyleSheet, View, Text, AsyncStorage, RefreshControl,
-    TouchableOpacity, ScrollView, FlatList, Image
+    TouchableOpacity, ScrollView, FlatList, Image, Alert
 } from 'react-native';
 import Resource from './network/Resource'
 import Tambak from './Tambak'
@@ -9,12 +9,8 @@ import IconBadge from 'react-native-icon-badge';
 import { set } from 'react-native-reanimated';
 import PushNotification from "react-native-push-notification";
 import I18n from '../i18n/i18n';
+import firebase from 'react-native-firebase';
 
-// import { SafeAreaView } from 'react-native-safe-area-context';
-
-/**
- * Home screen
- */
 export default class Home extends React.Component {    
 
     constructor(props){
@@ -26,39 +22,76 @@ export default class Home extends React.Component {
             enableButton: false,
             disableButton: true,
             isFetching: true,
-            totalNotif : '',            
+            totalNotif : '',           
+            tambakId : '' 
         }          
     }   
+    
 
     goToCreate(){        
         this.props.navigation.navigate('TambahTambak');
         // this.props.navigation.navigate('KebutuhanTambak');
     }
 
-    componentDidMount = async () => {
-        this.notif();
-        this.getData();               
-        const { navigation } = this.props;        
-        this.focusListener = navigation.addListener('didFocus', () => {      
-            this.getData();
-        });
+    componentDidMount = async () => {        
+    //   this.createNotificationChannel();
+    //   this.checkPermission();
+      
+      this.notif();
+      this.getData();                     
+
+      const { navigation } = this.props;        
+      this.focusListener = navigation.addListener('didFocus', () => {      
+          this.getData();
+      });        
     }    
+  
+    pushPakan = async () => {        
+        let body = new FormData();
+        body.append('type', 'pagi');
+        body.append('tambakID', this.state.tambakId);
+        try{                    
+            await AsyncStorage.getItem('user', (error, result) => {
+            let tokenString = JSON.parse(result);        
+            Resource.save_notif(body, tokenString.token)
+                .then((res) => {                
+                    this.props.navigation.navigate('DetailNotifikasi', {
+                        notifId : res.responseJson.data.notifikasiID,
+                    });
+                })
+                .catch((err) => {                                                                                                
+                    console.log("err")
+                })
+            });
+        } catch (error) {            
+            console.log(error)
+            console.log('AsyncStorage error: ' + error.message);
+        } 
+      }
 
     handleNotification(notification){
         //your logic here,
         console.warn(notification);
     
         let isBackground = notification.foreground;
-        let id = notification.ID;
+        let id = notification.ID;        
+        let tambakId = notification.tambakId
+        let type = notification.type
+        this.setState({
+            tambakId : tambakId
+        })        
         console.warn(id)
-        if(isBackground != true){
+        if(isBackground != true && type == null){
         //   this.props.navigation.navigate('AllNotifikasi');
-          this.props.navigation.navigate('DetailNotifikasi', {
-            notifId : id,
-        });
+            this.props.navigation.navigate('DetailNotifikasi', {
+                notifId : id,
+            });
+        }
+        if(isBackground != true && type == 'pagi' ){            
+            this.pushPakan()
         }
     };
-
+   
     notif = async () => {        
         const that = this
         PushNotification.configure({
@@ -90,6 +123,7 @@ export default class Home extends React.Component {
     componentWillUnmount() {
         // Remove the event listener before removing the screen from the stack
         this.focusListener.remove();        
+        // this.notificationOpenedListener();
     }
 
     onRefresh() {
@@ -98,33 +132,35 @@ export default class Home extends React.Component {
     
     getData = async () => {
         try{            
+            const role = await AsyncStorage.getItem('role');    
+            let rol = JSON.parse(role)
+
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
-                .then((res) => {        
-                    // console.warn(tokenString)
-                    // this.setState({
-                    //     totalNotif : res.data.totalNotif
-                    // })                    
-                    if (res.status == 'failed') {                        
-                        AsyncStorage.clear();
-                        this.props.navigation.navigate('Auth');
+                .then((res) => {      
+                    if(rol != "admin"){
+                        if (res.status == 'failed') {                        
+                            AsyncStorage.clear();
+                            this.props.navigation.navigate('Auth');
+                        }
+                                             
+                        if(res.data.data.length > 0){                        
+                            this.setState({
+                                enableButton : true,
+                                disableButton : false
+                            })
+                        } else {
+                            this.setState({
+                                enableButton : false,
+                                disableButton : true
+                            })
+                        }
+                        
+                        this.setState({isFetching: false, list_tambak: res.data.data, totalNotif : res.data.totalNotif })
+                    }else{
+                        this.props.navigation.navigate('Manage');
                     }
-                     
-                    console.log(res.data.data.length)
-                    if(res.data.data.length > 0){                        
-                        this.setState({
-                            enableButton : true,
-                            disableButton : false
-                        })
-                    } else {
-                        this.setState({
-                            enableButton : false,
-                            disableButton : true
-                        })
-                    }
-                    
-                    this.setState({isFetching: false, list_tambak: res.data.data, totalNotif : res.data.totalNotif })
                 })
                 .catch((err) => {                                                                            
                     this.setState({

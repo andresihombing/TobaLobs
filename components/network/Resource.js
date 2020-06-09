@@ -295,6 +295,46 @@ class Resource {
         }
       });
     }
+
+    async push_notif(body, token){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.PUSHNOTIF, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async save_notif(body, token){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.SAVENOTIF, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

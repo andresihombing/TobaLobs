@@ -124,7 +124,7 @@ export default class Login extends Component {
         body.append('password', this.state.password);
 
         Resource.login(body, devices)
-        .then((res) => {                
+        .then((res) => {                            
             console.log(res.responseJson.status)
             if(res.responseJson.status == 'failed'){
                 this.setState({
@@ -132,10 +132,17 @@ export default class Login extends Component {
                 })
             }else{
                 const token = res.responseJson.data;
+                const username = res.responseJson.data.username;
+                const role = res.responseJson.data.role;
+                AsyncStorage.setItem('role', JSON.stringify(role));
                 AsyncStorage.setItem('user', JSON.stringify(token));
                 AsyncStorage.setItem('devices', JSON.stringify(devices));
-                navigate("Menu")
-                // navigate("Manage")
+                AsyncStorage.setItem('username', JSON.stringify(username));
+                if(role == 'admin'){
+                    navigate("Manage")    
+                }else{
+                    navigate("Menu")
+                }                                
             }
         })
         .catch((err) => {

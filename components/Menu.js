@@ -31,6 +31,9 @@ import EditTambak from './EditTambak'
 import KebutuhanEditTambak from './KebutuhanEditTambak'
 import EditProfile from './EditProfile'
 import EditPassword from './EditPassword'
+import SetJadwalPagi from './SetJadwalPagi'
+import SetJadwalSore from './SetJadwalSore'
+import PushJadwal from './PushJadwal'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -69,7 +72,16 @@ const HomeStack = createStackNavigator({
   },
   KebutuhanEditTambak: {
     screen: KebutuhanEditTambak
-  },    
+  },        
+  PushJadwal : {
+    screen: PushJadwal
+  },
+  SetJadwalPagi: {
+    screen: SetJadwalPagi
+  },
+  SetJadwalSore: {
+    screen: SetJadwalSore
+  }
 });
 
 const InfoStack = createStackNavigator({ 
@@ -96,7 +108,7 @@ const AkunStack = createStackNavigator({
   },
   EditPassword: {
     screen: EditPassword
-  }
+  },  
 });
 
 const TabNavigator = createMaterialBottomTabNavigator(

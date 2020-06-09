@@ -6,17 +6,15 @@ import {
 import Resource from './network/Resource'
 import { Table, Row, Rows } from 'react-native-table-component';
 import I18n from '../i18n/i18n';
+import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 
-export default class DetailTambak extends React.Component {
+export default class DetailTambak extends React.Component {    
     constructor(props) {
         super(props);
         this.state = {
-          tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.takaran'), I18n.t('hompage.makanan')],
-          tableData: [
-            ['08.00 WIB', '... gram', 'Pelet halus'],
-            ['11.00 WIB', '... gram', 'Pelet halus'],
-            ['18.00WIB', '... gram', 'Pelet halus'],            
-          ],
+          tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.makanan')],
+          tableData: [],
           namaTambak: '',
           panjang: '',
           lebar: '',
@@ -39,6 +37,22 @@ export default class DetailTambak extends React.Component {
         this.focusListener = navigation.addListener('didFocus', () => {      
             this.Detail()
         });
+        this.setJadwal()
+    }
+
+    setJadwal = async() => {
+        const {params} = this.props.navigation.state;
+        const tambakId = params ? params.tambakId : null;                   
+        const pagi = await AsyncStorage.getItem(`pagi${tambakId}`);
+        const sore = await AsyncStorage.getItem(`sore${tambakId}`);
+        const pagiParse = JSON.parse(pagi)
+        const soreParse = JSON.parse(sore)
+        const convertPagi = moment(pagiParse).format('HH:mm')       
+        const convertSore = moment(soreParse).format('HH:mm')       
+        const table = [[`${convertPagi} WIB`, 'Pakan'],[`${convertSore} WIB`, 'Pakan']]             
+        this.setState({
+            tableData: table
+        })
     }
 
     componentWillUnmount() {
@@ -151,7 +165,19 @@ export default class DetailTambak extends React.Component {
                         <Text style = {styles.input}>{this.state.usiaLobster} bulan</Text>
                     </View>      
 
-                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.juduljadwal')}</Text>
+                    <View style={styles.titleContainer}>
+                        <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold', flex: 1}}>{I18n.t('hompage.juduljadwal')}</Text>
+                        <TouchableOpacity style = {styles.buttonPakan}
+                            onPress = {() => {
+                                this.props.navigation.navigate('PushJadwal', {
+                                    tambakId : this.state.tambakId,
+                                    namaTambak : this.state.namaTambak
+                                })
+                            }}>
+                             {/* <Text style={styles.txtTambah}>Edit Jadwal</Text> */}
+                             <Icon style={[{color: 'white'}]} size={30} name={'ios-settings'} />
+                        </TouchableOpacity>
+                    </View>
                     <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                     <Row data={state.tableHead} style={styles.head} textStyle={styles.textHead}/>
                     <Rows data={state.tableData} textStyle={styles.text}/>
@@ -231,5 +257,13 @@ const styles = StyleSheet.create({
     textHead: {
         color: 'black',        
         padding: 20
-    }
+    },
+    buttonPakan: {
+        // backgroundColor: '#f7c744',
+        // paddingVertical: 10,        
+        alignItems: 'center',
+        // width: '10%',
+        marginTop: 20,
+        marginBottom: 10
+    },   
 });

@@ -33,10 +33,10 @@ export default class AllNotifikasi extends React.Component {
       await AsyncStorage.getItem('user', (error, result) => {
       let tokenString = JSON.parse(result);
       Resource.getNotif(tokenString.token, 0, 'all-tambak')		
-        .then((res) => {         				          
-          res.data = res.data.map(item => {
-            item.StatusNotifikasi = item.StatusNotifikasi;
-            item.selectedClass = item.StatusNotifikasi == 'read' ? styles.list : styles.selected;
+        .then((res) => {         				             
+          res.data = res.data.map(item => {            
+            item.statusNotifikasi = item.statusNotifikasi;
+            item.selectedClass = item.statusNotifikasi == 'read' ? styles.list : styles.selected;
         
             return item;
           });                            
@@ -80,11 +80,11 @@ export default class AllNotifikasi extends React.Component {
   FlatListItemSeparator = () => <View style={styles.line} />;
 
   selectItem = data => {		
-    data.item.StatusNotifikasi = data.item.StatusNotifikasi;  
-    data.item.selectedClass = data.item.StatusNotifikasi ? styles.list : styles.selected;
+    data.item.statusNotifikasi = data.item.statusNotifikasi;  
+    data.item.selectedClass = data.item.statusNotifikasi ? styles.list : styles.selected;
 
     const index = this.state.dataSource.findIndex(
-      item => data.item.ID === item.ID
+      item => data.item.notifikasiID === item.notifikasiID,      
     );
 
     this.state.dataSource[index] = data.item;
@@ -92,7 +92,7 @@ export default class AllNotifikasi extends React.Component {
     this.detailNotif()
     this.setState({
       dataSource: this.state.dataSource,
-      notifId : data.item.ID
+      notifId : data.item.notifikasiID
     });
   };
 
@@ -103,8 +103,8 @@ export default class AllNotifikasi extends React.Component {
     >
     <View      
       style={{ width: 40, height: 40, margin: 6 }}>
-      <Text style={styles.titleText}>  {data.item.Title}  </Text>
-      <Text style={styles.lightText}>  {data.item.Body}  </Text>
+      <Text style={styles.titleText}>  {data.item.title}  </Text>
+      <Text style={styles.lightText}>  {data.item.body}  </Text>
     </View>
   </TouchableOpacity>
 
@@ -124,7 +124,7 @@ export default class AllNotifikasi extends React.Component {
             // data={this.state.dataSource.sort((a, b) => a.ID.localeCompare(b.ID))}
             ItemSeparatorComponent={this.FlatListItemSeparator}
             renderItem={item => this.renderItem(item)}
-            keyExtractor={item => item.ID.toString()}
+            keyExtractor={item => item.notifikasiID.toString()}
             extraData={this.state}
           />  
           <Text style={{ display: this.state.kosong ? "flex" : "none", marginTop:150, textAlign: 'center', alignItems: 'center', fontSize: 20, color: 'white' }}>Tidak Ada Notifikasi</Text>

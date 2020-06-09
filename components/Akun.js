@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
     StyleSheet, View, Text, AsyncStorage,
-    TouchableOpacity, ScrollView
+    TouchableOpacity, ScrollView, Alert
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import Resource from './network/Resource'
@@ -30,7 +30,8 @@ export default class Akun extends React.Component {
         title: I18n.t('hompage.labelaccount')
     })
 
-    componentDidMount() {                
+    componentDidMount = async() => {       
+        console.log(await AsyncStorage.getItem('user'))         
         this.getData()
         this.getUser()
         const { navigation } = this.props;
@@ -88,7 +89,8 @@ export default class Akun extends React.Component {
                 Resource.logout(body, tokenString, dev)
                 .then((res) => {                
                     console.log(res)                
-                    AsyncStorage.clear();
+                    // AsyncStorage.clear();
+                    AsyncStorage.removeItem('user');
                     this.props.navigation.navigate('Auth');
                 })
                 .catch((err) => {
@@ -98,7 +100,24 @@ export default class Akun extends React.Component {
         } catch (error) {
             console.log('AsyncStorage error: ' + error.message);
         }    
+        console.log(await AsyncStorage.getItem('user'))         
     };
+
+    keluar(){
+        Alert.alert(
+            "",
+            "Apakah anda yakin ingin keluar ?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => this._signOutAsync() }
+            ],
+            { cancelable: false }
+          );
+    }
     
     render() {
         return (        
@@ -138,7 +157,7 @@ export default class Akun extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.pengaturan}>
-                    <TouchableOpacity onPress = {() => this._signOutAsync()}>
+                    <TouchableOpacity onPress = {() => this.keluar()}>
                         <Text style = {styles.garis}> 
                         <Icon size={25} name={'md-log-out'} /> {this.state.keluar}</Text>
                     </TouchableOpacity>

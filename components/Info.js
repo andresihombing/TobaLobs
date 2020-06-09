@@ -27,7 +27,7 @@ export default class Info extends React.Component {
     getData = async () => {
       try{            
           await AsyncStorage.getItem('user', (error, result) => {
-          let tokenString = JSON.parse(result);
+          let tokenString = JSON.parse(result);          
           Resource.information(tokenString.token)
               .then((res) => {                                 
                 this.setState({

@@ -1,10 +1,11 @@
 import React from 'react';
 import { 
-    StyleSheet, View, Text,
-    TouchableOpacity, ScrollView
+    StyleSheet, View, Text, Alert,
+    TouchableOpacity, ScrollView, AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import I18n from '../i18n/i18n';
+import Resource from './network/Resource'
 /**
  * Home screen
  */
@@ -16,6 +17,48 @@ export default class Akun extends React.Component {
     static navigationOptions = ({navigation}) => ({
         title: 'Menu Admin',
     })
+
+    _signOutAsync = async () => {
+        try {
+            let devices = await AsyncStorage.getItem('devices');
+            let dev = JSON.parse(devices);
+            // console.warn(dev)
+            await AsyncStorage.getItem('user', (error, result) => {       
+                let tokenString = JSON.parse(result);            
+                let body = '';              
+
+                Resource.logout(body, tokenString, dev)
+                .then((res) => {                
+                    // console.log(res)                
+                    // AsyncStorage.clear();
+                    AsyncStorage.removeItem('user');
+                    AsyncStorage.removeItem('role');
+                    this.props.navigation.navigate('Auth');
+                })
+                .catch((err) => {
+                    alert(err)                
+                })            
+            });                  
+        } catch (error) {
+            console.log('AsyncStorage error: ' + error.message);
+        }            
+    };
+
+    keluar(){
+        Alert.alert(
+            "",
+            "Apakah anda yakin ingin keluar ?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => this._signOutAsync() }
+            ],
+            { cancelable: false }
+          );
+    }
         
     render() {
         return (        
@@ -30,6 +73,11 @@ export default class Akun extends React.Component {
                     <View style={styles.pengaturan}>
                         <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManagePanduan')}>
                             <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Mengolola Panduan</Text>
+                        </TouchableOpacity>                                        
+                    </View>  
+                    <View style={styles.pengaturan}>
+                        <TouchableOpacity onPress = {() => this.keluar()}>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Keluar</Text>
                         </TouchableOpacity>                                        
                     </View>                    
                 </View>

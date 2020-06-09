@@ -18,5 +18,7 @@ export default {
     MONITOR : '/api/tambak/monitor/',
     EDIT_TAMBAK : '/api/tambak/',
     USER : '/api/user',
-    CHANGE_PASS: '/api/user/password'
+    CHANGE_PASS: '/api/user/password',
+    PUSHNOTIF: '/api/push-notif',
+    SAVENOTIF: '/api/save-notif'
 }

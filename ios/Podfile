@@ -36,6 +36,10 @@ target 'TobaLobs' do
 
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
 
+  pod 'react-native-alarm-notification', :path => '../node_modules/react-native-alarm-notification'
+
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'TobaLobsTests' do
     inherit! :search_paths
     # Pods for testing

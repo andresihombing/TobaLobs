@@ -86,12 +86,12 @@ export default class LogNotifikasi extends React.Component {
       style={[styles.list, data.item.selectedClass]}      
       onPress={() => {
         this.detailNotif();
-        this.setState({notifId :data.item.ID})}
+        this.setState({notifId :data.item.notifikasiID})}
       }
     >
     <View      
       style={{ width: 40, height: 40, margin: 6 }}>      
-      <Text style={styles.lightText}>  {data.item.Body}  </Text>
+      <Text style={styles.lightText}>  {data.item.body}  </Text>
     </View>
   </TouchableOpacity>
 
