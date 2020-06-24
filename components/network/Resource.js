@@ -335,6 +335,140 @@ class Resource {
         }
       });
     }
+
+    async edit_info(body, headers, id_info){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDIT_INFO + id_info, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async create_info(body, headers){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.CREATE_INFO, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async delete_info(headers, id){      
+      const header = {
+        "Authorization": headers.token,
+        "Content-Type": "application/json",
+      }
+  
+      let res = await Request.delete(URI.API_BASE_URL + URI.DELETE_INFO + id, header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_panduan(body, headers, id){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDIT_PANDUAN + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async create_panduan(body, headers){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.CREATE_PANDUAN, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async delete_panduan(headers, id){      
+      const header = {
+        "Authorization": headers.token,
+        "Content-Type": "application/json",
+      }
+  
+      let res = await Request.delete(URI.API_BASE_URL + URI.DELETE_PANDUAN + id, header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_jadwal(body, headers, id){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDIT_JADWAL + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

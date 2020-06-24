@@ -7,6 +7,8 @@ import { Button } from 'react-native-paper';
 import Resource from './network/Resource'
 import Icon from 'react-native-vector-icons/Ionicons';
 import I18n from '../i18n/i18n';
+import PushNotification from 'react-native-push-notification';
+import PushJadwal from './PushJadwal';
 /**
  * Home screen
  */
@@ -26,11 +28,16 @@ export default class Akun extends React.Component {
         }
     }
     
+    // handlerSimpleCall = () => {
+    //     //Calling a function of other class (without arguments)
+    //     new PushJadwal().functionWithoutArg();
+    //   };
+
     static navigationOptions = ({navigation}) => ({
         title: I18n.t('hompage.labelaccount')
     })
 
-    componentDidMount = async() => {       
+    componentDidMount = async() => {              
         console.log(await AsyncStorage.getItem('user'))         
         this.getData()
         this.getUser()
@@ -56,7 +63,7 @@ export default class Akun extends React.Component {
 
     getUser = async () => {
         try {            
-            await AsyncStorage.getItem('user', (error, result) => {       
+            await AsyncStorage.getItem('user', (error, result) => {
                 let tokenString = JSON.parse(result);                                                                
                 Resource.user(tokenString.token)
                 .then((res) => {                       
@@ -91,6 +98,7 @@ export default class Akun extends React.Component {
                     console.log(res)                
                     // AsyncStorage.clear();
                     AsyncStorage.removeItem('user');
+                    
                     this.props.navigation.navigate('Auth');
                 })
                 .catch((err) => {
@@ -109,11 +117,11 @@ export default class Akun extends React.Component {
             "Apakah anda yakin ingin keluar ?",
             [
               {
-                text: "Cancel",
+                text: "Tidak",
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
               },
-              { text: "OK", onPress: () => this._signOutAsync() }
+              { text: "Ya", onPress: () => this._signOutAsync() }
             ],
             { cancelable: false }
           );
@@ -125,9 +133,11 @@ export default class Akun extends React.Component {
             <ScrollView>                
             <View style = {styles.infoContainer}>
                 <View style={styles.titleContainer}>
-                    <Text style = {styles.text}>{this.state.name}</Text>                    
-                
-                    <TouchableOpacity style = {styles.buttonContainer} onPress = {() => this.props.navigation.navigate('EditProfile', {
+                    <Text style = {styles.textName}>{this.state.name}</Text>                    
+                    <Text style = {styles.text}>{this.state.alamat}</Text>   
+                    <Text style = {styles.text}>{this.state.noHp}</Text>   
+                    <Text style = {styles.garis}></Text>         
+                    {/* <TouchableOpacity style = {styles.buttonContainer} onPress = {() => this.props.navigation.navigate('EditProfile', {
                         name: this.state.name,
                         alamat: this.state.alamat,
                         tglLahir: this.state.tglLahir,
@@ -135,14 +145,20 @@ export default class Akun extends React.Component {
                         username: this.state.username
                     })}>
                         <Text style={styles.txtTambah}>Edit Profile</Text>
-                    </TouchableOpacity>                    
+                    </TouchableOpacity>                     */}
                 </View>          
                 <View style={styles.contentContainer}>
-                    <Text style = {styles.text}>{this.state.alamat}</Text>
-                    <Text style = {styles.garis}>{this.state.noHp}</Text>                    
+                    {/* <Text style = {styles.text}>{this.state.alamat}</Text> */}
+                    {/* <Text style = {styles.garis}>{this.state.noHp}</Text>                     */}
                 </View>
                 <View style={styles.pengaturan}>
-                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('Pengaturan')}>
+                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('Pengaturan', {
+                        name: this.state.name,
+                        alamat: this.state.alamat,
+                        tglLahir: this.state.tglLahir,
+                        noHp : this.state.noHp,
+                        username: this.state.username
+                    })}>
                         <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> {this.state.pengaturan}</Text>
                     </TouchableOpacity>                                        
                 </View>
@@ -174,7 +190,7 @@ export default class Akun extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#192338",    
+        backgroundColor: "#254F6E",    
         position: "relative"
     },
     infoContainer: {        
@@ -183,11 +199,12 @@ const styles = StyleSheet.create({
         // padding: 15,                
     },
     buttonContainer: {        
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 10,
         alignItems: 'center',
         width: '30%',
-        marginBottom: 10  
+        marginBottom: 10,
+        borderRadius: 10
     },
     titleContainer: {
         marginTop: 10,
@@ -214,10 +231,16 @@ const styles = StyleSheet.create({
         paddingBottom: 20
     },
     text : {
-        fontSize: 18,
+        fontSize: 16,
         // fontWeight: 'bold',                
         color: 'white',        
-        width: '70%',        
+        width: '100%',        
+    },
+    textName : {
+        fontSize: 18,
+        fontWeight: 'bold',                
+        color: 'white',        
+        width: '100%',        
     },
     pengaturan : {
         marginTop: 10,                
@@ -225,4 +248,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,   
         paddingLeft : 15              
     },
+    txtTambah: {
+        color: 'white'
+    }
 });

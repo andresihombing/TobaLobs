@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgb(32, 53, 70)',
+      backgroundColor: '#254F6E',
       paddingTop: 10,
     },
     header: {

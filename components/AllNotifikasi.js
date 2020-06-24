@@ -33,7 +33,8 @@ export default class AllNotifikasi extends React.Component {
       await AsyncStorage.getItem('user', (error, result) => {
       let tokenString = JSON.parse(result);
       Resource.getNotif(tokenString.token, 0, 'all-tambak')		
-        .then((res) => {         				             
+        .then((res) => {         				               
+          this.setState({isFetching: false, dataSource: res.data })        
           res.data = res.data.map(item => {            
             item.statusNotifikasi = item.statusNotifikasi;
             item.selectedClass = item.statusNotifikasi == 'read' ? styles.list : styles.selected;
@@ -50,8 +51,7 @@ export default class AllNotifikasi extends React.Component {
               kosong : true,                            
             })
           }
-          
-          this.setState({isFetching: false, dataSource: res.data })
+                    
         })
         .catch((err) => {                                          
           console.log(err)
@@ -102,13 +102,15 @@ export default class AllNotifikasi extends React.Component {
       onPress={() => this.selectItem(data)}
     >
     <View      
-      style={{ width: 40, height: 40, margin: 6 }}>
+      style={styles.titleContainer}>      
       <Text style={styles.titleText}>  {data.item.title}  </Text>
-      <Text style={styles.lightText}>  {data.item.body}  </Text>
+      <Text style={styles.tanggal}>  {data.item.waktuTanggal}</Text>
+      <Text style={styles.lightText}>  {data.item.body}  </Text>      
     </View>
   </TouchableOpacity>
 
   render() {
+    
     return (
       <View style={styles.container}>   
       <ScrollView
@@ -137,7 +139,7 @@ export default class AllNotifikasi extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#192338",    
+    backgroundColor: "#254F6E",    
     position: "relative"
    },
   title: {
@@ -145,6 +147,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginBottom: 10
+  },
+  titleContainer: {
+    flex: 1,    
+    height: 60,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',            
   },
   loader: {
     flex: 1, 
@@ -156,7 +165,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     margin: 3,
     flexDirection: "row",
-    backgroundColor: "#192338",
+    backgroundColor: "#254F6E",
     justifyContent: "flex-start",
     alignItems: "center",
     zIndex: -1,
@@ -168,11 +177,11 @@ const styles = StyleSheet.create({
     fontSize: 13
    },
   titleText: {
-    color: "#f7f7f7",
-    width: 300,
-    paddingLeft: 17,
+    marginTop: 10,
+    color: "#f7f7f7",    
+    paddingLeft: 15,
     fontSize: 13,
-    fontWeight : 'bold'
+    width: '67%'
   },
   line: {
     height: 0.5,
@@ -197,6 +206,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#e3e3e3",
     justifyContent: "center",
     alignItems: "center"
+  },
+  tanggal: {    
+    marginTop: 10,
+    color: "#f7f7f7",    
+    paddingLeft: 15,
+    fontSize: 10,
+    width: '33%'
   },
   number: {fontSize: 14,color: "#000"},
   selected: {backgroundColor: "#FA7B5F"},

@@ -36,7 +36,7 @@ export default {
       jumlahlobster: 'Jumlah Lobster',
       ekor: 'ekor',
       shelter: 'Shelter',
-      juduljadwal: 'Jadwal Pemberian Pakan',
+      juduljadwal: 'Jadwal Pakan dan Ganti Air',
       perhatian: 'Perhatian !',
       warning: 'Pastikan setiap kebutuhan yang tertera diatas sudah terpenuhi. Hal ini untuk melancarkan panduan tahapan budi daya pada aplikasi.',
       terpenuhi: 'Kebutuhan sudah terpenuhi',
@@ -49,12 +49,12 @@ export default {
       juduljumlah: 'Jumlah lobster pada tambak',
       waktu: 'Waktu',
       takaran: 'Takaran',
-      makanan: 'Makanan',
+      makanan: 'Keterangan',
 
       //tambak
       riwayat: 'Lihat Riwayat Monitoring Tambak',
       suhu: 'Suhu',
-      notif: 'Notifikasi',
+      notif: 'Notifikasi belum dibaca',
       lognotif: 'Log Notifikasi',
 
       //profile
@@ -97,5 +97,12 @@ export default {
       berhasilgantipass: 'Berhasil Ganti Password',
       mincar: 'Password miniman 6 karakter',
       errorpass: 'Edit Password Gagal',
+
+      //jadwal
+      aturjadwal: 'Atur Jadwal',
+      aturjadwalpagi: 'Atur jadwal pakan pagi',
+      aturjadwalsore: 'Atur jadwal pakan sore',
+      aturjadwalair: 'Atur jadwal air',
+      aturdefault: 'Atur jadwal default '
     },
   }

@@ -158,7 +158,7 @@ export default class Register extends Component {
         const { navigate } = this.props.navigation;
         let formdata = new FormData();
         formdata.append('username', this.state.username);
-        formdata.append('fullname', this.state.nama);
+        formdata.append('nama', this.state.nama);
         formdata.append('password', this.state.password);        
         formdata.append('noHp', this.state.noHp);
         formdata.append('tanggalLahir', this.state.tanggalLahir);
@@ -310,7 +310,7 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     logoContainer: {                
@@ -358,13 +358,14 @@ const styles = StyleSheet.create({
         padding: 20        
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 15,
-        marginTop: 15
+        marginTop: 15,        
+        borderRadius:10,        
     },
     buttonText: {
         textAlign: 'center',
-        color: 'rgb(32, 53, 70)',
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 15,
     },

@@ -125,7 +125,7 @@ export default class Login extends Component {
 
         Resource.login(body, devices)
         .then((res) => {                            
-            console.log(res.responseJson.status)
+            console.log(res)
             if(res.responseJson.status == 'failed'){
                 this.setState({
                     errorForm: true,
@@ -185,9 +185,9 @@ export default class Login extends Component {
                         />
                         <Text style={{ display: this.state.errorPass ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
 
-                        <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 15, marginTop: 10}}
+                        <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 15, marginTop: 10, borderRadius: 10}}
                             onPress = {() => this.submitReg()}>
-                            <Text style = {styles.buttonText}>SIGN IN</Text>
+                            <Text style = {styles.buttonText}>Login</Text>
                         </TouchableOpacity>
                                            
                         <Text style={styles.buttonReg}>
@@ -209,7 +209,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     logoContainer: {        
@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
         right: 0,
         height: 380,        
         padding: 20,                
+        borderRadius:10,        
     },
     buttonContainer: {
         backgroundColor: '#f7c744',
@@ -254,7 +255,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: 'center',
-        color: 'rgb(32, 53, 70)',
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 15,        
     },

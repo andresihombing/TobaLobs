@@ -20,6 +20,7 @@ export default class Tambak extends React.Component {
             tambakId : '',
             kosong: false,
             isFetching: true,
+            pengukuranTerakhir: '',
         }
     }
     
@@ -59,13 +60,14 @@ export default class Tambak extends React.Component {
                 // console.warn(this.props.coba)
                 // console.warn(list)
                 Resource.postTambak(itemId, tokenString.token)
-                .then((res) => {                                                                        
+                .then((res) => {        
+                    console.log(res)                                                                
                     var ph = res.data.ph
                     var suhu = res.data.suhu
-                    var Do = res.data.do
-                    ph = ph.toFixed(1);
-                    suhu = suhu.toFixed(1);
-                    Do = Do.toFixed(1);
+                    var Do = res.data.do                    
+                    // ph = ph.toFixed(2);
+                    // suhu = suhu.toFixed(2);
+                    // Do = Do.toFixed(2);
                     this.setState({
                         namaTambak: res.data.namaTambak,
                         keterangan: res.data.keterangan,
@@ -75,6 +77,7 @@ export default class Tambak extends React.Component {
                         waktuTanggal: res.data.waktuTanggal,
                         tambakId: itemId,
                         isFetching: false,
+                        pengukuranTerakhir: res.data.waktuTanggal,
                     })                    
                 })
                 .catch((err) => {                    
@@ -137,7 +140,10 @@ export default class Tambak extends React.Component {
     }
 
     render() {                      
-
+        var date = this.state.pengukuranTerakhir
+        if(date == '1 Jan 0001 - 00:00'){
+            date = ' :   -'
+        }
         return (                        
             <View style={styles.container}>
                 <ScrollView
@@ -163,25 +169,32 @@ export default class Tambak extends React.Component {
                         </TouchableOpacity>
                         
                     </View>
-                    <View style={styles.tambakContainer}>  
+                    <View style={styles.tanggal}>
+                        <Text style = {{fontWeight:'bold'}}>Pengukuran terakhir {date}</Text>
+                    </View>
+                    <View style={styles.tambakContainer}>                          
                         <View style = {styles.monitoring}>
                             <Text style = {styles.textMonitoring}>{this.state.ph ? this.state.ph : 0}</Text>
-                            <Text style = {styles.textMonitoring}>{this.state.suhu ? this.state.ph : 0}°</Text>
+                            <Text style = {styles.textMonitoring}>{this.state.suhu ? this.state.suhu : 0}°</Text>
                             <Text style = {styles.textMonitoring}>{this.state.do ? this.state.do : 0}ppm</Text>
                         </View>
-                        <View style = {styles.monitoring}>
+                        <View style = {styles.monitoring2}>
                             <Text>PH</Text>
                             <Text>{I18n.t('hompage.suhu')}</Text>
                             <Text>Do</Text>
-                        </View>
+                        </View>                        
                     </View>
-                    <TouchableOpacity full style = {{backgroundColor: '#f7c744', paddingVertical: 7, marginTop: 10, marginBottom:20}}
+                    <View style={styles.keterangan}>
+                            <Text style = {{fontWeight:'bold'}}>keterangan :</Text>
+                            <Text>{this.state.keterangan}</Text>
+                        </View>
+                    <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 7, marginTop: 10, marginBottom:20}}
                         onPress = {() => {
                             this.props.navigation.navigate('Report', {
                                 tambakId : this.state.tambakId
                             })                            
                         }}>
-                        <Text style = {styles.txtTambah, {textAlign:'center'}}>{I18n.t('hompage.riwayat')}</Text>
+                        <Text style = {styles.txtTambah}>{I18n.t('hompage.riwayat')}</Text>
                     </TouchableOpacity>
                     <View style = {styles.notifContainer}>
                         <Text style={styles.txtNotif}>{I18n.t('hompage.notif')}</Text>
@@ -223,7 +236,7 @@ export default class Tambak extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     titleContainer: {
@@ -248,44 +261,65 @@ const styles = StyleSheet.create({
         width: '70%'
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 10,        
         alignItems: 'center',
         width: '30%',
-        marginBottom: 10  
+        marginBottom: 10 ,
+        borderRadius: 10
     },
     tambakContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        // flex: 1,
+        // flexDirection: 'column',
+        // // flexWrap: 'wrap',
+        // // justifyContent: 'space-between',
         // alignItems: 'stretch',    
         backgroundColor: 'white',
-        // paddingVertical: 15,
-        marginTop: 15,        
-        paddingTop: 70,
-        paddingBottom: 80,
-        height: 200,
-        // alignContent: 'center'
+        // // paddingVertical: 40,
+        // marginTop: 15,        
+        // paddingTop: 70,
+        // // paddingBottom: 80,
+        // height: 200,
+        // // alignContent: 'center'
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch',
     },
     monitoring: {
         flex: 1,
         flexDirection: 'row', 
         flexWrap: 'wrap',
-        justifyContent: 'space-evenly',        
-        alignItems: 'center',
-        alignContent: 'center',
+        justifyContent: 'space-evenly',     
+        height: 30,
+        marginTop: 40
+        // paddingVertical: 40,
+        // paddingBottom: 80,
+        // alignItems: 'center',
+        // alignContent: 'center',
+    },
+    monitoring2: {
+        flex: 1,
+        flexDirection: 'row', 
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',     
+        height: 40
+        
+        // paddingVertical: 40,
+        // paddingBottom: 80,
+        // alignItems: 'center',
+        // alignContent: 'center',
     },
     textMonitoring: {        
         fontSize: 20,
         fontWeight: 'bold',                                
     },
     txtNotif: {        
-        fontSize: 15,
+        fontSize: 13,
         fontWeight: 'bold',
         color: 'white',
         padding: 5,
-        width: '50%'
+        width: '65%'
     },
     notifContainer: {
         flex: 1,
@@ -314,9 +348,31 @@ const styles = StyleSheet.create({
         padding: 5
     },
     buttonLog: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 5,
         alignItems: 'center',
-        width: '50%',        
+        width: '35%',        
+        borderRadius: 5
     },
+    txtTambah: {
+        color: 'white',
+        textAlign: 'center'
+    },
+    keterangan: {
+        paddingLeft: 10,
+        backgroundColor: 'white',        
+        height: 50,        
+        flex: 1,
+        flexDirection: 'column',        
+        alignItems: 'stretch',
+    },
+    tanggal: {
+        paddingLeft: 10,
+        height: 30,
+        flexDirection: 'column', 
+        flexWrap: 'wrap',
+        justifyContent: 'center',     
+        backgroundColor: '#c7ddef',
+        marginTop: 15
+    }
 });

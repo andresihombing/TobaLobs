@@ -18,8 +18,8 @@ export default function Report(route) {
     <NavigationContainer>
       <Tab.Navigator
         tabBarOptions={{
-          labelStyle: { fontSize: 15 },          
-          style: { backgroundColor: '#f5d0d0' },
+          labelStyle: { fontSize: 15, color:'white' },          
+          style: { backgroundColor: '#012D4E'},
           // Greeting()
         }}
       >        

@@ -34,6 +34,7 @@ import EditPassword from './EditPassword'
 import SetJadwalPagi from './SetJadwalPagi'
 import SetJadwalSore from './SetJadwalSore'
 import PushJadwal from './PushJadwal'
+import SetJadwalAir from './SetJadwalAir'
 import { createStackNavigator } from 'react-navigation-stack';
 
 const HomeStack = createStackNavigator({
@@ -81,6 +82,9 @@ const HomeStack = createStackNavigator({
   },
   SetJadwalSore: {
     screen: SetJadwalSore
+  },
+  SetJadwalAir: {
+    screen: SetJadwalAir
   }
 });
 
@@ -134,7 +138,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         ),        
         activeColor: '#ffffff',
         inactiveColor: '#ebaabd',
-        barStyle: { backgroundColor: '#d13560' },
+        barStyle: { backgroundColor: '#1B4260' },
       }
     },
 
@@ -148,7 +152,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         ),        
         activeColor: '#ffffff',
         inactiveColor: '#ebaabd',
-        barStyle: { backgroundColor: '#265011' },
+        barStyle: { backgroundColor: '#1B4260' },
       }
     },
   },
@@ -156,7 +160,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
     initialRouteName: 'Home',
     activeColor: '#ffffff',
     inactiveColor: '#bda1f7',
-    barStyle: { backgroundColor: '#6948f4' },
+    barStyle: { backgroundColor: '#1B4260' },
   }
 );
 

@@ -7,29 +7,26 @@ import { Table, Row, Rows } from 'react-native-table-component';
 import CheckBox from 'react-native-check-box'
 import Resource from './network/Resource'
 import I18n from '../i18n/i18n';
+import moment from 'moment';
 
 export default class DetailTambak extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.takaran'), I18n.t('hompage.makanan')],
-          tableData: [
-            ['08.00 WIB', '... gram', 'Pelet halus'],
-            ['11.00 WIB', '... gram', 'Pelet halus'],
-            ['18.00WIB', '... gram', 'Pelet halus'],            
-          ],
-          namaTambak : '',
-          panjang : '',
-          lebar : '',
-          jenisBudidaya: '',
-          jumlah : '',
-          betina : '',
-          jantan : '',
-          tambakId: '',
-          shelter : '',
-          usiaLobster : '',          
-          isChecked : false,
-          errorCheck: false
+            tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.makanan')],
+            tableData: [],
+            namaTambak : '',
+            panjang : '',
+            lebar : '',
+            jenisBudidaya: '',
+            jumlah : '',
+            betina : '',
+            jantan : '',
+            tambakId: '',
+            shelter : '',
+            usiaLobster : '',          
+            isChecked : false,
+            errorCheck: false
         }
       }
 
@@ -43,6 +40,27 @@ export default class DetailTambak extends React.Component {
         this.focusListener = navigation.addListener('didFocus', () => {      
             this.kebutuhanTambak()
         });
+        this.setJadwal()
+    }
+
+    setJadwal = async() => {
+        const {params} = this.props.navigation.state;
+        const tambakId = params ? params.tambakId : null;                   
+        const pagi = await AsyncStorage.getItem(`pagi${tambakId}`);
+        const sore = await AsyncStorage.getItem(`sore${tambakId}`);
+        const air = await AsyncStorage.getItem(`gantiAir${tambakId}`);
+        const jumlahHari = await AsyncStorage.getItem(`jumlahHari${tambakId}`);
+        const pagiParse = JSON.parse(pagi)
+        const soreParse = JSON.parse(sore)
+        const airParse = JSON.parse(air)
+        const hari = JSON.parse(jumlahHari)
+        const convertPagi = moment(pagiParse).format('HH:mm')       
+        const convertSore = moment(soreParse).format('HH:mm') 
+        const convertAir = moment(airParse).format('HH:mm') 
+        const table = [[`${convertPagi} WIB`, 'Pakan Pagi'],[`${convertSore} WIB`, 'Pakan Sore'],[`${convertAir} WIB`, `Ganti air 1 x ${hari} hari`]]             
+        this.setState({
+            tableData: table
+        })
     }
 
     componentWillUnmount() {
@@ -185,14 +203,14 @@ export default class DetailTambak extends React.Component {
                     <Text style={{ display: this.state.errorCheck ? "flex" : "none", color: 'red', fontSize: 10, marginTop: -30, paddingBottom: 30, paddingLeft: 30}}>{I18n.t('hompage.centang')}</Text>
                     
                     
-                    <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "flex" : "none"}}
+                    <TouchableOpacity style = {{backgroundColor: '#00A9DE', borderRadius: 10,paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "flex" : "none"}}
                             onPress = {() => {
                                 this.editTambak();
                             }}
                         >
                         <Text style={styles.txtTambah}>{I18n.t('hompage.mulai')}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "none" : "flex"}}
+                    <TouchableOpacity style = {{backgroundColor: '#00A9DE', borderRadius: 10, paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "none" : "flex"}}
                             onPress = {() => {
                                 this.setState({
                                     errorCheck : true
@@ -221,7 +239,7 @@ export default class DetailTambak extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     titleContainer: {
@@ -300,7 +318,7 @@ const styles = StyleSheet.create({
         color: 'white',        
     }, 
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 15,        
         alignItems: 'center',
     },
@@ -309,4 +327,7 @@ const styles = StyleSheet.create({
         color: 'white',
         marginTop: 5
     },
+    txtTambah: {
+        color: 'white'
+    }
 });

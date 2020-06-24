@@ -23,7 +23,8 @@ export default class DetailTambak extends React.Component {
           usiaLobster: '',
           jantan: '',
           betina: '',
-          tambakId: ''
+          tambakId: '',
+          tglMulai: ''
         }       
       }
 
@@ -45,15 +46,20 @@ export default class DetailTambak extends React.Component {
         const tambakId = params ? params.tambakId : null;                   
         const pagi = await AsyncStorage.getItem(`pagi${tambakId}`);
         const sore = await AsyncStorage.getItem(`sore${tambakId}`);
+        const air = await AsyncStorage.getItem(`gantiAir${tambakId}`);
+        const jumlahHari = await AsyncStorage.getItem(`jumlahHari${tambakId}`);
         const pagiParse = JSON.parse(pagi)
         const soreParse = JSON.parse(sore)
+        const airParse = JSON.parse(air)
+        const hari = JSON.parse(jumlahHari)
         const convertPagi = moment(pagiParse).format('HH:mm')       
-        const convertSore = moment(soreParse).format('HH:mm')       
-        const table = [[`${convertPagi} WIB`, 'Pakan'],[`${convertSore} WIB`, 'Pakan']]             
+        const convertSore = moment(soreParse).format('HH:mm') 
+        const convertAir = moment(airParse).format('HH:mm') 
+        const table = [[`${convertPagi} WIB`, 'Pakan Pagi'],[`${convertSore} WIB`, 'Pakan Sore'],[`${convertAir} WIB`, `Ganti air 1 x ${hari} hari`]]             
         this.setState({
             tableData: table
         })
-    }
+    }   
 
     componentWillUnmount() {
         // Remove the event listener before removing the screen from the stack
@@ -74,7 +80,7 @@ export default class DetailTambak extends React.Component {
                 // console.warn(list)
                 Resource.detailTambak(tambakId, tokenString.token)
                 .then((res) => {     
-                    // console.warn(res)                                                                       
+                    console.log(res)                                                                       
                     this.setState({
                         tambakId: res.data.tambakID,
                         namaTambak: res.data.namaTambak,
@@ -84,7 +90,8 @@ export default class DetailTambak extends React.Component {
                         jumlahLobster: res.data.jumlahLobster,       
                         usiaLobster: res.data.usiaLobster,
                         jantan: res.data.jumlahLobsterJantan,
-                        betina: res.data.jumlahLobsterBetina,          
+                        betina: res.data.jumlahLobsterBetina,       
+                        tglMulai: res.data.tanggalMulaiBudidaya   
                     })                    
                 })
                 .catch((err) => {                    
@@ -120,6 +127,7 @@ export default class DetailTambak extends React.Component {
                         </TouchableOpacity>                                                             
                     </View>                    
 
+                    <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>Tanggal mulai budidaya {this.state.tglMulai}</Text>
                     <Text style = {{color: 'white', marginTop: 20, fontSize: 15, fontWeight: 'bold'}}>{I18n.t('hompage.judulukuran')}</Text>
                     <View style={styles.rowContainer}>
                         <Text style={styles.label}>{I18n.t('hompage.addPanjang')} :</Text>
@@ -194,7 +202,7 @@ export default class DetailTambak extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     titleContainer: {
@@ -219,11 +227,12 @@ const styles = StyleSheet.create({
         width: '70%'
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 10,        
         alignItems: 'center',
         width: '30%',
-        marginBottom: 10  
+        marginBottom: 10  ,
+        borderRadius: 10
     },   
     rowContainer: {
         flex: 1,         
@@ -266,4 +275,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10
     },   
+    txtTambah: {
+        color: 'white',
+        textAlign: 'center'
+    }
 });

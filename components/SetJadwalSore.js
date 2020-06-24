@@ -6,6 +6,7 @@ import Resource from './network/Resource'
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import PushNotification from 'react-native-push-notification';
+import I18n from '../i18n/i18n';
 
 class SetJadwalSore extends Component {
   state = {
@@ -16,11 +17,15 @@ class SetJadwalSore extends Component {
     namaTambak : ''
   };
 
+  static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.aturjadwal'),            
+  })
+
   componentDidMount = async() => {        
     const {params} = this.props.navigation.state;
     const tambakId = params ? params.tambakId : null;
     const namaTambak = params ? params.namaTambak : null;
-    const date = await AsyncStorage.getItem(`sore${tambakId}`);  
+    const date = await AsyncStorage.getItem(`sore${tambakId}`);
     const setTime = JSON.parse(date)
     this.setState({
       tambakId: tambakId,
@@ -42,6 +47,28 @@ class SetJadwalSore extends Component {
   hideDateTimePicker = () => {
     this.setState({ isDateTimePickerVisible: false });
   };
+
+  submitReg = async (id, date) => {            
+    var date = moment(date).format('HH:mm')    
+    let formdata = new FormData();
+    formdata.append('type', 'pakan_sore');
+    formdata.append('value', date);
+    
+    try{
+        await AsyncStorage.getItem('user', (error, result) => {
+            let tokenString = JSON.parse(result);                                       
+            Resource.edit_jadwal(formdata, tokenString, id)            
+            .then((res) => {                                                                                   
+                console.log(res)                
+            })
+            .catch((err) => {            
+                console.warn('Error:', err);
+            })  
+        });   
+    } catch (error) {            
+        console.log('AsyncStorage error: ' + error.message);
+    }            
+  }
 
   handleDatePicked = date => {        
     
@@ -66,7 +93,8 @@ class SetJadwalSore extends Component {
       date = new Date(yesterday)
       console.log('pas')
     }
-    this.hideDateTimePicker();                
+    this.hideDateTimePicker();   
+    this.submitReg(tambakId, date)             
     this.setState({
       notificationTime: date,
     });
@@ -74,9 +102,8 @@ class SetJadwalSore extends Component {
     this.scheduleNotif()
     Alert.alert(
       '',
-      `Berhasil Mengatur Waktu Pemberian Pakan pukul ${timeSelect} WIB`
-    )
-    
+      `Berhasil Mengatur Waktu Pemberian Pakan pukul ${moment(date).format("HH:mm")} WIB`
+    )    
   };
 
   scheduleNotif = async(soundName) =>{            
@@ -147,14 +174,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 5,    
-    backgroundColor: "#fff",  
+    backgroundColor: "#254F6E",  
   },
   text: {
     fontSize: 20,
-    marginTop: 10
+    marginTop: 10,
+    color: 'white'
   },
   buttonpagi: {
-    backgroundColor: "#4EB151",
+    backgroundColor: "#00A9DE",
     paddingVertical: 11,
     paddingHorizontal: 17,
     borderRadius: 3,

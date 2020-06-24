@@ -14,7 +14,7 @@ export default class LogNotifikasi extends React.Component {
         this.state = {
             isFetching: true,
             listNotif : [],
-            kosong : false,
+            kosong : true,
             notifId : ''
         }
     }
@@ -41,7 +41,8 @@ export default class LogNotifikasi extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getNotif(tokenString.token, tambakId, 'all-per-tambak')
                 .then((res) => {                                 
-                    // console.warn(res)    
+                    this.setState({isFetching: false, listNotif: res.data })
+                    
                     if(res.data.length != 0){
                         this.setState({
                             kosong : false,                            
@@ -50,9 +51,7 @@ export default class LogNotifikasi extends React.Component {
                         this.setState({
                             kosong : true,                            
                         })
-                    }
-                    
-                    this.setState({isFetching: false, listNotif: res.data })
+                    }                                        
                     
                 })
                 .catch((err) => {                                          
@@ -89,9 +88,9 @@ export default class LogNotifikasi extends React.Component {
         this.setState({notifId :data.item.notifikasiID})}
       }
     >
-    <View      
-      style={{ width: 40, height: 40, margin: 6 }}>      
-      <Text style={styles.lightText}>  {data.item.body}  </Text>
+    <View style = {{height: 50, marginTop: 6}}>      
+        <Text style={styles.lightText}>  {data.item.body}  </Text>      
+        <Text style={styles.tanggal}>  {data.item.waktuTanggal}  </Text>      
     </View>
   </TouchableOpacity>
 
@@ -134,7 +133,7 @@ export default class LogNotifikasi extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#192338",    
+        backgroundColor: "#254F6E",    
         position: "relative"
     },
     notif: {
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         margin: 3,
         flexDirection: "row",
-        backgroundColor: "#192338",
+        backgroundColor: "#254F6E",
         justifyContent: "flex-start",
         alignItems: "center",
         zIndex: -1,
@@ -162,15 +161,22 @@ const styles = StyleSheet.create({
     lightText: {
         color: "#f7f7f7",
         width: 300,
-        padding: 15,
-        fontSize: 13
-    },
+        paddingLeft: 15,
+        fontSize: 15
+    },    
+    tanggal: {
+        color: "#f7f7f7",
+        width: 300,
+        paddingLeft: 15,
+        fontSize: 10,
+        paddingTop: 10,
+    },    
     titleText: {
         color: "#f7f7f7",
         width: 300,
         paddingLeft: 17,
         fontSize: 13,
-        fontWeight : 'bold'
+        fontWeight : 'bold',        
     },
     line: {
         height: 0.5,

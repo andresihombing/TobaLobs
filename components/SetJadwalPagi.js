@@ -6,6 +6,7 @@ import Resource from './network/Resource'
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import PushNotification from 'react-native-push-notification';
+import I18n from '../i18n/i18n';
 
 class SetJadwalPagi extends Component {
   state = {
@@ -15,6 +16,10 @@ class SetJadwalPagi extends Component {
     tambakId : '',
     namaTambak : ''
   };
+
+  static navigationOptions = ({navigation}) => ({
+    title: I18n.t('hompage.aturjadwal'),            
+  })
 
   componentDidMount = async() => {        
     const {params} = this.props.navigation.state;
@@ -43,6 +48,28 @@ class SetJadwalPagi extends Component {
     this.setState({ isDateTimePickerVisible: false });
   };
 
+  submitReg = async (id, date) => {            
+    var date = moment(date).format('HH:mm')    
+    let formdata = new FormData();
+    formdata.append('type', 'pakan_pagi');
+    formdata.append('value', date);
+    
+    try{
+        await AsyncStorage.getItem('user', (error, result) => {
+            let tokenString = JSON.parse(result);                                       
+            Resource.edit_jadwal(formdata, tokenString, id)            
+            .then((res) => {                                                                                   
+                console.log(res)                
+            })
+            .catch((err) => {            
+                console.warn('Error:', err);
+            })  
+        });   
+    } catch (error) {            
+        console.log('AsyncStorage error: ' + error.message);
+    }            
+  }
+
   handleDatePicked = date => {    
     var tambakId = this.state.tambakId
     var dateNow = moment().format("MM DD YY");
@@ -65,7 +92,8 @@ class SetJadwalPagi extends Component {
       date = new Date(yesterday)
       console.log('pas')
     }
-    this.hideDateTimePicker();                
+    this.hideDateTimePicker(); 
+    this.submitReg(tambakId,date)               
     this.setState({
       notificationTime: date,
     });
@@ -73,7 +101,7 @@ class SetJadwalPagi extends Component {
     this.scheduleNotif()
     Alert.alert(
       '',
-      `Berhasil Mengatur Waktu Pemberian Pakan pukul ${timeSelect} WIB`
+      `Berhasil Mengatur Waktu Pemberian Pakan pukul ${moment(date).format("HH:mm")} WIB`
     )
   };
 
@@ -145,19 +173,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 5,    
-    backgroundColor: "#fff",  
+    backgroundColor: "#254F6E",  
   },
   text: {
     fontSize: 20,
-    marginTop: 10
+    marginTop: 10,
+    color: 'white'
   },
   buttonpagi: {
-    backgroundColor: "#4EB151",
+    backgroundColor: "#00A9DE",
     paddingVertical: 11,
     paddingHorizontal: 17,
     borderRadius: 3,
     marginVertical: 50,
     alignItems: "center",
+    borderRadius: 10
   },
   
   buttonText: {

@@ -6,10 +6,11 @@ import {
 import Resource from './network/Resource'
 import Tambak from './Tambak'
 import IconBadge from 'react-native-icon-badge';
-import { set } from 'react-native-reanimated';
+import { set, cond } from 'react-native-reanimated';
 import PushNotification from "react-native-push-notification";
 import I18n from '../i18n/i18n';
 import firebase from 'react-native-firebase';
+import moment from 'moment';
 
 export default class Home extends React.Component {    
 
@@ -27,6 +28,9 @@ export default class Home extends React.Component {
         }          
     }   
     
+    static navigationOptions = ({navigation}) => ({
+        title: I18n.t('hompage.labelallnotif'),            
+    })
 
     goToCreate(){        
         this.props.navigation.navigate('TambahTambak');
@@ -46,9 +50,9 @@ export default class Home extends React.Component {
       });        
     }    
   
-    pushPakan = async () => {        
+    pushPakan = async (type) => {        
         let body = new FormData();
-        body.append('type', 'pagi');
+        body.append('type', type);
         body.append('tambakID', this.state.tambakId);
         try{                    
             await AsyncStorage.getItem('user', (error, result) => {
@@ -88,7 +92,9 @@ export default class Home extends React.Component {
             });
         }
         if(isBackground != true && type == 'pagi' ){            
-            this.pushPakan()
+            this.pushPakan('pagi')
+        }else if(isBackground != true && type == 'sore'){
+            this.pushPakan('sore')
         }
     };
    
@@ -139,6 +145,7 @@ export default class Home extends React.Component {
             let tokenString = JSON.parse(result);
             Resource.getTambak(tokenString.token)
                 .then((res) => {      
+                    // console.log(res.data.data)
                     if(rol != "admin"){
                         if (res.status == 'failed') {                        
                             AsyncStorage.clear();
@@ -158,6 +165,7 @@ export default class Home extends React.Component {
                         }
                         
                         this.setState({isFetching: false, list_tambak: res.data.data, totalNotif : res.data.totalNotif })
+                        this.getNotifTambak()      
                     }else{
                         this.props.navigation.navigate('Manage');
                     }
@@ -188,6 +196,236 @@ export default class Home extends React.Component {
             console.log('error')
             console.log('AsyncStorage error: ' + error.message);
         }
+    }
+
+    getNotifTambak = async () => {                
+        var list = this.state.list_tambak;        
+        list.forEach(element => {
+            var pagi = element.pakanPagi
+            var sore = element.pakanSore
+            var air = element.gantiAir
+            var airDate = moment({ hour: 7 })                        
+            var dateNow = moment().format('YYYY-MM-DD')
+            var splitPagi = pagi.split(':')
+            var splitSore = sore.split(':')
+            var setDatePagi = moment(dateNow).set({"hour": splitPagi[0], "minute": splitPagi[1]});
+            var setDateSore = moment(dateNow).set({"hour": splitSore[0], "minute": splitSore[1]});
+            var dateAir = new Date(airDate)
+            var datePagi = new Date(setDatePagi)
+            var dateSore = new Date(setDateSore)
+            var id = element.tambakID            
+            this.handleDatePickedPagi(id, datePagi)
+            this.handleDatePickedSore(id, dateSore)
+            this.handleDatePickedAir(id, dateAir, air)
+        });
+    }
+
+    handleDatePickedPagi = (id, date) => {            
+        var dateNow = moment().format("MM DD YY");
+        var timeNow = moment().format('HH mm');
+        var dateSelect = moment(date).format("MM DD YY")
+        var timeSelect = moment(date).format("HH mm")
+        var dateTommorow = moment(date);        
+        
+        if (dateSelect == dateNow && timeSelect <= timeNow) {
+          var tomorrow = dateTommorow.add(1, 'day');    
+          date = new Date(tomorrow)
+          console.log('plus 1 pagi')
+        }else if(dateSelect > dateNow && timeSelect <= timeNow){
+          var yesterday = dateTommorow.subtract(1, 'day');
+          var tomorrow = dateTommorow.add(1, 'day');    
+          date = new Date(yesterday)
+          console.log('tetap')
+        }else if(dateSelect > dateNow && timeSelect > timeNow){
+          var yesterday = dateTommorow.subtract(1, 'day');      
+          date = new Date(yesterday)
+          console.log('pas')
+        }    
+        AsyncStorage.setItem(`pagi${id}`, JSON.stringify(date));
+        this.scheduleNotifPagi(id, date)        
+    };
+
+    handleDatePickedSore = (id, date) => {            
+        var dateNow = moment().format("MM DD YY");
+        var timeNow = moment().format('HH mm');
+        var dateSelect = moment(date).format("MM DD YY")
+        var timeSelect = moment(date).format("HH mm")
+        var dateTommorow = moment(date);                
+        
+        
+        if (dateSelect == dateNow && timeSelect <= timeNow) {
+          var tomorrow = dateTommorow.add(1, 'day');    
+          date = new Date(tomorrow)
+          console.log('plus 1 sore')
+        }else if(dateSelect > dateNow && timeSelect <= timeNow){
+          var yesterday = dateTommorow.subtract(1, 'day');
+          var tomorrow = dateTommorow.add(1, 'day');    
+          date = new Date(yesterday)
+          console.log('tetap')
+        }else if(dateSelect > dateNow && timeSelect > timeNow){
+          var yesterday = dateTommorow.subtract(1, 'day');      
+          date = new Date(yesterday)
+          console.log('pas')
+        }
+        AsyncStorage.setItem(`sore${id}`, JSON.stringify(date));
+        this.scheduleNotifSore(id, date)        
+    };
+
+    handleDatePickedAir = (id, date, air) => {                    
+        var dateNow = moment().format("MM DD YY");
+        var timeNow = moment().format('HH mm');
+        var dateSelect = moment(date).format("MM DD YY")
+        var timeSelect = moment(date).format("HH mm")
+        var dateTommorow = moment(date);        
+        
+        // if (dateSelect == dateNow && timeSelect <= timeNow) {
+        //   var tomorrow = dateTommorow.add(1, 'day');    
+        //   date = new Date(tomorrow)
+        //   console.log('plus 1')
+        // }else if(dateSelect > dateNow && timeSelect <= timeNow){
+        //   var yesterday = dateTommorow.subtract(1, 'day');
+        //   var tomorrow = dateTommorow.add(1, 'day');    
+        //   date = new Date(yesterday)
+        //   console.log('tetap')
+        // }else if(dateSelect > dateNow && timeSelect > timeNow){
+        //   var yesterday = dateTommorow.subtract(1, 'day');      
+        //   date = new Date(yesterday)
+        //   console.log('pas')
+        // }    
+        if (dateSelect == dateNow) {
+            var tomorrow = dateTommorow.add(air, 'day');    
+            date = new Date(tomorrow)
+            console.log('plus 3')
+        }else{
+            var dateNow = moment().format('YYYY-MM-DD')
+            var timeSelect = moment(date).format("HH:mm")
+            var split = timeSelect.split(':')
+            var setDate = moment(dateNow).set({"hour": split[0], "minute": split[1]});
+            // var dateAir = new Date(setDate)
+            var tomorrow = setDate.add(air, 'day');    
+            var date = new Date(tomorrow)
+            
+          }
+        // console.log(date)
+
+        AsyncStorage.setItem(`gantiAir${id}`, JSON.stringify(date));
+        AsyncStorage.setItem(`jumlahHari${id}`, JSON.stringify(air));
+        this.scheduleNotifAir(id, date, air)        
+    };
+
+    scheduleNotifPagi = async(id, time, soundName) =>{            
+        console.log('pagi')        
+        PushNotification.localNotificationSchedule({
+          date: time,
+    
+          /* Android Only Properties */
+          id: `1${id}`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+          type: 'pagi',
+          tambakId: id,
+          ticker: 'My Notification Ticker', // (optional)
+          autoCancel: true, // (optional) default: true
+          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+          bigText: 'Silahkan anda berikan pakan di pagi hari', // (optional) default: "message" prop
+          // subText: 'This is a subText', // (optional) default: none
+          color: 'blue', // (optional) default: system default
+          vibrate: true, // (optional) default: true
+          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+          tag: 'some_tag', // (optional) add tag to message
+          group: 'group', // (optional) add group to message
+          ongoing: true, // (optional) set whether this is an "ongoing" notification
+    
+          /* iOS only properties */
+          alertAction: 'view', // (optional) default: view
+          category: '', // (optional) default: empty string
+          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
+    
+          /* iOS and Android properties */
+          title: this.state.namaTambak, // (optional)
+          message: 'Beri Pakan Pagi Hari', // (required)      
+          playSound: !!soundName, // (optional) default: true
+          number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+          repeatType: "day",
+          soundName: soundName ? soundName : 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+          // actions: '["Simpan Notifikasi"]', // (Android only) See the doc for notification actions to know more
+        });
+    }
+
+    scheduleNotifSore = async(id, time, soundName) =>{           
+        console.log('sore')                 
+        PushNotification.localNotificationSchedule({
+          date: time,
+    
+          /* Android Only Properties */
+          id: `2${id}`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+          type: 'sore',
+          tambakId: id,
+          ticker: 'My Notification Ticker', // (optional)
+          autoCancel: true, // (optional) default: true
+          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+          bigText: 'Silahkan anda berikan pakan di pagi hari', // (optional) default: "message" prop
+          // subText: 'This is a subText', // (optional) default: none
+          color: 'blue', // (optional) default: system default
+          vibrate: true, // (optional) default: true
+          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+          tag: 'some_tag', // (optional) add tag to message
+          group: 'group', // (optional) add group to message
+          ongoing: true, // (optional) set whether this is an "ongoing" notification
+    
+          /* iOS only properties */
+          alertAction: 'view', // (optional) default: view
+          category: '', // (optional) default: empty string
+          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
+    
+          /* iOS and Android properties */
+          title: this.state.namaTambak, // (optional)
+          message: 'Beri Pakan Sore Hari', // (required)      
+          playSound: !!soundName, // (optional) default: true
+          number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+          repeatType: "day",
+          soundName: soundName ? soundName : 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+          // actions: '["Simpan Notifikasi"]', // (Android only) See the doc for notification actions to know more
+        });
+    }
+
+    scheduleNotifAir = async(id, time, air, soundName) =>{   
+        console.log('air')                         
+        PushNotification.localNotificationSchedule({
+          date: time,
+    
+          /* Android Only Properties */
+          id: `3${id}`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+          type: 'air',
+          tambakId: id,
+          ticker: 'My Notification Ticker', // (optional)
+          autoCancel: true, // (optional) default: true
+          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+          bigText: 'Silahkan anda menganti air dengan air yang lebih bersih dan bebas kotoran', // (optional) default: "message" prop
+          // subText: 'This is a subText', // (optional) default: none
+          color: 'blue', // (optional) default: system default
+          vibrate: true, // (optional) default: true
+          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+          tag: 'some_tag', // (optional) add tag to message
+          group: 'group', // (optional) add group to message
+          ongoing: true, // (optional) set whether this is an "ongoing" notification
+    
+          /* iOS only properties */
+          alertAction: 'view', // (optional) default: view
+          category: '', // (optional) default: empty string
+          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
+    
+          /* iOS and Android properties */
+          title: this.state.namaTambak, // (optional)
+          message: 'Pergatian Air', // (required)        
+          playSound: !!soundName, // (optional) default: true
+          number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+          repeatType: "time",
+          repeatTime: 86400 * 1000 * air,
+          soundName: soundName ? soundName : 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+          // actions: '["Simpan Notifikasi"]', // (Android only) See the doc for notification actions to know more
+        });
     }
 
     render() {
@@ -278,7 +516,7 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',      
     },    
     infoContainer: {        
@@ -297,10 +535,11 @@ const styles = StyleSheet.create({
         borderBottomColor: 'white'
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 15,
         marginTop: 15,
         alignItems: 'center',
+        borderRadius:10,        
     },
     txtTambah: {
         color: 'white',
@@ -320,7 +559,7 @@ const styles = StyleSheet.create({
     },
     nameTambak: {
         // flex: 1,
-        backgroundColor: 'blue',
+        backgroundColor: '#2D4151',
         paddingVertical: 10,       
         // padding: 30,        
         width: '48%',

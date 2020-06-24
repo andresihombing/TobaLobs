@@ -304,7 +304,7 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     dropdown: {
@@ -358,13 +358,14 @@ const styles = StyleSheet.create({
         padding: 20        
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 15,
-        marginTop: 15
+        marginTop: 15,
+        borderRadius: 10
     },
     buttonText: {
         textAlign: 'center',
-        color: 'rgb(32, 53, 70)',
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 15,
     },
@@ -376,5 +377,5 @@ const styles = StyleSheet.create({
         flex: 1,
         color: 'white',
         fontSize: 10
-    }
+    },
 })

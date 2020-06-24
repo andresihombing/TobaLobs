@@ -148,6 +148,7 @@ export default class EditProfile extends Component {
         const alamat = params ? params.alamat : null;
         const noHp = params ? params.noHp : null;
         const tglLahir = params ? params.tglLahir : null;        
+        console.log(name)
 
         this.setState({
             nama: name,
@@ -191,6 +192,13 @@ export default class EditProfile extends Component {
             console.log('error', error)
             console.log('AsyncStorage error: ' + error.message);
         }            
+    }
+    
+    cek = async() => {
+        await this.val()
+        if (this.state.errorForm != true) {
+            this.submitReg()
+        }
     }
 
     render() {  
@@ -299,7 +307,7 @@ export default class EditProfile extends Component {
                             </View>                     
                             <Text style={{ color: 'red', fontSize: 12, display: this.state.errorTgl ? "flex" : "none"}}>{I18n.t('hompage.errornull')}</Text>   
                             <TouchableOpacity style = {styles.buttonContainer}
-                                onPress={() => this.submitReg()}>
+                                onPress={() => this.cek()}>
                                 <Text style = {styles.buttonText}>Edit</Text>
                             </TouchableOpacity>                                                                  
                         </View>
@@ -313,7 +321,7 @@ export default class EditProfile extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     logoContainer: {                
@@ -360,13 +368,14 @@ const styles = StyleSheet.create({
         padding: 20        
     },
     buttonContainer: {
-        backgroundColor: '#f7c744',
+        backgroundColor: '#00A9DE',
         paddingVertical: 15,
-        marginTop: 15
+        marginTop: 15,
+        borderRadius: 10
     },
     buttonText: {
         textAlign: 'center',
-        color: 'rgb(32, 53, 70)',
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 15,
     },

@@ -16,7 +16,8 @@ export default class ManageInformasi extends React.Component {
             listInfo : [],
             kosong : false,
             judul : '',
-            penjelasan: ''
+            penjelasan: '',
+            idInfo: ''
         }
     }
 
@@ -28,10 +29,23 @@ export default class ManageInformasi extends React.Component {
         }
       }
 
+    onRefresh() {
+        this.setState({ isFetching: true }, function() { this.getData() });
+     }
+
     componentDidMount = async () => {
         this.getData();        
         this.props.navigation.setParams({ handleSave: () => this.tambahInfo() })
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener('didFocus', () => {      
+            this.getData() 
+        });
     }  
+
+    componentWillUnmount() {
+        // Remove the event listener before removing the screen from the stack
+        this.focusListener.remove();        
+    }
 
     tambahInfo() {
         this.props.navigation.navigate('TambahInfo')
@@ -67,6 +81,7 @@ export default class ManageInformasi extends React.Component {
             await AsyncStorage.getItem('user', (error, result) => {                       
                 let list = this.state.tambak;                
                     this.props.navigation.navigate('EditInfo', {
+                        idInfo: this.state.idInfo,
                         judul : this.state.judul,
                         penjelasan: this.state.penjelasan
                     });                
@@ -83,8 +98,9 @@ export default class ManageInformasi extends React.Component {
     <TouchableOpacity
       style={[styles.list, data.item.selectedClass]}      
       onPress={() => {
-        this.detailInfo();
+        this.detailInfo();        
         this.setState({
+            idInfo: data.item.infoID,
             judul :data.item.judul,
             penjelasan: data.item.penjelasan
         })}
@@ -123,13 +139,13 @@ export default class ManageInformasi extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#192338",    
+        backgroundColor: "#254F6E",    
         position: "relative"
     },
     notif: {
         flex: 1,        
         borderBottomColor: 'white',
-        backgroundColor: '#455867',
+        backgroundColor: '#254F6E',
         padding: 10
     },
     notifikasi: {
@@ -143,7 +159,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         margin: 3,
         flexDirection: "row",
-        backgroundColor: "#192338",
+        backgroundColor: "#254F6E",
         justifyContent: "flex-start",
         alignItems: "center",
         zIndex: -1,

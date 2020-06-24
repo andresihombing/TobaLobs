@@ -10,28 +10,25 @@ import I18n from '../i18n/i18n';
 import BackgroundJob from "react-native-background-job";
 import moment from 'moment';
 import PushNotification from 'react-native-push-notification';
+import { set } from 'react-native-reanimated';
 
 export default class DetailTambak extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.takaran'), I18n.t('hompage.makanan')],
-          tableData: [
-            ['08.00 WIB', '... gram', 'Pelet halus'],
-            ['11.00 WIB', '... gram', 'Pelet halus'],
-            ['18.00WIB', '... gram', 'Pelet halus'],            
-          ],
-          namaTambak : '',
-          panjang : '',
-          lebar : '',
-          jenisBudidaya: '',
-          jumlah : '',
-          betina : '',
-          jantan : '',
-          shelter : '',
-          usiaLobster : '',          
-          isChecked : false,
-          errorCheck: false
+            tableHead: [I18n.t('hompage.waktu'), I18n.t('hompage.makanan')],        
+            namaTambak : '',
+            panjang : '',
+            lebar : '',
+            jenisBudidaya: '',
+            jumlah : '',
+            betina : '',
+            jantan : '',
+            shelter : '',
+            usiaLobster : '',          
+            isChecked : false,
+            errorCheck: false,
+            tableData: [],
         }
       }
 
@@ -40,11 +37,19 @@ export default class DetailTambak extends React.Component {
     })
 
     componentDidMount() {        
-        this.kebutuhanTambak()
+        this.kebutuhanTambak()        
         const { navigation } = this.props;
         this.focusListener = navigation.addListener('didFocus', () => {      
             this.kebutuhanTambak()
         });
+        this.setJadwal()
+    }
+
+    setJadwal = async() => {                
+        const table = [[`08:00 WIB`, 'Pakan Pagi'],[`17:00 WIB`, 'Pakan Sore'],[`07:00 WIB`, `Ganti air 1 x 3 hari`]]             
+        this.setState({
+            tableData: table
+        })
     }
 
     componentWillUnmount() {
@@ -95,12 +100,15 @@ export default class DetailTambak extends React.Component {
                 .then((res) => {                                                        
                     let id = res.responseJson.data;
                     console.log(id)                    
-                    var pagi = moment({ hour: 7 })
+                    var pagi = moment({ hour: 8 })
                     var sore = moment({ hour: 17 })
+                    var air = moment({ hour: 7 })
                     var dateTimePagi = new Date(pagi)
                     var dateTimeSore = new Date(sore)
+                    var dateTimeAir = new Date(air)
                     this.handleDatePickedPagi(id, dateTimePagi)
                     this.handleDatePickedSore(id, dateTimeSore)
+                    this.handleDatePickedAir(id, dateTimeAir)
                     // AsyncStorage.setItem(`pagi${id}`, JSON.stringify(dateTime));                    
                     this.props.navigation.navigate('Home');    
                 })
@@ -122,7 +130,7 @@ export default class DetailTambak extends React.Component {
         var timeNow = moment().format('HH mm');
         var dateSelect = moment(date).format("MM DD YY")
         var timeSelect = moment(date).format("HH mm")
-        var dateTommorow = moment(date);        
+        var dateTommorow = moment(date);
         
         if (dateSelect == dateNow && timeSelect <= timeNow) {
           var tomorrow = dateTommorow.add(1, 'day');    
@@ -167,9 +175,49 @@ export default class DetailTambak extends React.Component {
         this.scheduleNotifSore(id, date)        
     };
 
+    handleDatePickedAir = (id, date) => {            
+        var dateNow = moment().format("MM DD YY");
+        var timeNow = moment().format('HH mm');
+        var dateSelect = moment(date).format("MM DD YY")
+        var timeSelect = moment(date).format("HH mm")
+        var dateTommorow = moment(date);        
+        
+        // if (dateSelect == dateNow && timeSelect <= timeNow) {
+        //   var tomorrow = dateTommorow.add(1, 'day');    
+        //   date = new Date(tomorrow)
+        //   console.log('plus 1')
+        // }else if(dateSelect > dateNow && timeSelect <= timeNow){
+        //   var yesterday = dateTommorow.subtract(1, 'day');
+        //   var tomorrow = dateTommorow.add(1, 'day');    
+        //   date = new Date(yesterday)
+        //   console.log('tetap')
+        // }else if(dateSelect > dateNow && timeSelect > timeNow){
+        //   var yesterday = dateTommorow.subtract(1, 'day');      
+        //   date = new Date(yesterday)
+        //   console.log('pas')
+        // }    
+        if (dateSelect == dateNow) {
+            var tomorrow = dateTommorow.add(3, 'day');    
+            date = new Date(tomorrow)
+            console.log('plus 3')
+        }else{
+            var dateNow = moment().format('YYYY-MM-DD')
+            var timeSelect = moment(date).format("HH:mm")
+            var split = timeSelect.split(':')
+            var setDate = moment(dateNow).set({"hour": split[0], "minute": split[1]});
+            // var dateAir = new Date(setDate)
+            var tomorrow = setDate.add(air, 'day');    
+            var date = new Date(tomorrow)
+            console.log(date)  
+        }        
+
+        AsyncStorage.setItem(`gantiAir${id}`, JSON.stringify(date));
+        AsyncStorage.setItem(`jumlahHari${id}`, JSON.stringify('3'));
+        this.scheduleNotifAir(id, date)        
+    };
+
     scheduleNotifPagi = async(id, time, soundName) =>{            
-        console.log('asdf')
-        console.log(time)
+        console.log('pagi')        
         PushNotification.localNotificationSchedule({
           date: time,
     
@@ -206,9 +254,8 @@ export default class DetailTambak extends React.Component {
         });
     }
 
-    scheduleNotifSore = async(id, time, soundName) =>{            
-        console.log('asdf')
-        console.log(time)
+    scheduleNotifSore = async(id, time, soundName) =>{           
+        console.log('sore')                 
         PushNotification.localNotificationSchedule({
           date: time,
     
@@ -240,6 +287,45 @@ export default class DetailTambak extends React.Component {
           playSound: !!soundName, // (optional) default: true
           number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
           repeatType: "day",
+          soundName: soundName ? soundName : 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+          // actions: '["Simpan Notifikasi"]', // (Android only) See the doc for notification actions to know more
+        });
+    }
+
+    scheduleNotifAir = async(id, time, soundName) =>{   
+        console.log('air')                         
+        PushNotification.localNotificationSchedule({
+          date: time,
+    
+          /* Android Only Properties */
+          id: `3${id}`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+          type: 'air',
+          tambakId: id,
+          ticker: 'My Notification Ticker', // (optional)
+          autoCancel: true, // (optional) default: true
+          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+          bigText: 'Silahkan anda menganti air dengan air yang lebih bersih dan bebas kotoran', // (optional) default: "message" prop
+          // subText: 'This is a subText', // (optional) default: none
+          color: 'blue', // (optional) default: system default
+          vibrate: true, // (optional) default: true
+          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+          tag: 'some_tag', // (optional) add tag to message
+          group: 'group', // (optional) add group to message
+          ongoing: true, // (optional) set whether this is an "ongoing" notification
+    
+          /* iOS only properties */
+          alertAction: 'view', // (optional) default: view
+          category: '', // (optional) default: empty string
+          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
+    
+          /* iOS and Android properties */
+          title: this.state.namaTambak, // (optional)
+          message: 'Pergatian Air', // (required)        
+          playSound: !!soundName, // (optional) default: true
+          number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+          repeatType: "time",
+          repeatTime: 86400 * 1000 * 3,
           soundName: soundName ? soundName : 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
           // actions: '["Simpan Notifikasi"]', // (Android only) See the doc for notification actions to know more
         });
@@ -314,14 +400,14 @@ export default class DetailTambak extends React.Component {
                     <Text style={{ display: this.state.errorCheck ? "flex" : "none", color: 'red', fontSize: 10, marginTop: -30, paddingBottom: 30, paddingLeft: 30}}>{I18n.t('hompage.centang')}</Text>
                     
                     
-                    <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "flex" : "none"}}
+                    <TouchableOpacity style = {{backgroundColor: '#00A9DE', borderRadius: 10, paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "flex" : "none"}}
                             onPress = {() => {
                                 this.createTambak();
                             }}
                         >
                         <Text style={styles.txtTambah}>{I18n.t('hompage.mulai')}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {{backgroundColor: '#f7c744', paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "none" : "flex"}}
+                    <TouchableOpacity style = {{backgroundColor: '#00A9DE', borderRadius: 10, paddingVertical: 15, alignItems: 'center',display: this.state.isChecked ? "none" : "flex"}}
                             onPress = {() => {
                                 this.setState({
                                     errorCheck : true
@@ -350,7 +436,7 @@ export default class DetailTambak extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(32, 53, 70)',
+        backgroundColor: '#254F6E',
         flexDirection: 'column',
     },
     titleContainer: {
@@ -438,4 +524,7 @@ const styles = StyleSheet.create({
         color: 'white',
         marginTop: 5
     },
+    txtTambah: {
+        color: 'white'
+    }
 });

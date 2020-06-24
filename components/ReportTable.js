@@ -115,10 +115,10 @@ export default class DetailTambak extends React.Component {
                                 color: "black",
                                 textAlign: "left"
                             },
-                            dateIcon: {
-                                width:0,
-                                height:0,
-                            },
+                            // dateIcon: {
+                            //     width:0,
+                            //     height:0,
+                            // },
                             }}            
                         onDateChange={(date) => {             
                             this.validate(date, 'tgl')          
@@ -129,7 +129,7 @@ export default class DetailTambak extends React.Component {
                 </View>       
                 <ScrollView>                          
                 <View> 
-                    <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                    <Table borderStyle={{borderWidth: 2, borderColor: '#FFFFFF'}}>
                     <Row data={this.state.tableHead} style={styles.head} textStyle={styles.textHead}/>
                     <Rows data={this.state.tableData} textStyle={styles.text}/>
                     </Table>

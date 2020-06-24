@@ -20,5 +20,12 @@ export default {
     USER : '/api/user',
     CHANGE_PASS: '/api/user/password',
     PUSHNOTIF: '/api/push-notif',
-    SAVENOTIF: '/api/save-notif'
+    SAVENOTIF: '/api/save-notif',
+    CREATE_INFO: '/api/info', 
+    EDIT_INFO: '/api/info/', 
+    DELETE_INFO: '/api/info/',
+    CREATE_PANDUAN: '/api/panduan', 
+    EDIT_PANDUAN: '/api/panduan/', 
+    DELETE_PANDUAN: '/api/panduan/',
+    EDIT_JADWAL: '/api/jadwal/'
 }

@@ -96,5 +96,12 @@ export default {
       berhasilgantipass: 'Successfully Changed Password',
       mincar: 'Minimum password is 6 characters',
       errorpass: 'Edit Password Failed',
+
+      //jadwal
+      aturjadwal: 'Set the schedule',
+      aturjadwalpagi: 'set the morning feed schedule',
+      aturjadwalsore: 'set the afternoon feed schedule',
+      aturjadwalair: 'set a water schedule',
+      aturdefault: 'set default schedule'
   }
 }

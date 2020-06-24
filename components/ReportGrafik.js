@@ -145,10 +145,10 @@ class ReportGrafik extends Component {
                         color: "black",
                         textAlign: "left"
                       },
-                      dateIcon: {
-                        width:0,
-                        height:0,
-                      },
+                      // dateIcon: {
+                      //   width:0,
+                      //   height:0,
+                      // },
                     }}            
                   onDateChange={(date) => {             
                       this.validate(date, 'tgl')          

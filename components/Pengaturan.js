@@ -13,7 +13,12 @@ export default class App extends React.Component {
         super(props)
             this.state = {
                 languageSelected: 'id',
-                heading: ''
+                heading: '',
+                name: '',
+                alamat: '',
+                noHp: '',
+                tglLahir: '',
+                username: '',
             }
         }
 
@@ -21,7 +26,8 @@ export default class App extends React.Component {
             title: I18n.t('hompage.labelpengaturan'),
         })
         
-        componentDidMount = async()=> {            
+        componentDidMount = async()=> {       
+            this.listEdit()     
             await AsyncStorage.getItem('bahasa', (error, result) => {                    
                 const bahasa = JSON.parse(result)                              
                 this.setState({
@@ -29,6 +35,23 @@ export default class App extends React.Component {
                 })
             });
         }
+
+        listEdit(){
+            const {params} = this.props.navigation.state;
+            const name = params ? params.name : null;
+            const username = params ? params.username : null;
+            const alamat = params ? params.alamat : null;
+            const noHp = params ? params.noHp : null;
+            const tglLahir = params ? params.tglLahir : null;                    
+    
+            this.setState({
+                name: name,
+                alamat: alamat,
+                tglLahir: tglLahir,
+                username: username,
+                noHp: noHp
+            })
+        }    
 
         onChangeLanguage = async(languageSelected) => {
             this.setState({
@@ -51,13 +74,19 @@ export default class App extends React.Component {
             const {languageSelected} = this.state
             return (
                 <View style={styles.container}>
+                    <TouchableOpacity style = {styles.profile} onPress = {() => this.props.navigation.navigate('EditProfile', {
+                        name: this.state.name,
+                        alamat: this.state.alamat,
+                        tglLahir: this.state.tglLahir,
+                        noHp : this.state.noHp,
+                        username: this.state.username
+                    })}>
+                        <Text>Edit Profile</Text>
+                    </TouchableOpacity>         
                     <DropdownLanguage language={languageSelected} onChangeLanguage={this.onChangeLanguage.bind(this)}></DropdownLanguage>                
                     <TouchableOpacity style = {styles.password} onPress = {() => this.props.navigation.navigate('EditPassword')}>
                         <Text>{I18n.t('hompage.gantipass')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style = {styles.pakan} onPress = {() => this.props.navigation.navigate('SetJadwal')}>
-                        <Text>Set Jadwal</Text>
-                    </TouchableOpacity>           
+                    </TouchableOpacity>                      
                 </View>
             );
         }
@@ -73,7 +102,7 @@ class DropdownLanguage extends React.Component {
             <View style={styles.dropdownLanguage}>
                 <Text style={{width:60, fontSize: 14}}>{I18n.t('hompage.language')} </Text>
                 <Picker
-                    // mode="dropdown"                    
+                    mode="dropdown"                    
                     style={{ width: 250,height:40}}
                     selectedValue={this.props.language}
                     onValueChange={this.props.onChangeLanguage.bind(this)}
@@ -91,7 +120,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "#192338",  
+    backgroundColor: "#254F6E",  
     padding: 8,
     position: 'relative'    
   },
@@ -105,7 +134,7 @@ const styles = StyleSheet.create({
     width:340,
     height:40, 
     position:'absolute',
-    top:10,
+    top:110,
     right:10, 
     flexDirection:'row',
     flex:1,    
@@ -128,8 +157,8 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white',    
   },
-  pakan: {
-    top: 110,
+  profile: {
+    top: 10,
     width:340,
     height:40, 
     position:'absolute',    

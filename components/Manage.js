@@ -50,11 +50,11 @@ export default class Akun extends React.Component {
             "Apakah anda yakin ingin keluar ?",
             [
               {
-                text: "Cancel",
+                text: "Tidak",
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
               },
-              { text: "OK", onPress: () => this._signOutAsync() }
+              { text: "Ya", onPress: () => this._signOutAsync() }
             ],
             { cancelable: false }
           );
@@ -67,17 +67,17 @@ export default class Akun extends React.Component {
                 <View style = {styles.infoContainer}>                                
                     <View style={styles.pengaturan}>
                         <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManageInformasi')}>
-                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Mengolola Informasi</Text>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Informasi Budidaya</Text>
                         </TouchableOpacity>                                        
                     </View>
                     <View style={styles.pengaturan}>
                         <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManagePanduan')}>
-                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Mengolola Panduan</Text>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Panduan Aplikasi</Text>
                         </TouchableOpacity>                                        
                     </View>  
                     <View style={styles.pengaturan}>
                         <TouchableOpacity onPress = {() => this.keluar()}>
-                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Keluar</Text>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-log-out'} /> Keluar</Text>
                         </TouchableOpacity>                                        
                     </View>                    
                 </View>
@@ -90,7 +90,7 @@ export default class Akun extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#192338",    
+        backgroundColor: "#254F6E",    
         position: "relative"
     },
     infoContainer: {        
