@@ -7,22 +7,25 @@ import {
 import Resource from './network/Resource'
 import I18n from '../i18n/i18n';
 // import AwesomeAlert from 'react-native-awesome-alerts';
+import PasswordInputText from 'react-native-hide-show-password-input';
+import {
+    TextField,
+    FilledTextField,
+    OutlinedTextField,
+  } from 'react-native-material-textfield'
 
 export default class EditProfile extends Component {            
         
     constructor(props){
         super(props);                
         
-        this.state = {
-            passLama: "",
+        this.state = {            
             passBaru: "",            
             passKonfirm: "",            
-            
-            errorPassLama: false,
+                        
             errorPassBaru: false,
             errorPassKonfirm: false,             
-            errorForm: false,
-            errorPassCarLama: false,
+            errorForm: false,            
             errorPassCarBaru: false,
             errorPassCarKonfirm: false
         }          
@@ -32,28 +35,8 @@ export default class EditProfile extends Component {
         title: 'Edit Password'
     };
 
-    validate(text, type) {        
-        if (type == 'passLama') {
-            if(text == ''){
-                this.setState({              
-                    errorPassLama: true
-                })
-            }else{
-                this.setState({              
-                    errorPassLama: false
-                })
-                if(text.length > 6){
-                    this.setState({                    
-                        errorPassCarLama: false
-                    })
-                }else{
-                    this.setState({                    
-                        errorPassCarLama: true
-                    })
-                }
-            }            
-        }
-        else if (type == 'passBaru') {
+    validate(text, type) {              
+        if (type == 'passBaru') {
             if(text == ''){
                 this.setState({              
                     errorPassBaru: true
@@ -73,7 +56,7 @@ export default class EditProfile extends Component {
                 }
             }            
         }               
-        else if (type == 'passKonfrim') {
+        else if (type == 'passKonfirm') {            
             if(text == ''){
                 this.setState({              
                     errorPassKonfirm: true
@@ -92,17 +75,11 @@ export default class EditProfile extends Component {
                     })
                 }
             }            
-        }                         
+        }         
     }    
 
     val(){
-        const { passLama, passBaru, passKonfirm } = this.state
-        if ((passLama == "")) {
-            this.setState({
-                errorForm: true,
-                errorPassLama: true,                
-            })            
-        }        
+        const { passBaru, passKonfirm } = this.state        
         if(passBaru == ""){
             this.setState({
                 errorForm: true,                
@@ -129,8 +106,7 @@ export default class EditProfile extends Component {
 
     submitReg = async () => {                        
         this.val();
-        let formdata = new FormData();
-        formdata.append('password', this.state.passLama);
+        let formdata = new FormData();        
         formdata.append('newPassword', this.state.passBaru);
         try{
             await AsyncStorage.getItem('user', (error, result) => {
@@ -170,7 +146,7 @@ export default class EditProfile extends Component {
                     <ScrollView>
                         <View style = {{marginBottom:10}}>                    
                             <Text style = {styles.title}>Edit Password</Text>
-                            <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>{I18n.t('hompage.errorprofile')}</Text>                            
+                            {/* <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>{I18n.t('hompage.errorprofile')}</Text>                            
                             <View style={styles.rowContainer}>
                                 <Text style={styles.label}>{I18n.t('hompage.passlama')} :</Text>
                                 <TextInput style = {styles.input}                                    
@@ -184,37 +160,47 @@ export default class EditProfile extends Component {
                                 />                                                            
                             </View>
                             <Text style={{ display: this.state.errorPassLama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>
-                            <Text style={{ display: this.state.errorPassCarLama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.mincar')}</Text>
+                            <Text style={{ display: this.state.errorPassCarLama ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.mincar')}</Text> */}
 
-                            <View style={styles.rowContainer}>
+                            {/* <View style={styles.rowContainer}> */}
                                 <Text style={styles.label}>{I18n.t('hompage.passbaru')} :</Text>
-                                <TextInput style = {styles.input}                                                            
+                                <PasswordInputText 
                                     returnKeyType = 'next'
                                     secureTextEntry
-                                    value = {this.state.username}
+                                    textColor = 'white'
+                                    iconColor = 'white'                            
+                                    baseColor = 'white'
+                                    tintColor = 'white'
+                                    label = ''
+                                    value = {this.state.passBaru}
                                     autoCorrect = {false}
                                     onChangeText={(passBaru) => {
                                         this.validate(passBaru, 'passBaru')
                                         this.setState({passBaru})
                                     }}                                    
                                 />
-                            </View>
+                            {/* </View> */}
                             <Text style={{ display: this.state.errorPassBaru ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>   
                             <Text style={{ display: this.state.errorPassCarBaru ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.mincar')}</Text>                         
 
-                            <View style={styles.rowContainer}>
+                            {/* <View style={styles.rowContainer}> */}
                                 <Text style={styles.label}>{I18n.t('hompage.passkonfirm')} :</Text>
-                                <TextInput style = {styles.input}                                                    
+                                <PasswordInputText
                                     returnKeyType = 'next'
                                     secureTextEntry
-                                    value = {this.state.alamat}
+                                    textColor = 'white'
+                                    iconColor = 'white'                            
+                                    baseColor = 'white'
+                                    tintColor = 'white'
+                                    label = ''
+                                    value = {this.state.passKonfirm}
                                     autoCorrect = {false}
                                     onChangeText={(passKonfirm) => {
                                         this.validate(passKonfirm, 'passKonfirm')
                                         this.setState({passKonfirm})
                                     }}
                                 />
-                            </View>            
+                            {/* </View>             */}
                             <Text style={{ display: this.state.errorPassKonfirm ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.errornull')}</Text>     
                             <Text style={{ display: this.state.errorPassCarKonfirm ? "flex" : "none", color: 'red', fontSize: 12 }}>{I18n.t('hompage.mincar')}</Text>                                                   
                             
@@ -295,5 +281,7 @@ const styles = StyleSheet.create({
     label:{
         flex: 1,
         color: 'white',
+        marginTop: 10,
+        marginBottom: -20
     }
 })

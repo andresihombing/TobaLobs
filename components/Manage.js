@@ -74,12 +74,22 @@ export default class Akun extends React.Component {
                         <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManagePanduan')}>
                             <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Panduan Aplikasi</Text>
                         </TouchableOpacity>                                        
-                    </View>  
+                    </View>
+                    <View style={styles.pengaturan}>
+                        <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManageSensor')}>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Manage Sensor</Text>
+                        </TouchableOpacity>                                        
+                    </View>
+                    <View style={styles.pengaturan}>
+                        <TouchableOpacity onPress = {() => this.props.navigation.navigate('ManageGuideline')}>
+                            <Text style = {styles.garis}><Icon size={25} name={'md-settings'} /> Manage Guideline</Text>
+                        </TouchableOpacity>                                        
+                    </View>
                     <View style={styles.pengaturan}>
                         <TouchableOpacity onPress = {() => this.keluar()}>
                             <Text style = {styles.garis}><Icon size={25} name={'md-log-out'} /> Keluar</Text>
                         </TouchableOpacity>                                        
-                    </View>                    
+                    </View>              
                 </View>
             </ScrollView>
         </View>

@@ -153,23 +153,60 @@ export default class Register extends Component {
         }
     }
 
+    // submitReg(){         
+    //     this.val();          
+    //     const { navigate } = this.props.navigation;
+    //     var noHp = `+62${this.state.noHp}`        
+    //     let formdata = new FormData();
+    //     formdata.append('username', this.state.username);
+    //     formdata.append('nama', this.state.nama);
+    //     formdata.append('password', this.state.password);        
+    //     formdata.append('noHp', noHp);
+    //     formdata.append('tanggalLahir', this.state.tanggalLahir);
+    //     formdata.append('alamat', this.state.alamat);
+        
+    //     Resource.register(formdata)
+    //     .then((res) => {                
+    //         console.log(res.responseJson.data)
+    //         // const token = res.responseJson.data;
+    //         // AsyncStorage.setItem('user', JSON.stringify(token));
+    //         navigate("SignIn")
+    //     })
+    //     .catch((err) => {            
+    //         this.setState({
+    //             errorForm: true,
+    //         })
+    //         console.log('Error:', error);
+    //     })        
+    // }
+
     submitReg(){         
         this.val();          
         const { navigate } = this.props.navigation;
+        var noHp = `+62${this.state.noHp}`        
         let formdata = new FormData();
-        formdata.append('username', this.state.username);
-        formdata.append('nama', this.state.nama);
-        formdata.append('password', this.state.password);        
-        formdata.append('noHp', this.state.noHp);
-        formdata.append('tanggalLahir', this.state.tanggalLahir);
-        formdata.append('alamat', this.state.alamat);
+        formdata.append('username', this.state.username);        
+        formdata.append('noHp', noHp);        
+        formdata.append('type', 'register');        
         
-        Resource.register(formdata)
+        Resource.verify(formdata)
         .then((res) => {                
-            console.log(res.responseJson.data)
-            // const token = res.responseJson.data;
-            // AsyncStorage.setItem('user', JSON.stringify(token));
-            navigate("SignIn")
+            if(this.state.errorForm == true){
+                this.val()
+            }else{
+            
+                // const token = res.responseJson.data;
+                // AsyncStorage.setItem('user', JSON.stringify(token));
+                navigate("Verifikasi", {
+                    username: this.state.username,
+                    nama : this.state.nama,
+                    password: this.state.password,
+                    noHp: this.state.noHp,
+                    tanggalLahir: this.state.tanggalLahir,
+                    alamat: this.state.alamat,
+                    data: res.responseJson.data
+                })
+            }
         })
         .catch((err) => {            
             this.setState({
@@ -248,7 +285,8 @@ export default class Register extends Component {
 
                             <View style={styles.rowContainer}>
                                 <Text style={styles.label}>No.Telp</Text>
-                                <TextInput style = {styles.input}                                    
+                                <Text style={styles.label62}>+62</Text>
+                                <TextInput style = {styles.inputNo}                                    
                                     returnKeyType = 'next'
                                     autoCorrect = {false}
                                     keyboardType= 'number-pad'
@@ -349,6 +387,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
 
+    inputNo: {    
+        flex: 1.7,
+        height: 50,
+        width: 300,        
+        color: 'white',        
+        borderBottomColor: 'white',
+        borderBottomWidth: 1
+    },
+
     infoContainer: {
         position: 'absolute',
         top: 0,
@@ -372,5 +419,14 @@ const styles = StyleSheet.create({
     label:{
         flex: 1,
         color: 'white',
+    },
+    label62:{
+        flex: 0.3,
+        height: 50,
+        width: 300,        
+        color: 'white',        
+        borderBottomColor: 'white',
+        borderBottomWidth: 1,
+        paddingVertical: 15
     }
 })

@@ -27,7 +27,7 @@ export default {
       pembenihan: 'Pembenihan',
       error: 'Tambah tambak gagal',
       erroredit: 'Edit tambak gagal',
-      errornull: 'Tidak boleh kosong',      
+      errornull: 'Tidak boleh kosong atau 0',      
 
       //kebutuhan tambak
       juduljumlah : 'Jumlah Lobster dan Shelter',

@@ -24,7 +24,11 @@ export default class DetailTambak extends React.Component {
           jantan: '',
           betina: '',
           tambakId: '',
-          tglMulai: ''
+          tglMulai: '',
+          hari : '',
+          error0P: false,
+          error0L: false,
+          error0U: false,
         }       
       }
 
@@ -80,7 +84,19 @@ export default class DetailTambak extends React.Component {
                 // console.warn(list)
                 Resource.detailTambak(tambakId, tokenString.token)
                 .then((res) => {     
-                    console.log(res)                                                                       
+                    console.log(res.data.usiaLobster)          
+                    var usia = res.data.usiaLobster * 30                   
+                    var tanggal_awal = res.data.tanggalMulaiBudidaya                      
+                    var tanggal_sekarang = moment().format('DD MMMM YYYY');                   
+                    var tanggal_awal_moment = moment(tanggal_awal,'DD MMMM YYYY');
+                    var tanggal_sekarang_moment = moment(tanggal_sekarang,'DD MMMM YYYY');
+                    var selisih_hari = tanggal_sekarang_moment.diff(tanggal_awal_moment,'days');
+                    if(selisih_hari != 0){
+                        selisih_hari = selisih_hari + ' hari'
+                    }else{
+                        selisih_hari = ''
+                    }
+                    console.log(selisih_hari)
                     this.setState({
                         tambakId: res.data.tambakID,
                         namaTambak: res.data.namaTambak,
@@ -91,7 +107,8 @@ export default class DetailTambak extends React.Component {
                         usiaLobster: res.data.usiaLobster,
                         jantan: res.data.jumlahLobsterJantan,
                         betina: res.data.jumlahLobsterBetina,       
-                        tglMulai: res.data.tanggalMulaiBudidaya   
+                        tglMulai: res.data.tanggalMulaiBudidaya,
+                        hari : selisih_hari
                     })                    
                 })
                 .catch((err) => {                    
@@ -170,7 +187,7 @@ export default class DetailTambak extends React.Component {
                     </View>      
                     <View style={styles.rowContainer}>
                         <Text style={styles.label}>{I18n.t('hompage.addUsia')} :</Text>
-                        <Text style = {styles.input}>{this.state.usiaLobster} bulan</Text>
+                        <Text style = {styles.input}>{this.state.usiaLobster} bulan {this.state.hari}</Text>
                     </View>      
 
                     <View style={styles.titleContainer}>

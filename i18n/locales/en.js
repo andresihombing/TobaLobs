@@ -26,7 +26,7 @@ export default {
       pembenihan: 'Hatchery',
       error: 'added pond failed',
       erroredit: 'edit pond failed',
-      errornull: 'can not be empty',      
+      errornull: 'can not be empty or 0',      
 
       //kebutuhan tambak
       juduljumlah : 'Amount of lobsters and shelter',

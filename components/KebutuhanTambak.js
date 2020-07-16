@@ -267,7 +267,7 @@ export default class DetailTambak extends React.Component {
           autoCancel: true, // (optional) default: true
           largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
           smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
-          bigText: 'Silahkan anda berikan pakan di pagi hari', // (optional) default: "message" prop
+          bigText: 'Silahkan anda berikan pakan di sore hari', // (optional) default: "message" prop
           // subText: 'This is a subText', // (optional) default: none
           color: 'blue', // (optional) default: system default
           vibrate: true, // (optional) default: true

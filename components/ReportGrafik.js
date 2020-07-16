@@ -222,7 +222,7 @@ class ReportGrafik extends Component {
           <LineChart
               data={{
               labels: this.state.labelPh,
-              datasets: this.state.datasetsSuhu,           
+              datasets: this.state.datasetsDo,
               }}              
               verticalLabelRotation = {80}
               width={Dimensions.get("window").width - 20} // from react-native

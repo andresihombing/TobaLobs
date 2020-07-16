@@ -98,6 +98,7 @@ export default class Akun extends React.Component {
                     console.log(res)                
                     // AsyncStorage.clear();
                     AsyncStorage.removeItem('user');
+                    PushNotification.cancelAllLocalNotifications()   
                     
                     this.props.navigation.navigate('Auth');
                 })

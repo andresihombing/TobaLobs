@@ -64,7 +64,7 @@ export default class Register extends Component {
             }            
         }
         if (type == 'panjang') {
-            if(text == ''){
+            if(text == '' || text == 0){
                 this.setState({              
                     errorPanjang: true
                 })
@@ -75,7 +75,7 @@ export default class Register extends Component {
             }            
         }
         if (type == 'lebar') {
-            if(text == ''){
+            if(text == '' || text == 0){
                 this.setState({              
                     errorLebar: true
                 })
@@ -97,7 +97,7 @@ export default class Register extends Component {
             }            
         }
         if (type == 'usia') {
-            if(text == ''){
+            if(text == '' || text == 0){
                 this.setState({              
                     errorUsia: true
                 })

@@ -22,10 +22,12 @@ class Resource {
         });
     }
 
-    async register(body){
+    async register(body, otp, data){
         const header = {                      
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',  
+            'otp' : otp,
+            'token': data
         }
     
         console.log(JSON.stringify(body))
@@ -460,6 +462,140 @@ class Resource {
       console.log(JSON.stringify(body))
   
       let res = await Request.put(URI.API_BASE_URL + URI.EDIT_JADWAL + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async verify(body){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',  
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.VERIFY, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async forgot(token, otp, body, devices){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',  
+          'token': token,
+          'otp': otp,
+          'deviceID' : devices
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.FORGOT, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async listSensor(){      
+      const header = {
+        'Accept': 'application/json',        
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.SENSOR , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_sensor(body, headers, id){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',     
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDIT_SENSOR + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async listGuideline(token){      
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': token  
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.GUIDELINE , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async edit_guideline(body, headers, id){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',     
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.put(URI.API_BASE_URL + URI.EDITGUIDELINE + id, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async tambah_guideline(body, headers){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',     
+          'Authorization': headers.token
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.TAMBAHGUIDELINE, header, body);
       
       return new Promise((resolve, reject) => {
         try{

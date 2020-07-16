@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import {
     StyleSheet, Text, View, ScrollView,
-    Button,TouchableOpacity,
-    TextInput, Alert,AsyncStorage
+    Alert,TouchableOpacity,
+    TextInput, Button,AsyncStorage
 } from 'react-native'
 import Resource from './network/Resource'
 
-export default class EditInfo extends Component {
+export default class EditPanduan extends Component {
 
     static navigationOptions = ({navigation}) => {        
         const { state } = navigation
         return {
-            headerTitle: 'Edit Informasi',
-            headerRight: <View style={styles.right}><Button title="Hapus" onPress={() => state.params.handleSave()} /></View>,
+            headerTitle: 'Edit Sensor',            
           }
     }
 
@@ -20,135 +19,80 @@ export default class EditInfo extends Component {
         super(props);        
 
         this.state = {
-            judul: '',
-            penjelasan: '',
-            idInfo: "",
-            errorJudul: false,
-            errorPenjelasan: false,
+            id: '',
+            tipe: '',
+            nilai: '',
+            aksi: '',
+            kondisi: '',
+            errorNilai: false,
+            errorAksi: false,
             errorForm: false,
         }
     }    
 
     validate(text, type) {        
-        if (type == 'judul') {
+        if (type == 'nilai') {
             if(text == ''){
                 this.setState({              
-                    errorJudul: true
+                    errorNilai: true
                 })
             }else{
                 this.setState({              
-                    errorJudul: false
+                    errorNilai: false
                 })
             }            
         }
-        else if (type == 'penjelasan') {
+        else if (type == 'aksi') {
             if(text == ''){
                 this.setState({              
-                    errorPenjelasan: true
+                    errorAksi: true
                 })
             }else{
                 this.setState({              
-                    errorPenjelasan: false
+                    errorAksi: false
                 })
             }            
         }                                              
     }
 
     val(){
-        const { judul, penjelasan,} = this.state
-        if ((judul == "")) {
+        const { nilai, aksi,} = this.state
+        if ((nilai == "")) {
             this.setState({
                 errorForm: true,
-                errorJudul: true,                
+                errorNilai: true,                
             })            
         }        
-        if(penjelasan == ""){
+        if(aksi == ""){
             this.setState({
                 errorForm: true,                
-                errorPenjelasan: true,
+                errorAksi: true,
             })            
         }        
-    } 
-
-    componentDidMount(){
-        const {params} = this.props.navigation.state;
-        const idInfo = params ? params.idInfo : null;  
-        const judul = params ? params.judul : null;  
-        const penjelasan = params ? params.penjelasan : null;                  
-        this.setState({
-            idInfo: idInfo,
-            judul: judul,
-            penjelasan: penjelasan
-        })
-        this.props.navigation.setParams({ handleSave: () => this.deleteInfo() })
-    }
-
-    deleteInfo() {
-        Alert.alert(
-            "",
-            "Apakah anda yakin ingin menghapus informasi ?",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              { text: "OK", onPress: () => this.submitDelete() }
-            ],
-            { cancelable: false }
-          );        
     }
     
-    submitDelete = async() => {
-        try{
-            await AsyncStorage.getItem('user', (error, result) => {
-                let tokenString = JSON.parse(result);
-                let id = this.state.idInfo                
-                Resource.delete_info(tokenString, id)
-                .then((res) => {                                                                                   
-                    console.log(res)
-                    Alert.alert(
-                        '',
-                        `Berhasil menghapus informasi`
-                    )
-                    this.props.navigation.navigate('ManageInformasi');        
-                })
-                .catch((err) => {                    
-                    console.warn('Error:', error);
-                })  
-            });   
-        } catch (error) {            
-            console.log('AsyncStorage error: ' + error.message);
-        }       
-    }
-
-    submitReg = async () => {                
-        let formdata = new FormData();
-        formdata.append('judul', this.state.judul);
-        formdata.append('penjelasan', this.state.penjelasan);
-        
-        try{
-            await AsyncStorage.getItem('user', (error, result) => {
-                let tokenString = JSON.parse(result);
-                let id = this.state.idInfo                  
-                Resource.edit_info(formdata, tokenString, id)            
-                .then((res) => {                                                                                   
-                    console.log(res)
-                    this.props.navigation.navigate('ManageInformasi');        
-                })
-                .catch((err) => {                    
-                    console.warn('Error:', error);
-                })  
-            });   
-        } catch (error) {            
-            console.log('AsyncStorage error: ' + error.message);
-        }            
+    componentDidMount(){
+        const {params} = this.props.navigation.state;
+        const id = params ? params.id : null;  
+        const tipe = params ? params.tipe : null;  
+        const nilai = params ? params.nilai : null;  
+        const aksi = params ? params.aksi : null;  
+        const kondisi = params ? params.kondisi : null;          
+        var kon = kondisi.split(" ")
+        var kond = kon[0]+' '+kon[1]
+        this.setState({
+            id: id,
+            tipe: tipe,
+            nilai: nilai,
+            aksi: aksi,
+            kondisi: kond
+        })
     }
 
     edit(){
         Alert.alert(
             "",
-            "Apakah anda yakin ingin mengedit informasi ?",
+            "Apakah anda yakin ingin mengedit sensor ?",
             [
               {
                 text: "Cancel",
@@ -163,50 +107,79 @@ export default class EditInfo extends Component {
 
     cek = async() => {
         await this.val()
+        this.setState({
+            kondisi : this.state.kondisi+' '+this.state.nilai
+        })
         if (this.state.errorForm != true) {
             this.edit()
         }
     }
 
-    render() {                
+    submitReg = async () => {                
+        let formdata = new FormData();
+        formdata.append('aksiPenyimpangan', this.state.aksi);
+        formdata.append('nilai', this.state.nilai);
+        formdata.append('tipe', this.state.tipe);
+        formdata.append('kondisi', this.state.kondisi);
+                
+        try{
+            await AsyncStorage.getItem('user', (error, result) => {
+                let tokenString = JSON.parse(result);
+                let id = this.state.id              
+                Resource.edit_sensor(formdata, tokenString, id)            
+                .then((res) => {                                                                                   
+                    console.log(res)
+                    this.props.navigation.navigate('ManageSensor');        
+                })
+                .catch((err) => {                    
+                    console.warn('Error:', error);
+                })  
+            });   
+        } catch (error) {            
+            console.log('AsyncStorage error: ' + error.message);
+        }                
+    }
+
+    render() {                        
         return (
             <View style={styles.container}>
                 <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Lengkapi form dengan baik</Text>
                 <ScrollView>
-                    <Text style={styles.label}>Judul</Text>
+                    <Text style={styles.label}>Nilai</Text>
                     <View style={styles.textAreaContainer} >                    
                         <TextInput style = {styles.input}                            
                             returnKeyType = 'next'
-                            placeholder="Masukkan Judul Informasi"  
+                            placeholder="Masukkan Nilai Sensor"  
                             placeholderTextColor="grey"
-                            value = {this.state.judul}
+                            keyboardType= 'number-pad'
+                            value = {this.state.nilai}
                             autoCorrect = {false}
-                            onChangeText={(judul) => {                            
-                                this.setState({judul})
+                            onChangeText={(nilai) => {                            
+                                this.setState({nilai})
                             }}                            
                         />
                     </View>
-                    <Text style={{ display: this.state.errorJudul ? "flex" : "none", color: 'red', fontSize: 12 }}>Form tidak boleh kosong</Text>
+                    <Text style={{ display: this.state.errorNilai ? "flex" : "none", color: 'red', fontSize: 12 }}>Form tidak boleh kosong</Text>
 
-                    <Text style={styles.label}>Keterangan</Text>
+                    <Text style={styles.label}>Aksi Penyimpangan</Text>
                     <View style={styles.textAreaContainer} >
                         <ScrollView>
                         <TextInput
                         style={styles.textArea}
-                        value= {this.state.penjelasan}
+                        value= {this.state.aksi}
                         underlineColorAndroid="transparent"
-                        placeholder="Berikan Keterangan"
                         textAlignVertical='top'
+                        placeholder="Berikan Aksi Penyimpangan"
                         placeholderTextColor="grey"
                         numberOfLines={10}
                         multiline={true}
-                        onChangeText={(penjelasan) => {                    
-                            this.setState({penjelasan})
+                        onChangeText={(aksi) => {                        
+                            this.setState({aksi})
                         }}   
                         />
                         </ScrollView>
                     </View>
-                    <Text style={{ display: this.state.errorPenjelasan ? "flex" : "none", color: 'red', fontSize: 12 }}>From tidak boleh kosong</Text>
+                    <Text style={{ display: this.state.errorAksi ? "flex" : "none", color: 'red', fontSize: 12 }}>From tidak boleh kosong</Text>
 
                     <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 15, marginTop: 10, borderRadius: 10}}
                         onPress = {() => this.cek()}>
@@ -249,3 +222,4 @@ const styles = StyleSheet.create({
         padding: 7
     }
   })
+  

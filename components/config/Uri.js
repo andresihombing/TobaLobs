@@ -27,5 +27,12 @@ export default {
     CREATE_PANDUAN: '/api/panduan', 
     EDIT_PANDUAN: '/api/panduan/', 
     DELETE_PANDUAN: '/api/panduan/',
-    EDIT_JADWAL: '/api/jadwal/'
+    EDIT_JADWAL: '/api/jadwal/',
+    VERIFY: '/api/user/verify',
+    FORGOT: '/api/user/forgot',
+    SENSOR: '/api/penyimpangan-kondisi-tambak',
+    EDIT_SENSOR: '/api/penyimpangan-kondisi-tambak/',
+    GUIDELINE: '/api/guideline',
+    EDITGUIDELINE: '/api/guideline/',
+    TAMBAHGUIDELINE: '/api/guideline'
 }

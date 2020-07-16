@@ -18,6 +18,14 @@ import EditInfo from './components/EditInfo';
 import EditPanduan from './components/EditPanduan';
 import TambahInfo from './components/TambahInfo'
 import TambahPanduan from './components/TambahPanduan'
+import Verifikasi from './components/Verifikasi'
+import VerifikasiForgot from './components/VerifikasiForgot'
+import NoHp from './components/NoHp'
+import ManageSensor from './components/ManageSensor'
+import EditSensor from './components/EditSensor'
+import ManageGuideline from './components/ManageGuideline'
+import EditGuideline from './components/EditGuideline'
+import TambahGuideline from './components/TambahGuideline'
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -56,7 +64,7 @@ const styles = StyleSheet.create({
 });
 
 const AppStack = createStackNavigator({ Menu: Menu }, {headerMode: 'none'});
-const AuthStack = createStackNavigator({ SignIn: Login, Register: Register });
+const AuthStack = createStackNavigator({SignIn: Login, Register: Register,  Verifikasi: Verifikasi, VerifikasiForgot: VerifikasiForgot, NoHp: NoHp });
 const ManageStack = createStackNavigator({ 
   Manage: Manage, 
   ManageInformasi: ManageInformasi, 
@@ -64,7 +72,12 @@ const ManageStack = createStackNavigator({
   EditInfo: EditInfo,
   EditPanduan: EditPanduan,
   TambahInfo: TambahInfo,
-  TambahPanduan: TambahPanduan
+  TambahPanduan: TambahPanduan,
+  ManageSensor: ManageSensor,
+  EditSensor: EditSensor,
+  ManageGuideline: ManageGuideline,
+  EditGuideline: EditGuideline,
+  TambahGuideline: TambahGuideline
 });
 
 export default createAppContainer(createSwitchNavigator(

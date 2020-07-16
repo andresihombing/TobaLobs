@@ -6,7 +6,12 @@ import {
 } from 'react-native'
 import Resource from './network/Resource'
 import PushNotification from "react-native-push-notification";
-
+import PasswordInputText from 'react-native-hide-show-password-input';
+import {
+    TextField,
+    FilledTextField,
+    OutlinedTextField,
+  } from 'react-native-material-textfield'
 export default class Login extends Component {
     static navigationOptions = {
         header: null
@@ -110,7 +115,7 @@ export default class Login extends Component {
                 errorPass: true,
             })            
         }
-    }
+    }    
 
     submitReg(){
         this.val();
@@ -164,8 +169,11 @@ export default class Login extends Component {
                         <Text style={{ display: this.state.errorForm ? "flex" : "none", color: 'red', fontSize: 12, textAlign:'center'}}>Username dan Password Salah</Text>
 
                         <Text style={styles.label}>Username</Text>
-                        <TextInput style = {styles.input}                            
-                            returnKeyType = 'next'
+                        <TextField                                           
+                            textColor = 'white'                            
+                            baseColor = 'white'
+                            tintColor = 'white'
+                            label = ''
                             autoCorrect = {false}
                             onChangeText={(username) => {
                                 this.validate(username, 'uname')
@@ -175,15 +183,37 @@ export default class Login extends Component {
                         <Text style={{ display: this.state.errorUsername ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
 
                         <Text style={styles.label}>Password</Text>
-                        <TextInput style = {styles.input}             
+                        <PasswordInputText             
                             secureTextEntry
+                            textColor = 'white'
+                            iconColor = 'white'                            
+                            baseColor = 'white'
+                            tintColor = 'white'
+                            label= ''
+                            // labelFontSize = '1'
                             autoCorrect = {false}
                             onChangeText={(password) => {
                                 this.validate(password, 'pass')
                                 this.setState({password})
                             }}
                         />
+                        {/* <PasswordInputText style = {styles.input} 
+                            getRef={input => this.input = input}
+                            autoCorrect = {false}
+                            onChangeText={(password) => {
+                                this.validate(password, 'pass')
+                                this.setState({password})
+                            }}
+                        /> */}
                         <Text style={{ display: this.state.errorPass ? "flex" : "none", color: 'red', fontSize: 12 }}>Tidak boleh kosong</Text>
+
+                        <Text style={styles.buttonLupa}>                            
+                            <Text style={{color: '#f7c744'}} onPress={() => navigate(
+                                'NoHp'
+                            )}>
+                            Lupa Password ?
+                            </Text>
+                        </Text>      
 
                         <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 15, marginTop: 10, borderRadius: 10}}
                             onPress = {() => this.submitReg()}>
@@ -268,7 +298,16 @@ const styles = StyleSheet.create({
     },
     label:{
         color: 'white',
-        marginTop: 20,        
-    }
+        marginTop: 20, 
+        marginBottom: -20       
+    },
+    buttonLupa: {
+        textAlign: 'right',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 13,        
+        marginTop: 10,                
+        paddingBottom: 20
+    },
 
 })

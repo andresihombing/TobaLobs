@@ -11,6 +11,7 @@ import PushNotification from "react-native-push-notification";
 import I18n from '../i18n/i18n';
 import firebase from 'react-native-firebase';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Home extends React.Component {    
 
@@ -37,7 +38,7 @@ export default class Home extends React.Component {
         // this.props.navigation.navigate('KebutuhanTambak');
     }
 
-    componentDidMount = async () => {        
+    componentDidMount = async () => {             
     //   this.createNotificationChannel();
     //   this.checkPermission();
       
@@ -143,12 +144,14 @@ export default class Home extends React.Component {
 
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
+            console.log(tokenString)
             Resource.getTambak(tokenString.token)
                 .then((res) => {      
-                    // console.log(res.data.data)
+                    console.log(res)
                     if(rol != "admin"){
                         if (res.status == 'failed') {                        
                             AsyncStorage.clear();
+                            console.log('masuk')
                             this.props.navigation.navigate('Auth');
                         }
                                              
@@ -364,7 +367,7 @@ export default class Home extends React.Component {
           autoCancel: true, // (optional) default: true
           largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
           smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
-          bigText: 'Silahkan anda berikan pakan di pagi hari', // (optional) default: "message" prop
+          bigText: 'Silahkan anda berikan pakan di sore hari', // (optional) default: "message" prop
           // subText: 'This is a subText', // (optional) default: none
           color: 'blue', // (optional) default: system default
           vibrate: true, // (optional) default: true
@@ -453,14 +456,21 @@ export default class Home extends React.Component {
                         <IconBadge
                             MainElement={
                                 <View style={{
-                                    backgroundColor:'#489EFE',
-                                    width:20,
-                                    height:23,
-                                    margin:10
+                                    backgroundColor:'#00A9DE',
+                                    width:22,
+                                    height:25,
+                                    margin:12,
+                                    borderRadius:5,
+                                    alignItems: 'center'
                                 }}>
-                                    <Image 
-                                    style = {{paddingRight:9}}
-                                    source = {require('./assets/icons/notif.png')} />
+                                    <Icon size={23} name={'md-notifications'} color={'white'}/>
+                                    {/* <Icon
+                                        reverse
+                                        size='25'
+                                        name='ios-notifications'
+                                        type='ionicon'
+                                        color='white'
+                                        /> */}
                                 </View>
                             }
                             BadgeElement={
@@ -469,7 +479,7 @@ export default class Home extends React.Component {
                             IconBadgeStyle={{
                                 width:15,
                                 height:15,
-                                backgroundColor: '#FF00EE'
+                                backgroundColor: '#8B0000'
                             }}
                             Hidden={this.state.BadgeCount==0}
                         />
