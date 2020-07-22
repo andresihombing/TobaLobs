@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     View, StyleSheet, ScrollView, Text,
-    TouchableOpacity, AsyncStorage
+    TouchableOpacity, AsyncStorage, Alert
 } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component';
 import CheckBox from 'react-native-check-box'
@@ -97,20 +97,27 @@ export default class DetailTambak extends React.Component {
             await AsyncStorage.getItem('user', (error, result) => {       
                 let tokenString = JSON.parse(result);                                
                 Resource.tambah_tambak(formdata, tokenString)
-                .then((res) => {                                                        
-                    let id = res.responseJson.data;
-                    console.log(id)                    
-                    var pagi = moment({ hour: 8 })
-                    var sore = moment({ hour: 17 })
-                    var air = moment({ hour: 7 })
-                    var dateTimePagi = new Date(pagi)
-                    var dateTimeSore = new Date(sore)
-                    var dateTimeAir = new Date(air)
-                    this.handleDatePickedPagi(id, dateTimePagi)
-                    this.handleDatePickedSore(id, dateTimeSore)
-                    this.handleDatePickedAir(id, dateTimeAir)
-                    // AsyncStorage.setItem(`pagi${id}`, JSON.stringify(dateTime));                    
-                    this.props.navigation.navigate('Home');    
+                .then((res) => {                   
+                    if(res.responseJson.status != 'failed'){                                     
+                        let id = res.responseJson.data;
+                        console.log(id)                    
+                        var pagi = moment({ hour: 8 })
+                        var sore = moment({ hour: 17 })
+                        var air = moment({ hour: 7 })
+                        var dateTimePagi = new Date(pagi)
+                        var dateTimeSore = new Date(sore)
+                        var dateTimeAir = new Date(air)
+                        this.handleDatePickedPagi(id, dateTimePagi)
+                        this.handleDatePickedSore(id, dateTimeSore)
+                        this.handleDatePickedAir(id, dateTimeAir)
+                        // AsyncStorage.setItem(`pagi${id}`, JSON.stringify(dateTime));                    
+                        this.props.navigation.navigate('Home'); 
+                    }else{
+                        Alert.alert(
+                            '',
+                            `Gagal menghubungkan ke perangkat IOT, pastikan perangkat terhubung ke internet. `
+                        )
+                    }
                 })
                 .catch((err) => {
                     this.setState({

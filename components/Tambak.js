@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
     StyleSheet, View, Text, AsyncStorage, RefreshControl,
-    TouchableOpacity, ScrollView, FlatList
+    TouchableOpacity, ScrollView, FlatList, Alert
 } from 'react-native';
 import Resource from './network/Resource'
 import I18n from '../i18n/i18n';
@@ -25,7 +25,7 @@ export default class Tambak extends React.Component {
     }
     
     static navigationOptions = ({navmigation}) => ({
-        title: I18n.t('hompage.labeltambak'),            
+        title: I18n.t('hompage.labeltambak'),
     })
 
     componentDidMount() {        
@@ -98,8 +98,8 @@ export default class Tambak extends React.Component {
             await AsyncStorage.getItem('user', (error, result) => {
             let tokenString = JSON.parse(result);
             Resource.getNotif(tokenString.token, itemId, 'unread-per-tambak')
-                .then((res) => {                                 
-                    if(res.data.length != 0){
+                .then((res) => {                    
+                    if(res.data != null){
                         this.setState({
                             kosong : false,                            
                         })
@@ -139,11 +139,90 @@ export default class Tambak extends React.Component {
         }
     }
 
+    monitor(){
+        
+    }
+
+    save_monitor(ph, suhu, Do, ket){        
+        let body = new FormData();
+        body.append('tambakID', this.state.tambakId);
+        body.append('ph', ph);
+        body.append('suhu', suhu);
+        body.append('do', Do);
+        body.append('keterangan', ket);
+        Resource.save_monitor(body)
+            .then((res) => {             
+                // console.log(res)                
+                this.getData()    
+                Alert.alert(
+                    '',
+                    `Berhasil menyipan data monitoring`
+                )  
+            })
+            .catch((err) => {                                      
+                console.log(err)
+            })        
+    }
+
+    monitor = async () => {        
+        try{            
+            await AsyncStorage.getItem('user', (error, result) => {       
+                let tokenString = JSON.parse(result);     
+                console.log(tokenString.token)           
+                Resource.get_now(tokenString.token)
+                .then((res) => {        
+                    console.log(res)  
+                    if(res.status != 'failed'){
+                    var keterangan = res.data.keterangan
+                    var ket = keterangan.split(':')
+                    var k = ket.join('\n')                                                
+                    Alert.alert(
+                        "",
+            `pH                  : ${res.data.ph}
+Suhu              : ${res.data.suhu}°C
+Do                  : ${res.data.do}ppm
+
+Keterangan   : 
+${k}
+Apakah anda ingin menyimpan data monitoring?`,
+                        [
+                          {
+                            text: "Tidak",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                          },
+                          { text: "Ya", onPress: () => this.save_monitor(res.data.ph, res.data.suhu, res.data.do, res.data.keterangan) }
+                        ],
+                        { cancelable: false }
+                    );
+                    }
+                    else{
+                        Alert.alert(
+                            '',
+                            `Gagal menghubungkan ke perangkat IOT, pastikan perangkat terhubung ke internet.`
+                        )  
+                    }
+                })                
+                .catch((err) => {                    
+                    console.log('Error:', error);
+                })  
+            });  
+        } catch (error) {            
+            console.log(error)
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
     render() {                      
         var date = this.state.pengukuranTerakhir
         if(date == '1 Jan 0001 - 00:00'){
             date = ' :   -'
         }
+        var keterangan = this.state.keterangan
+        var ket = keterangan.split(':')
+        var k = ket.join('\n')
+        console.log(k)
+
         return (                        
             <View style={styles.container}>
                 <ScrollView
@@ -174,21 +253,33 @@ export default class Tambak extends React.Component {
                     </View>
                     <View style={styles.tambakContainer}>                          
                         <View style = {styles.monitoring}>
-                            <Text style = {styles.textMonitoring}>{this.state.ph ? this.state.ph : 0}</Text>
-                            <Text style = {styles.textMonitoring}>{this.state.suhu ? this.state.suhu : 0}°</Text>
-                            <Text style = {styles.textMonitoring}>{this.state.do ? this.state.do : 0}ppm</Text>
+                            <Text style = {styles.textMonitoring}>{this.state.ph ? this.state.ph : 0}{'\n'}
+                                <Text style={{fontSize:17, fontWeight:"normal"}}>pH</Text>
+                            </Text>
+                            <Text style = {styles.textMonitoring}>{this.state.suhu ? this.state.suhu : 0}°C{'\n'}
+                                <Text style={{fontSize:17, fontWeight:"normal"}}>{I18n.t('hompage.suhu')}</Text>
+                            </Text>
+                            <Text style = {styles.textMonitoring}>{this.state.do ? this.state.do : 0}ppm{'\n'}
+                                <Text style={{fontSize:17, fontWeight:"normal"}}>Do</Text>
+                            </Text>
                         </View>
                         <View style = {styles.monitoring2}>
-                            <Text>PH</Text>
+                            {/* <Text>PH</Text>
                             <Text>{I18n.t('hompage.suhu')}</Text>
-                            <Text>Do</Text>
+                            <Text>Do</Text> */}
                         </View>                        
                     </View>
                     <View style={styles.keterangan}>
                             <Text style = {{fontWeight:'bold'}}>keterangan :</Text>
-                            <Text>{this.state.keterangan}</Text>
+                            <Text>{k}</Text>
                         </View>
-                    <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 7, marginTop: 10, marginBottom:20}}
+                    <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 7, marginTop: 10, marginBottom:5}}
+                        onPress = {() => {
+                            this.monitor();
+                        }}>
+                        <Text style = {styles.txtTambah}>{I18n.t('hompage.monitor')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity full style = {{backgroundColor: '#00A9DE', paddingVertical: 7, marginBottom:20}}
                         onPress = {() => {
                             this.props.navigation.navigate('Report', {
                                 tambakId : this.state.tambakId
@@ -196,7 +287,7 @@ export default class Tambak extends React.Component {
                         }}>
                         <Text style = {styles.txtTambah}>{I18n.t('hompage.riwayat')}</Text>
                     </TouchableOpacity>
-                    <View style = {styles.notifContainer}>
+                    <View style = {styles.notifContainer}>  
                         <Text style={styles.txtNotif}>{I18n.t('hompage.notif')}</Text>
                         <TouchableOpacity style = {styles.buttonLog}
                         onPress = {() => {
@@ -252,7 +343,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         // height: 380,        
-        padding: 20,                
+        padding: 20,                        
     },
     textTittle: {        
         fontSize: 20,
@@ -312,7 +403,8 @@ const styles = StyleSheet.create({
     },
     textMonitoring: {        
         fontSize: 20,
-        fontWeight: 'bold',                                
+        fontWeight: 'bold',      
+        textAlign: 'center'
     },
     txtNotif: {        
         fontSize: 13,
@@ -361,7 +453,7 @@ const styles = StyleSheet.create({
     keterangan: {
         paddingLeft: 10,
         backgroundColor: 'white',        
-        height: 50,        
+        height: 80,        
         flex: 1,
         flexDirection: 'column',        
         alignItems: 'stretch',

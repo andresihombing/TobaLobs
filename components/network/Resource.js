@@ -605,6 +605,42 @@ class Resource {
         }
       });
     }
+
+    async save_monitor(body){
+      const header = {                      
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',               
+      }
+  
+      console.log(JSON.stringify(body))
+  
+      let res = await Request.post(URI.API_BASE_URL + URI.SAVE_MONITOR, header, body);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res)
+        } catch (err) { 
+          reject("An error occurred")
+        }
+      });
+    }
+
+    async get_now(token){      
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': token  
+      }
+        
+      let res = await Request.get(URI.API_BASE_URL + URI.GET_NOW , header);
+      
+      return new Promise((resolve, reject) => {
+        try{
+          resolve(res.data)
+        } catch (err) {
+          reject("An error occurred")
+        }
+      });
+    }
 }
 
 export default new Resource();

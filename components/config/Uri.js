@@ -34,5 +34,7 @@ export default {
     EDIT_SENSOR: '/api/penyimpangan-kondisi-tambak/',
     GUIDELINE: '/api/guideline',
     EDITGUIDELINE: '/api/guideline/',
-    TAMBAHGUIDELINE: '/api/guideline'
+    TAMBAHGUIDELINE: '/api/guideline',
+    SAVE_MONITOR: '/api/tambak/monitor',
+    GET_NOW: '/api/get-kondisi-sekarang'
 }

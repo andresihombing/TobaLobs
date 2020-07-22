@@ -51,6 +51,9 @@ export default class DetailTambak extends React.Component {
             Resource.monitor(tokenString.token, tambakId, formdata)
                 .then((res) => {                                    
                     // const ph = res.data.map(value => value.ph);
+                    this.setState({
+                        tableData: [[]]
+                    })
                     res.data = res.data.map(item => {                        
                         var waktuTanggal = item.waktuTanggal
                         var ph = item.ph
@@ -61,7 +64,6 @@ export default class DetailTambak extends React.Component {
                         this.setState({
                             tableData: table
                         })
-                        // console.warn(table)
                     });                    
                 })
                 .catch((err) => {                                          

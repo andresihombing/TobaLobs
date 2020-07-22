@@ -122,8 +122,7 @@ export default class Login extends Component {
 
         const { navigate } = this.props.navigation;
         let deviceID = this.state.tokenNotif
-        let devices = deviceID.token
-        // console.warn(devices)
+        let devices = deviceID.token        
         let body = new FormData();
         body.append('username', this.state.username);
         body.append('password', this.state.password);

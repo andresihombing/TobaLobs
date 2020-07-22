@@ -52,6 +52,7 @@ export default {
 
       //tambak
       riwayat: 'View pond monitoring history',
+      monitor: 'View monitoring now',
       suhu: 'temperature',
       notif: 'Notification',
       lognotif: 'Notification log',
