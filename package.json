@@ -18,7 +18,7 @@
     "@react-navigation/native": "^5.0.3",
     "date-fns": "^2.11.1",
     "native-base": "^2.13.8",
-    "npm": "^7.20.5",
+    "npm": "^8.11.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-24h-timepicker": "^1.1.0",
